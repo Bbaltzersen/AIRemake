@@ -21,45 +21,38 @@ public class Queen {
     AntFindPath fRoute = new AntFindPath(new EulerHeristic());
     Graph gra;
     public EAction generalQueenControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos) {
-        System.out.println("thisX: "+ thisLocation.getX() + ", ThisY: " + thisLocation.getY());
-        System.out.println("Direction: "+visibleLocations.size());
-        System.out.println("Food: " + antM.totalFoodInFront(visibleLocations));
-        System.out.println("Find Path: " + new AntFindPath(new EulerHeristic()).findShortestPath(g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5,5)));
         
         if(startPos == 1) {
             if(thisLocation.getFoodCount() != 0) {
                 return EAction.PickUpFood;
             }
-            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(thisLocation.getX(),thisLocation.getY()+1));
-        }
+            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5,5));}
         if(startPos == 2) {
             if(thisLocation.getFoodCount() != 0) {
                 return EAction.PickUpFood;
             }
-            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(thisLocation.getX(),thisLocation.getY()+1));
-        }
+            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5,5));}
         if(startPos == 3) {
             if(thisLocation.getFoodCount() != 0) {
                 return EAction.PickUpFood;
             }
-            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(thisLocation.getX(),thisLocation.getY()+1));
-        }
+            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5,5));}
         if(startPos == 4) {
             if(thisLocation.getFoodCount() != 0) {
                 return EAction.PickUpFood;
             }
-            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(thisLocation.getX(),thisLocation.getY()+1));
+            System.out.println(thisLocation.getX() + ", and "+ thisLocation.getY());
+            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5,5));
         }
         else {
+            System.out.println("Pass in main");
             return EAction.Pass;
         }
     };
     
      public int totalFoodInFront(List<ILocationInfo> visibleLocations) {
         int foodCount = 0;
-        for(ILocationInfo loc : visibleLocations){
-            foodCount += loc.getFoodCount();
-        }
+        foodCount = visibleLocations.stream().map((loc) -> loc.getFoodCount()).reduce(foodCount, Integer::sum);
         return foodCount;
     }
 }

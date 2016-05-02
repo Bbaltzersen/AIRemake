@@ -61,7 +61,8 @@ public class Node implements Iterable<Edge>, Comparable<Node>
 
     public Node getPrev()
     {
-        return prev;
+        Node tPrev = prev;
+        return tPrev;
     }
 
     public void setPrev(Node prev)

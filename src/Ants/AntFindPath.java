@@ -34,8 +34,11 @@ public class AntFindPath {
     public ArrayList<Node> findShortestPath(Node start, Node goal) {
         Queue<Node> openSet = new PriorityQueue<>();
         Set<Node> closedSet = new HashSet<>();
+        
         start.setGVal(0);
         Node curNode = start;
+        System.out.println("PREEEEEV: === " + curNode.getPrev());
+        curNode.setPrev(null);
         while (true) {
             for (Edge edge : curNode) {
                 Node other = edge.getEnd();
@@ -61,6 +64,9 @@ public class AntFindPath {
                     ArrayList<Node> res = new ArrayList<>();
                     do {
                         res.add(curNode);
+                        Node changeNode = curNode;
+                        curNode.setGVal(0);
+                        curNode.setHVal(0);
                         curNode = curNode.getPrev();
                     } while (curNode != null);
                     Collections.reverse(res);
@@ -71,8 +77,11 @@ public class AntFindPath {
     }
 
     public EAction NextStep(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, Node start, Node goal) {
-        ArrayList<Node> nodes = findShortestPath(start, goal);
-        System.out.println(nodes);
+        System.out.println(start);
+        System.out.println(goal);
+        ArrayList<Node> nodes;
+        nodes = findShortestPath(start, goal);
+        System.out.println("Nodes in path: " + nodes);
         int vX = 0;
         int vY = 0;
         if (!visibleLocations.isEmpty()) {
@@ -81,12 +90,9 @@ public class AntFindPath {
         }
         int nX = (int) nodes.get(1).getXPos();
         int nY = (int) nodes.get(1).getYPos();
-        System.out.println("vX: " + vX + ", vY: " + vY + ", nX: " + nX + ", nY: " + nY);
         if (vX == nX && vY == nY) {
             return EAction.MoveForward;
         } else if (vX != nX || vY != nY) {
-            System.out.println("In Loop!");
-            System.out.println(vX + ">" + nX + "," + vY + "<" + nY);
             if (vX == nX || vY == nY) {
                 return EAction.TurnLeft;
             } else if (vX < nX && vY < nY || vX > nX && vY > nY || vX > nX && vY < nY) {
@@ -94,9 +100,11 @@ public class AntFindPath {
             } else if (vX < nX && vY > nX) {
                 return EAction.TurnRight;
             } else {
+                System.out.println("Pass in second if statement");
                 return EAction.Pass;
             }
         } else {
+            System.out.println("Pass in first if statement");
             return EAction.Pass;
         }
     }
