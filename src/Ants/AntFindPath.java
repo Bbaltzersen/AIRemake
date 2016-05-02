@@ -73,13 +73,17 @@ public class AntFindPath {
     public EAction NextStep(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, Node start, Node goal) {
         ArrayList<Node> nodes = findShortestPath(start, goal);
         System.out.println(nodes);
-        int vX = visibleLocations.get(0).getX();
-        int vY = visibleLocations.get(0).getY();
+        int vX = 0;
+        int vY = 0;
+        if (!visibleLocations.isEmpty()) {
+            vX = visibleLocations.get(0).getX();
+            vY = visibleLocations.get(0).getY();
+        }
         int nX = (int) nodes.get(1).getXPos();
         int nY = (int) nodes.get(1).getYPos();
         System.out.println("vX: " + vX + ", vY: " + vY + ", nX: " + nX + ", nY: " + nY);
         if (vX == nX && vY == nY) {
-          return EAction.MoveForward;
+            return EAction.MoveForward;
         } else if (vX != nX || vY != nY) {
             System.out.println("In Loop!");
             System.out.println(vX + ">" + nX + "," + vY + "<" + nY);
