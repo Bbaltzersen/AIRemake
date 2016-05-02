@@ -37,7 +37,6 @@ public class AntFindPath {
         
         start.setGVal(0);
         Node curNode = start;
-        System.out.println("PREEEEEV: === " + curNode.getPrev());
         curNode.setPrev(null);
         while (true) {
             for (Edge edge : curNode) {
