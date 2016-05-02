@@ -32,9 +32,7 @@ public class AntMethods {
 
     public int totalFoodInFront(List<ILocationInfo> visibleLocations) {
         int foodCount = 0;
-        for (ILocationInfo loc : visibleLocations) {
-            foodCount += loc.getFoodCount();
-        }
+        foodCount = visibleLocations.stream().map((loc) -> loc.getFoodCount()).reduce(foodCount, Integer::sum);
         return foodCount;
     }
 
