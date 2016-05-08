@@ -35,18 +35,19 @@ public class AntFindPath {
     public List<Node> findShortestPath(Node start, Node goal, Graph graph) {
         Queue<Node> openSet = new PriorityQueue<>();
         Set<Node> closedSet = new HashSet<>();
-        List<Node> path = new ArrayList<>();
-
         start.setGVal(0);
+        
         Node curNode = start;
         while (true) {
+            
             for (Edge edge : curNode) {
 
                 Node other = edge.getEnd();
-                if (!closedSet.contains(other)) {
+                if (!closedSet.contains(other) && !other.isBlocked() && !other.isRock()) {
                     double newG = edge.getWeight() + curNode.getGVal();
                     if (other.getGVal() > newG) {
                         other.setGVal(newG);
+                        System.out.println("inside if gval: " + other.isBlocked());
                         other.setPrev(curNode);
                     }
                     if (!openSet.contains(other)) {
@@ -61,15 +62,23 @@ public class AntFindPath {
             }
             if (!curNode.isBlocked()) {
                 closedSet.add(curNode);
-                path.add(curNode);
             }
 
+            
             curNode = openSet.poll();
             {
                 if (curNode == goal) {
-                    path.add(goal);
-                    System.out.println("Path: " + path);
-                    return path;
+                   
+                    ArrayList<Node> res = new ArrayList<>();
+                    do
+                    {
+                        res.add(curNode);
+                        curNode = curNode.getPrev();
+                        
+                    }
+                    while(curNode != null);
+                    Collections.reverse(res);
+                    return res;
                 }
             }
 
@@ -82,12 +91,13 @@ public class AntFindPath {
         List<Node> nodes;
         nodes = findShortestPath(start, goal,graph);
         System.out.println("Nodes in path: " + nodes);
-        int vX = 0;
-        int vY = 0;
+        int vX = -1;
+        int vY = -1;
         if (!visibleLocations.isEmpty()) {
             vX = visibleLocations.get(0).getX();
             vY = visibleLocations.get(0).getY();
         }
+        
         int nX = (int) nodes.get(1).getXPos();
         int nY = (int) nodes.get(1).getYPos();
         System.out.println("nx: "+ nX+ ", nY: "+nY);

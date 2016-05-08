@@ -10,6 +10,8 @@ import aiantwars.IAntInfo;
 import aiantwars.ILocationInfo;
 import board.EulerHeristic;
 import board.Graph;
+import board.Node;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +24,11 @@ public class Queen {
     AntFindPath fRoute = new AntFindPath(new EulerHeristic());
 
     public EAction generalQueenControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos) {
+        List<Node> nodes = g.getNodes();
+        for(Node n : nodes) {
+             n.resetNode();
+        }
+        
         // Position 1
         // <editor-fold defaultstate="collapsed">
         if (startPos == 1) {
@@ -55,24 +62,11 @@ public class Queen {
         // Position 4
         // <editor-fold defaultstate="collapsed">
         if (startPos == 4) {
-            System.out.println("in here");
-            System.out.println(fRoute.findShortestPath(g.getNode(0, 0), g.getNode(5, 5),g));
-            for (ILocationInfo loc : visibleLocations) {
-                if (loc.isFilled()) {
-                    g.getNode(loc.getX(), loc.getY()).setBlocked(true);
-                    System.out.println(g.getNode(loc.getX(), loc.getY()));
-                }
-                if (loc.isRock()) {
-                    g.getNode(loc.getX(), loc.getY()).setBlocked(true);
-                    System.out.println(g.getNode(loc.getX(), loc.getY()));
-                }
-            }
-            System.out.println("Foodload: " + thisAnt.getFoodLoad());
             if (thisLocation.getFoodCount() != 0 && thisAnt.getFoodLoad() < 10) {
                 return EAction.PickUpFood;
             }
             
-            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(2, 1), g);
+            return fRoute.NextStep(thisAnt, visibleLocations, getNodeByXAndY(thisLocation.getX(), thisLocation.getY(), nodes), getNodeByXAndY(5, 5, nodes), g);
         } else {
             System.out.println("Pass in main");
             return EAction.Pass;
@@ -94,5 +88,12 @@ public class Queen {
         for (ILocationInfo loc : visibleLocations) {
 
         }
+    }
+    
+    public Node getNodeByXAndY(int x, int y, List<Node> lN) {
+        for(Node n : lN) {
+            if(x == n.getXPos() && y == n.getYPos()) return n;
+        }
+        return null;
     }
 }

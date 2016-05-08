@@ -145,5 +145,11 @@ public class Node implements Iterable<Edge>, Comparable<Node>
         }
         return 0;
     }
+    
+    public void resetNode() {
+        prev = null;
+        gVal = Double.POSITIVE_INFINITY;
+        hVal = Double.POSITIVE_INFINITY;
+    }
 
 }
