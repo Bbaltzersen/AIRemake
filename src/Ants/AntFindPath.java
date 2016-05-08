@@ -39,7 +39,6 @@ public class AntFindPath {
 
         start.setGVal(0);
         Node curNode = start;
-        curNode.setPrev(null);
         while (true) {
             for (Edge edge : curNode) {
 
@@ -69,6 +68,7 @@ public class AntFindPath {
             {
                 if (curNode == goal) {
                     path.add(goal);
+                    System.out.println("Path: " + path);
                     return path;
                 }
             }
@@ -90,6 +90,8 @@ public class AntFindPath {
         }
         int nX = (int) nodes.get(1).getXPos();
         int nY = (int) nodes.get(1).getYPos();
+        System.out.println("nx: "+ nX+ ", nY: "+nY);
+        System.out.println("vx: "+ vX+ ", vY: "+vY);
         if (vX == nX && vY == nY) {
             return EAction.MoveForward;
         } else if (vX != nX || vY != nY) {
@@ -97,7 +99,7 @@ public class AntFindPath {
                 return EAction.TurnLeft;
             } else if (vX < nX && vY < nY || vX > nX && vY > nY || vX > nX && vY < nY) {
                 return EAction.TurnLeft;
-            } else if (vX < nX && vY > nX) {
+            } else if (vX < nX && vY > nY) {
                 return EAction.TurnRight;
             } else {
                 System.out.println("Pass in second if statement");

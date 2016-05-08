@@ -72,7 +72,7 @@ public class Queen {
                 return EAction.PickUpFood;
             }
             
-            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5, 5));
+            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(2, 1), g);
         } else {
             System.out.println("Pass in main");
             return EAction.Pass;
