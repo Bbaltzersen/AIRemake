@@ -22,8 +22,12 @@ public class Queen {
 
     AntMethods antM = new AntMethods();
     AntFindPath fRoute = new AntFindPath(new EulerHeristic());
-
+    int posX,posY ;
+    
     public EAction generalQueenControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber) {
+        setPosX( thisLocation.getX() );
+        setPosY( thisLocation.getY() );
+        
         if(possibleActions.contains(EAction.LayEgg)){
             return EAction.LayEgg;
         }
@@ -106,5 +110,18 @@ public class Queen {
     }
     private void seekToCorner() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public void setPosX(int x){
+        this.posX = x;
+    }
+    public void setPosY(int y){
+        this.posY = y;
+    }
+    public int getPosX(){
+        return this.posX;
+    }
+    public int getPosY(){
+        return this.posY;
     }
 }

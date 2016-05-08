@@ -17,7 +17,7 @@ public class CarrierLogic {
     AntFindPath fRoute = new AntFindPath(new EulerHeristic());
     
     public CarrierLogic(){}
-            
+           
     public  EAction generalCarrierControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations
             , List<EAction> possibleActions, Graph graph,Queen queen , int roundNumber) {
         
@@ -32,7 +32,7 @@ public class CarrierLogic {
         if(thisAnt.getFoodLoad() >= thisAnt.getAntType().getMaxFoodLoad())
         {
             System.out.println("Foodload at max, returning to queen" +thisAnt.asString());
-            return goToQueen( thisLocation,  possibleActions,  graph,  roundNumber, queen );
+            return goToQueen(thisAnt,visibleLocations, thisLocation,  possibleActions,  graph,  roundNumber, queen );
         } 
         else if ( !foodNodes.isEmpty() ){
             System.out.println("Foodload not at max, trying to find new route to food.. : " +thisAnt.getAntType());
@@ -45,8 +45,8 @@ public class CarrierLogic {
     }
 
     //use the A star to move to queens location..
-    private  EAction goToQueen( ILocationInfo thisLocation, List<EAction> possibleActions, Graph  graph, int roundNumber, Queen queen) {
-        return  fRoute.NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode(  thisLocation.getX(), thisLocation.getY()   ) );
+    private  EAction goToQueen(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation, List<EAction> possibleActions, Graph  graph, int roundNumber, Queen queen) {
+        return  fRoute.NextStep(thisAnt,thisLocation, visibleLocations,    graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  graph.getNode(queen.posX,queen.posY), graph);
     }
     
 //find the closest location where there is food and pick it up..
