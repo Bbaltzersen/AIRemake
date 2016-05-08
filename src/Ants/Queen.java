@@ -31,85 +31,58 @@ public class Queen {
         if(possibleActions.contains(EAction.LayEgg)){
             return EAction.LayEgg;
         }
-         if( roundNumber > 50 ){ // skal sættes ned når den er færdig..
-            seekToCorner();
-        }
+        
         
         List<Node> nodes = g.getNodes();
         for(Node n : nodes) {
              n.resetNode();
         }
         
+        if (roundNumber > 20) {
+            return startProduction(thisAnt, thisLocation, visibleLocations, possibleActions, g, startPos, roundNumber);
+        } else {
+            return EAction.Pass;
+        }
         
-        // Position 1
+    }
+    
+    public EAction startProduction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber) {
+        // Position 1 // South West
         // <editor-fold defaultstate="collapsed">
         if (startPos == 1) {
-            if (thisLocation.getFoodCount() != 0) {
-                return EAction.PickUpFood;
-            }
-            return fRoute.NextStep(thisAnt, thisLocation , visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5, 5),g);
+            return EAction.Pass;
         }
         // </editor-fold>
         
-        // Position 2
+        // Position 2 // North East
         // <editor-fold defaultstate="collapsed">
         if (startPos == 2) {
-            if (thisLocation.getFoodCount() != 0) {
-                return EAction.PickUpFood;
-            }
-            return fRoute.NextStep(thisAnt, thisLocation , visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5, 5),g);
+            return EAction.Pass;
         }
         // </editor-fold>
         
-        // Position 3
+        // Position 3 // South West
         // <editor-fold defaultstate="collapsed">
         if (startPos == 3) {
-            if (thisLocation.getFoodCount() != 0) {
-                return EAction.PickUpFood;
-            }
-            return fRoute.NextStep(thisAnt, thisLocation , visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5, 5),g);
+            return EAction.Pass;
         }
         // </editor-fold>
         
-        // Position 4
+        // Position 4 and else
         // <editor-fold defaultstate="collapsed">
         if (startPos == 4) {
-            if (thisLocation.getFoodCount() != 0 && thisAnt.getFoodLoad() < 10) {
-                return EAction.PickUpFood;
-            }
-            
-            return fRoute.NextStep(thisAnt, thisLocation , visibleLocations, getNodeByXAndY(thisLocation.getX(), thisLocation.getY(), nodes), getNodeByXAndY(5, 5, nodes), g);
+            return EAction.Pass;
         } else {
-            System.out.println("Pass in main");
             return EAction.Pass;
         }
         // </editor-fold>
     }
-
-    ;
-    
-//     public void setBlocked(List<ILocationInfo> visibleLocations, Graph g) {
-//        for (ILocationInfo loc : visibleLocations) {
-//            if (loc.isFilled()) {
-//                g.setBlocked(loc.getX(), loc.getY(), true);
-//            }
-//        }
-//    }
-//
-//    public void setBlocked(List<ILocationInfo> visibleLocations) {
-//        for (ILocationInfo loc : visibleLocations) {
-//
-//        }
-//    }
     
     public Node getNodeByXAndY(int x, int y, List<Node> lN) {
         for(Node n : lN) {
             if(x == n.getXPos() && y == n.getYPos()) return n;
         }
         return null;
-    }
-    private void seekToCorner() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     public void setPosX(int x){

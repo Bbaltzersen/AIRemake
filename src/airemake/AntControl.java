@@ -64,17 +64,17 @@ public class AntControl implements aiantwars.IAntAI {
             
             // Define Start Position
             // <editor-fold defaultstate="collapsed"> </editor-fold>
-            if (worldSizeX == 0 || worldSizeY == 0) {
+            if (thisLocation.getX() == 0 || thisLocation.getY() == 0) {
                 this.startPos = 1; // South West
             }
-            if (worldSizeX == 0 || worldSizeY > 0) {
+            if (thisLocation.getX() == 0 || thisLocation.getY() > 0) {
                 this.startPos = 2; // North East
             }
-            if (worldSizeX > 0 || worldSizeY == 0) {
+            if (thisLocation.getX() > 0 || thisLocation.getY() == 0) {
                 this.startPos = 3; // South West
             }
-            if (worldSizeX > 0 || worldSizeY > 0) {
-                this.startPos = 4; // North West
+            if (thisLocation.getX() > 0 || thisLocation.getY() > 0) {
+                this.startPos = 4; // NORTH WEST
             }
             // </editor-fold>
             

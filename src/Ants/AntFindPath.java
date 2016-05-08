@@ -112,9 +112,17 @@ public class AntFindPath {
                     break;
             }
         }
+        int nX = 0;
+        int nY = 0;
 
-        int nX = (int) nodes.get(1).getXPos();
-        int nY = (int) nodes.get(1).getYPos();
+        if(nodes.size() >= 2) {
+        nX = (int) nodes.get(1).getXPos();
+        nY = (int) nodes.get(1).getYPos();
+        } else {
+            System.out.println("Pass in Node array check");
+            return EAction.Pass;
+        }
+        
         if (vX == nX && vY == nY) {
             return EAction.MoveForward;
         } else if (vX != nX || vY != nY) {
