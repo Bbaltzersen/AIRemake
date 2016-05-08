@@ -34,8 +34,8 @@ public class AntFindPath {
     public List<Node> findShortestPath(Node start, Node goal) {
         Queue<Node> openSet = new PriorityQueue<>();
         Set<Node> closedSet = new HashSet<>();
-        List<Node> path = new ArrayList<>(); 
-        
+        List<Node> path = new ArrayList<>();
+
         start.setGVal(0);
         Node curNode = start;
         curNode.setPrev(null);
@@ -43,20 +43,19 @@ public class AntFindPath {
             for (Edge edge : curNode) {
 
                 Node other = edge.getEnd();
-                if (!other.isBlocked()) {
-                    if (!closedSet.contains(other)) {
-                        double newG = edge.getWeight() + curNode.getGVal();
-                        if (other.getGVal() > newG) {
-                            other.setGVal(newG);
-                            other.setPrev(curNode);
-                        }
-                        if (!openSet.contains(other)) {
-                            other.setHVal(heuristic.getMinimumDist(other, goal));
-                            openSet.add(other);
-                        }
+                if (!closedSet.contains(other)) {
+                    double newG = edge.getWeight() + curNode.getGVal();
+                    if (other.getGVal() > newG) {
+                        other.setGVal(newG);
+                        other.setPrev(curNode);
+                    }
+                    if (!openSet.contains(other)) {
+                        other.setHVal(heuristic.getMinimumDist(other, goal));
+                        openSet.add(other);
                     }
                 }
             }
+
             if (openSet.isEmpty()) {
                 return null;
             }
@@ -64,7 +63,7 @@ public class AntFindPath {
                 closedSet.add(curNode);
                 path.add(curNode);
             }
-            
+
             curNode = openSet.poll();
             {
                 if (curNode == goal) {
@@ -72,7 +71,7 @@ public class AntFindPath {
                     return path;
                 }
             }
-            
+
         }
     }
 

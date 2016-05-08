@@ -22,7 +22,6 @@ public class Queen {
     AntFindPath fRoute = new AntFindPath(new EulerHeristic());
 
     public EAction generalQueenControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos) {
-
         // Position 1
         // <editor-fold defaultstate="collapsed">
         if (startPos == 1) {
@@ -56,21 +55,23 @@ public class Queen {
         // Position 4
         // <editor-fold defaultstate="collapsed">
         if (startPos == 4) {
-            if (thisLocation.getFoodCount() != 0 || thisAnt.getFoodLoad() == 10) {
-                return EAction.PickUpFood;
-            }
+            System.out.println("in here");
+            System.out.println(fRoute.findShortestPath(g.getNode(0, 0), g.getNode(5, 5)));
             for (ILocationInfo loc : visibleLocations) {
                 if (loc.isFilled()) {
-                    System.out.println("Soil inc !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                     g.getNode(loc.getX(), loc.getY()).setBlocked(true);
                     System.out.println(g.getNode(loc.getX(), loc.getY()));
                 }
                 if (loc.isRock()) {
-                    System.out.println("ROOOOOOOOOOOOOOOOOOOOOOOCKED");
                     g.getNode(loc.getX(), loc.getY()).setBlocked(true);
                     System.out.println(g.getNode(loc.getX(), loc.getY()));
                 }
             }
+            System.out.println("Foodload: " + thisAnt.getFoodLoad());
+            if (thisLocation.getFoodCount() != 0 && thisAnt.getFoodLoad() < 10) {
+                return EAction.PickUpFood;
+            }
+            
             return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5, 5));
         } else {
             System.out.println("Pass in main");
