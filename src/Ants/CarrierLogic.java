@@ -67,7 +67,7 @@ public class CarrierLogic {
         }
         
       
-        return fRoute.NextStep(thisAnt, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
+        return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
                 , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph);
     }
     

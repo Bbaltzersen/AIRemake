@@ -28,6 +28,10 @@ public class Queen {
         for(Node n : nodes) {
              n.resetNode();
         }
+        List<Node> nodes2 = g.getNodes();
+        for(Node n : nodes) {
+             System.out.println(n.isBlocked());
+        }
         
         // Position 1
         // <editor-fold defaultstate="collapsed">
@@ -35,7 +39,7 @@ public class Queen {
             if (thisLocation.getFoodCount() != 0) {
                 return EAction.PickUpFood;
             }
-            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5, 5),g);
+            return fRoute.NextStep(thisAnt, thisLocation , visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5, 5),g);
         }
         // </editor-fold>
         
@@ -45,7 +49,7 @@ public class Queen {
             if (thisLocation.getFoodCount() != 0) {
                 return EAction.PickUpFood;
             }
-            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5, 5),g);
+            return fRoute.NextStep(thisAnt, thisLocation , visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5, 5),g);
         }
         // </editor-fold>
         
@@ -55,7 +59,7 @@ public class Queen {
             if (thisLocation.getFoodCount() != 0) {
                 return EAction.PickUpFood;
             }
-            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5, 5),g);
+            return fRoute.NextStep(thisAnt, thisLocation , visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5, 5),g);
         }
         // </editor-fold>
         
@@ -66,7 +70,7 @@ public class Queen {
                 return EAction.PickUpFood;
             }
             
-            return fRoute.NextStep(thisAnt, visibleLocations, getNodeByXAndY(thisLocation.getX(), thisLocation.getY(), nodes), getNodeByXAndY(5, 5, nodes), g);
+            return fRoute.NextStep(thisAnt, thisLocation , visibleLocations, getNodeByXAndY(thisLocation.getX(), thisLocation.getY(), nodes), getNodeByXAndY(5, 5, nodes), g);
         } else {
             System.out.println("Pass in main");
             return EAction.Pass;

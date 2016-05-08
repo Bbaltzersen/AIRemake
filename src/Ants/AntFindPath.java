@@ -85,7 +85,7 @@ public class AntFindPath {
         }
     }
 
-    public EAction NextStep(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, Node start, Node goal,Graph graph) {
+    public EAction NextStep(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, Node start, Node goal,Graph graph) {
         System.out.println(start);
         System.out.println(goal);
         List<Node> nodes;
@@ -97,6 +97,22 @@ public class AntFindPath {
         if (!visibleLocations.isEmpty()) {
             vX = visibleLocations.get(0).getX();
             vY = visibleLocations.get(0).getY();
+        } else {
+            if(v == 0){
+                vX = thisLocation.getX();
+                vY = thisLocation.getY()+1;
+            }
+            if(v == 1){
+                vX = thisLocation.getX()+1;
+                vY = thisLocation.getY();
+            }
+            if(v == 2){
+                vX = thisLocation.getX();
+                vY = -1;
+            } else {
+                vX = -1;
+                vY = thisLocation.getY();
+            }
         }
         
         int nX = (int) nodes.get(1).getXPos();
@@ -111,7 +127,7 @@ public class AntFindPath {
             } else if (vX > nX && vY > nY && v == 0 ||              
                        vX < nX && vY > nY && v == 3 || 
                        vX < nX && vY < nY && v == 2 || 
-                       vX > nX && vY < nY && v == 1  ) {
+                       vX > nX && vY < nY && v == 1 )  {
                 return EAction.TurnLeft;
             } else if (vX < nX && vY > nY && v == 0 ||              
                        vX < nX && vY < nY && v == 3 || 
