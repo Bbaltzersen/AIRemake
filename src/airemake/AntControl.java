@@ -57,7 +57,6 @@ public class AntControl implements aiantwars.IAntAI {
         {    
             Node[][] nodes = new Node[worldSizeX][worldSizeY];
             IHeuristic h = new EulerHeristic();
-            AntMethods def = new AntMethods();
 
             this.worldSizeX = worldSizeX;
             this.worldSizeY = worldSizeY;
