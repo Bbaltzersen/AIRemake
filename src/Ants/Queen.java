@@ -22,39 +22,41 @@ public class Queen {
 
     AntMethods antM = new AntMethods();
     AntFindPath fRoute = new AntFindPath(new EulerHeristic());
-    int posX,posY ;
-    
+    int posX, posY;
+
     public EAction generalQueenControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
-        setPosX( thisLocation.getX() );
-        setPosY( thisLocation.getY() );
-        
-        if(possibleActions.contains(EAction.LayEgg)){
+        setPosX(thisLocation.getX());
+        setPosY(thisLocation.getY());
+
+        if (possibleActions.contains(EAction.LayEgg)) {
             return EAction.LayEgg;
         }
-        
-        
+
         List<Node> nodes = g.getNodes();
-        for(Node n : nodes) {
-             n.resetNode();
+        for (Node n : nodes) {
+            n.resetNode();
         }
-        
-        if (roundNumber > 20) {
+
+        if (roundNumber < 20) {
+            System.out.println("in first loop");
             return startProduction(thisAnt, thisLocation, visibleLocations, possibleActions, g, startPos, roundNumber, starX, starY);
         } else {
             return EAction.Pass;
         }
-        
+
     }
-    
+
     public EAction startProduction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
         // Position 1 // South West
         // <editor-fold defaultstate="collapsed">
-        if (startPos == 1) {
-            if(thisAnt.getFoodLoad() <= 10 && thisLocation.getFoodCount() != 0) {
+        System.out.println(startPos + starX + starY);
+        if (startPos == 3) {
+            System.out.println("in second");
+            if (thisAnt.getFoodLoad() <= 10 && thisLocation.getFoodCount() != 0) {
                 return EAction.PickUpFood;
-            } else if(thisAnt.getFoodLoad() == 5) {
-                if(thisLocation.getX() != starX && thisLocation.getY() != starY) {
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(posX, posY), g);
+            } else if (thisAnt.getFoodLoad() == 5) {
+                if (thisLocation.getX() != starX && thisLocation.getY() != starY) {
+                    return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(posX, posY), g);
                 } else if (thisLocation.getX() == starX && thisLocation.getY() == starY) {
                     return fRoute.findDirection(starX + 1, starY, thisLocation, visibleLocations, thisAnt, false);
                 } else if (possibleActions.contains(EAction.LayEgg)) {
@@ -62,53 +64,56 @@ public class Queen {
                 } else {
                     return EAction.Pass;
                 }
-            } 
-            
-        }
-        // </editor-fold>
-        
+            } else {
+                return EAction.Pass;
+            }
+
+        } // </editor-fold>
         // Position 2 // North East
         // <editor-fold defaultstate="collapsed">
-        if (startPos == 2) {
-            if(thisAnt.getFoodLoad() <= 10 && thisLocation.getFoodCount() != 0) {
-                return EAction.PickUpFood;
-            } else if(thisAnt.getFoodLoad() == 5) {
-                if(thisLocation.getX() != starX && thisLocation.getY() != starY) {
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(posX, posY), g);
-                }
-            }
-        }
+        //        if (startPos == 2) {
+        //            if(thisAnt.getFoodLoad() <= 10 && thisLocation.getFoodCount() != 0) {
+        //                return EAction.PickUpFood;
+        //            } else if(thisAnt.getFoodLoad() == 5) {
+        //                if(thisLocation.getX() != starX && thisLocation.getY() != starY) {
+        //                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(posX, posY), g);
+        //                }
+        //            }
+        //        }
         // </editor-fold>
-        
         // Position 3 // South East
         // <editor-fold defaultstate="collapsed">
-        if (startPos == 3) {
-            if(thisAnt.getFoodLoad() <= 10 && thisLocation.getFoodCount() != 0) {
-                return EAction.PickUpFood;
-            } else if(thisAnt.getFoodLoad() == 5) {
-                if(thisLocation.getX() != posX && thisLocation.getY() != posY) {
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(posX, posY), g);
-                }
-            }
-        }
+        //        if (startPos == 3) {
+        //            if(thisAnt.getFoodLoad() <= 10 && thisLocation.getFoodCount() != 0) {
+        //                return EAction.PickUpFood;
+        //            } else if(thisAnt.getFoodLoad() == 5) {
+        //                if(thisLocation.getX() != posX && thisLocation.getY() != posY) {
+        //                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(posX, posY), g);
+        //                } {
+        //                    return EAction.Pass;
+        //                }
+        //            }
+        //        }
         // </editor-fold>
-        
         // Position 4 and else // South West
         // <editor-fold defaultstate="collapsed">
-        if (startPos == 4) {
-            if(thisAnt.getFoodLoad() <= 10 && thisLocation.getFoodCount() != 0) {
-                return EAction.PickUpFood;
-            } else if(thisAnt.getFoodLoad() == 5) {
-                if(thisLocation.getX() != posX && thisLocation.getY() != posY) {
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(posX, posY), g);
-                }
-            }
-        } else {
+        //        if (startPos == 4) {
+        //            if(thisAnt.getFoodLoad() <= 10 && thisLocation.getFoodCount() != 0) {
+        //                return EAction.PickUpFood;
+        //            } else if(thisAnt.getFoodLoad() == 5) {
+        //                if(thisLocation.getX() != posX && thisLocation.getY() != posY) {
+        //                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(posX, posY), g);
+        //                } else {
+        //                    return EAction.Pass;
+        //                }
+        //            }
+        //        } 
+        else {
             return EAction.Pass;
         }
         // </editor-fold>
     }
-    
+
     public EAction stallGame(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber) {
         // Position 1 // South West
         // <editor-fold defaultstate="collapsed">
@@ -116,21 +121,21 @@ public class Queen {
             return EAction.Pass;
         }
         // </editor-fold>
-        
+
         // Position 2 // North East
         // <editor-fold defaultstate="collapsed">
         if (startPos == 2) {
             return EAction.Pass;
         }
         // </editor-fold>
-        
+
         // Position 3 // South East
         // <editor-fold defaultstate="collapsed">
         if (startPos == 3) {
             return EAction.Pass;
         }
         // </editor-fold>
-        
+
         // Position 4 and else // South West
         // <editor-fold defaultstate="collapsed">
         if (startPos == 4) {
@@ -140,18 +145,20 @@ public class Queen {
         }
         // </editor-fold>
     }
-    
-    
-    public void setPosX(int x){
+
+    public void setPosX(int x) {
         this.posX = x;
     }
-    public void setPosY(int y){
+
+    public void setPosY(int y) {
         this.posY = y;
     }
-    public int getPosX(){
+
+    public int getPosX() {
         return this.posX;
     }
-    public int getPosY(){
+
+    public int getPosY() {
         return this.posY;
     }
 }

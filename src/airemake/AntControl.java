@@ -69,13 +69,13 @@ public class AntControl implements aiantwars.IAntAI {
                 this.startPos = 1; // South West
             }
             if (thisLocation.getX() == 0 || thisLocation.getY() > 0) {
-                this.startPos = 2; // North East
+                this.startPos = 2; // North West
             }
             if (thisLocation.getX() > 0 || thisLocation.getY() == 0) {
                 this.startPos = 3; // South East
             }
             if (thisLocation.getX() > 0 || thisLocation.getY() > 0) {
-                this.startPos = 4; // South West
+                this.startPos = 4; // North east
             }
             // </editor-fold>
             
