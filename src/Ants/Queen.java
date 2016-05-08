@@ -84,19 +84,19 @@ public class Queen {
 
     ;
     
-     public void setBlocked(List<ILocationInfo> visibleLocations, Graph g) {
-        for (ILocationInfo loc : visibleLocations) {
-            if (loc.isFilled()) {
-                g.setBlocked(loc.getX(), loc.getY(), true);
-            }
-        }
-    }
-
-    public void setBlocked(List<ILocationInfo> visibleLocations) {
-        for (ILocationInfo loc : visibleLocations) {
-
-        }
-    }
+//     public void setBlocked(List<ILocationInfo> visibleLocations, Graph g) {
+//        for (ILocationInfo loc : visibleLocations) {
+//            if (loc.isFilled()) {
+//                g.setBlocked(loc.getX(), loc.getY(), true);
+//            }
+//        }
+//    }
+//
+//    public void setBlocked(List<ILocationInfo> visibleLocations) {
+//        for (ILocationInfo loc : visibleLocations) {
+//
+//        }
+//    }
     
     public Node getNodeByXAndY(int x, int y, List<Node> lN) {
         for(Node n : lN) {

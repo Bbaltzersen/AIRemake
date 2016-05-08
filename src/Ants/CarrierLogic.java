@@ -46,7 +46,7 @@ public class CarrierLogic {
 
     //use the A star to move to queens location..
     private  EAction goToQueen( ILocationInfo thisLocation, List<EAction> possibleActions, Graph  graph, int roundNumber, Queen queen) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        return  fRoute.NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode(  thisLocation.getX(), thisLocation.getY()   ) );
     }
     
 //find the closest location where there is food and pick it up..
