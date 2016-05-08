@@ -82,10 +82,14 @@ public class CarrierLogic {
             targetNode = shortestPathToFood.get( shortestPathToFood.size()-1 );
         }
         
-      
-        return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
-                , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph);
-    }
+      try{
+            return  fRoute.NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
+                    , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph);
+        }catch(Exception e){
+            return antM.walkAround(possibleActions,thisLocation,queen,  thisAnt);
+        }
+      }
+    
     
 }
 
