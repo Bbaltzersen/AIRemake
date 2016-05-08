@@ -28,10 +28,7 @@ public class Queen {
         for(Node n : nodes) {
              n.resetNode();
         }
-        List<Node> nodes2 = g.getNodes();
-        for(Node n : nodes) {
-             System.out.println(n.isBlocked());
-        }
+        
         
         // Position 1
         // <editor-fold defaultstate="collapsed">

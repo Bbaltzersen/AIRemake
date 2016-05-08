@@ -36,10 +36,10 @@ public class AntFindPath {
         Queue<Node> openSet = new PriorityQueue<>();
         Set<Node> closedSet = new HashSet<>();
         start.setGVal(0);
-        
+
         Node curNode = start;
         while (true) {
-            
+
             for (Edge edge : curNode) {
 
                 Node other = edge.getEnd();
@@ -47,7 +47,6 @@ public class AntFindPath {
                     double newG = edge.getWeight() + curNode.getGVal();
                     if (other.getGVal() > newG) {
                         other.setGVal(newG);
-                        System.out.println("inside if gval: " + other.isBlocked());
                         other.setPrev(curNode);
                     }
                     if (!openSet.contains(other)) {
@@ -64,19 +63,16 @@ public class AntFindPath {
                 closedSet.add(curNode);
             }
 
-            
             curNode = openSet.poll();
             {
                 if (curNode == goal) {
-                   
+
                     ArrayList<Node> res = new ArrayList<>();
-                    do
-                    {
+                    do {
                         res.add(curNode);
                         curNode = curNode.getPrev();
                         
-                    }
-                    while(curNode != null);
+                    } while (curNode != null);
                     Collections.reverse(res);
                     return res;
                 }
@@ -85,54 +81,54 @@ public class AntFindPath {
         }
     }
 
-    public EAction NextStep(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, Node start, Node goal,Graph graph) {
-        System.out.println(start);
-        System.out.println(goal);
+    public EAction NextStep(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, Node start, Node goal, Graph graph) {
+
         List<Node> nodes;
-        nodes = findShortestPath(start, goal,graph);
-        System.out.println("Nodes in path: " + nodes);
-        int vX = -1;
-        int vY = -1;
+        nodes = findShortestPath(start, goal, graph);
+        int vX;
+        int vY;
         int v = thisAnt.getDirection();
         if (!visibleLocations.isEmpty()) {
             vX = visibleLocations.get(0).getX();
             vY = visibleLocations.get(0).getY();
         } else {
-            if(v == 0){
-                vX = thisLocation.getX();
-                vY = thisLocation.getY()+1;
-            }
-            if(v == 1){
-                vX = thisLocation.getX()+1;
-                vY = thisLocation.getY();
-            }
-            if(v == 2){
-                vX = thisLocation.getX();
-                vY = -1;
-            } else {
-                vX = -1;
-                vY = thisLocation.getY();
+            System.out.println("V; " + v);
+            switch (v) {
+                case 0:
+                    vX = thisLocation.getX();
+                    vY = thisLocation.getY() + 1;
+                    break;
+                case 1:
+                    vX = thisLocation.getX() + 1;
+                    vY = thisLocation.getY();
+                    break;
+                case 2:
+                    vX = thisLocation.getX();
+                    vY = -1;
+                    break;
+                default:
+                    vX = -1;
+                    vY = thisLocation.getY();
+                    break;
             }
         }
-        
+
         int nX = (int) nodes.get(1).getXPos();
         int nY = (int) nodes.get(1).getYPos();
-        System.out.println("nx: "+ nX+ ", nY: "+nY);
-        System.out.println("vx: "+ vX+ ", vY: "+vY);
         if (vX == nX && vY == nY) {
             return EAction.MoveForward;
         } else if (vX != nX || vY != nY) {
             if (vX == nX || vY == nY) {
                 return EAction.TurnLeft;
-            } else if (vX > nX && vY > nY && v == 0 ||              
-                       vX < nX && vY > nY && v == 3 || 
-                       vX < nX && vY < nY && v == 2 || 
-                       vX > nX && vY < nY && v == 1 )  {
+            } else if (vX > nX && vY > nY && v == 0
+                    || vX < nX && vY > nY && v == 3
+                    || vX < nX && vY < nY && v == 2
+                    || vX > nX && vY < nY && v == 1) {
                 return EAction.TurnLeft;
-            } else if (vX < nX && vY > nY && v == 0 ||              
-                       vX < nX && vY < nY && v == 3 || 
-                       vX > nX && vY < nY && v == 2 || 
-                       vX > nX && vY > nY && v == 1 ) {
+            } else if (vX < nX && vY > nY && v == 0
+                    || vX < nX && vY < nY && v == 3
+                    || vX > nX && vY < nY && v == 2
+                    || vX > nX && vY > nY && v == 1) {
                 return EAction.TurnRight;
             } else {
                 System.out.println("Pass in second if statement");
