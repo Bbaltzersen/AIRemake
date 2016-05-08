@@ -46,7 +46,16 @@ public class CarrierLogic {
 
     //use the A star to move to queens location..
     private  EAction goToQueen(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation, List<EAction> possibleActions, Graph  graph, int roundNumber, Queen queen) {
-        return  fRoute.NextStep(thisAnt,thisLocation, visibleLocations,    graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  graph.getNode(queen.posX,queen.posY), graph);
+        int antLocX = thisLocation.getX();
+        int antLocY = thisLocation.getY();
+        int queenLocX = queen.getPosX();
+        int queenLocY = queen.getPosY();
+        
+        if(antLocX == queenLocX || antLocX == queenLocX-1 || antLocX == queenLocX+1 && antLocY == queenLocY || antLocY == queenLocY-1 || antLocY == queenLocY+1){
+            return EAction.DropFood;
+        }else{
+            return  fRoute.NextStep(thisAnt,thisLocation, visibleLocations,    graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  graph.getNode(queen.getPosX(),queen.getPosY()), graph);
+        }
     }
     
 //find the closest location where there is food and pick it up..
