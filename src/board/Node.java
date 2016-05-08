@@ -20,6 +20,15 @@ public class Node implements Iterable<Edge>, Comparable<Node>
     private boolean blocked;
     private int foodCount;
     private boolean rock;
+    private boolean discovered;
+
+    public boolean isDiscovered() {
+        return discovered;
+    }
+
+    public void setDiscovered(boolean discovered) {
+        this.discovered = discovered;
+    }
     
     public boolean isRock(){
         return rock;

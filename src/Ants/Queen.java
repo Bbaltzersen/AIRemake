@@ -49,22 +49,26 @@ public class Queen {
     public EAction startProduction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
         // Position 1 // South West
         // <editor-fold defaultstate="collapsed">
-        System.out.println(startPos + starX + starY);
         if (startPos == 3) {
             System.out.println("in second");
+            System.out.println(thisLocation.getX() + thisLocation.getY());
             if (thisAnt.getFoodLoad() <= 10 && thisLocation.getFoodCount() != 0) {
                 return EAction.PickUpFood;
-            } else if (thisAnt.getFoodLoad() == 5) {
-                if (thisLocation.getX() != starX && thisLocation.getY() != starY) {
-                    return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(posX, posY), g);
-                } else if (thisLocation.getX() == starX && thisLocation.getY() == starY) {
-                    return fRoute.findDirection(starX + 1, starY, thisLocation, visibleLocations, thisAnt, false);
-                } else if (possibleActions.contains(EAction.LayEgg)) {
-                    return EAction.LayEgg;
+            } else if (g.getNode(0,3).isDiscovered() != true || g.getNode(0,3).getFoodCount() != 0 || thisAnt.getFoodLoad() <= 10 ) {
+                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(),thisLocation.getY()), g.getNode(0,3), g);
+            } else if (g.getNode(1,0).isDiscovered() != true || g.getNode(1,0).getFoodCount() != 0 || thisAnt.getFoodLoad() <= 10) {
+                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(),thisLocation.getY()), g.getNode(1,0), g);
+            } else if (thisLocation.getX() != 0 && thisLocation.getY() != 0) {
+                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(),thisLocation.getY()), g.getNode(0,0), g);
+            } else if(thisLocation.getX() == 0 && thisLocation.getY() == 0 && thisAnt.getFoodLoad() >= 5) {
+                if(thisAnt.getDirection() != 1) {
+                return fRoute.findDirection(1, 0, thisLocation, visibleLocations, thisAnt, false);
                 } else {
-                    return EAction.Pass;
+                    return EAction.LayEgg;
                 }
-            } else {
+            } 
+            else {
+                System.out.println("pass in main");
                 return EAction.Pass;
             }
 

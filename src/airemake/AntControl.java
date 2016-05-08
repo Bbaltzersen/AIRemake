@@ -25,10 +25,9 @@ import java.util.List;
  * @author bbalt
  */
 public class AntControl implements aiantwars.IAntAI {
-
+    
     Queen queen = new Queen();
     CarrierLogic carrier = new CarrierLogic();
-    
     
     Graph graph = new Graph(); // collective map
     int startPos;
@@ -42,7 +41,7 @@ public class AntControl implements aiantwars.IAntAI {
     public boolean inside(int x, int y) {
         return (x >= 0 && x < worldSizeX && y >= 0 && y < worldSizeY);
     }
-
+    
     public void edgeNeighbour(Graph g, Node[][] nodes, int x, int y, Node m, IHeuristic h) {
         if (inside(x, y)) {
             Node n = nodes[x][y];
@@ -55,14 +54,13 @@ public class AntControl implements aiantwars.IAntAI {
 
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
-        if (thisAnt.getAntType().equals(EAntType.QUEEN)) 
-        {    
+        if (thisAnt.getAntType().equals(EAntType.QUEEN)) {            
             Node[][] nodes = new Node[worldSizeX][worldSizeY];
             IHeuristic h = new EulerHeristic();
-
+            
             this.worldSizeX = worldSizeX;
             this.worldSizeY = worldSizeY;
-            
+
             // Define Start Position
             // <editor-fold defaultstate="collapsed"> </editor-fold>
             if (thisLocation.getX() == 0 || thisLocation.getY() == 0) {
@@ -77,8 +75,11 @@ public class AntControl implements aiantwars.IAntAI {
             if (thisLocation.getX() > 0 || thisLocation.getY() > 0) {
                 this.startPos = 4; // North east
             }
-            // </editor-fold>
             
+            this.starX = thisLocation.getX();
+            this.starY = thisLocation.getY();
+            // </editor-fold>
+
             // Create Board
             // <editor-fold defaultstate="collapsed">
             for (int y = 0; y < worldSizeY; ++y) {
@@ -118,74 +119,78 @@ public class AntControl implements aiantwars.IAntAI {
             // </editor-fold>
         }
     }
-
-     @Override
+    
+    @Override
     public void onStartTurn(IAntInfo thisAnt, int turn) {        
         this.roundNumber = turn;
     }
-
+    
     @Override
     public EAction chooseAction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions) {
         
         addLocationsInfoToGraph(visibleLocations);
         
-        if ( thisAnt.getAntType().equals( EAntType.QUEEN )) {
-            return queen.generalQueenControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos,roundNumber, starX, starY);
+        if (thisAnt.getAntType().equals(EAntType.QUEEN)) {
+            return queen.generalQueenControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
         }
-        if ( thisAnt.getAntType().equals( EAntType.CARRIER )) {
-            return carrier.generalCarrierControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph ,queen ,roundNumber);
+        if (thisAnt.getAntType().equals(EAntType.CARRIER)) {
+            return carrier.generalCarrierControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, queen, roundNumber);
         }
         return EAction.Pass;
     }
     
-    private void addLocationsInfoToGraph(List<ILocationInfo> visibleLocations){
-        for(ILocationInfo location : visibleLocations){
-              Node node = graph.getNode( location.getX() , location.getY() );
-            if( location.isRock() ){
+    private void addLocationsInfoToGraph(List<ILocationInfo> visibleLocations) {
+        for (ILocationInfo location : visibleLocations) {
+            Node node = graph.getNode(location.getX(), location.getY());
+            node.setDiscovered(true);
+            if (location.isRock()) {
                 node.setRock();
-            } if(location.isFilled()){
-                node.setBlocked(true);
-            } if( !location.isFilled() ){
-                node.setBlocked(false);
-            } if(location.getFoodCount() > 0 ){
-                node.setFoodCount(location.getFoodCount());
             }
+            if (location.isFilled()) {
+                node.setBlocked(true);
+            }
+            if (!location.isFilled()) {
+                node.setBlocked(false);
+            }
+            if (location.getFoodCount() > 0) {
+                node.setFoodCount(location.getFoodCount());
+            }            
         }
     }
-
+    
     @Override
     public void onLayEgg(IAntInfo thisAnt, List<EAntType> types, IEgg egg) {
         egg.set(EAntType.CARRIER, this);
     }
-
+    
     @Override
     public void onAttacked(IAntInfo thisAnt, int dir, IAntInfo attacker, int damage) {
-        System.out.println(thisAnt.antID() +" WAS ATTACKED!!!!!!!!!!!!!!!!!");
+        System.out.println(thisAnt.antID() + " WAS ATTACKED!!!!!!!!!!!!!!!!!");
     }
     
     @Override
     public void onDeath(IAntInfo thisAnt) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void onStartMatch(int worldSizeX, int worldSizeY) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void onStartRound(int round) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void onEndRound(int yourMajor, int yourMinor, int enemyMajor, int enemyMinor) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public void onEndMatch(int yourScore, int yourWins, int enemyScore, int enemyWins) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
 }
