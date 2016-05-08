@@ -18,7 +18,22 @@ public class Node implements Iterable<Edge>, Comparable<Node>
     private final double xPos;
     private final double yPos;
     private boolean blocked;
-
+    private int foodCount;
+    private boolean rock;
+    
+    public boolean isRock(){
+        return rock;
+    }
+    public void setRock(){
+        rock = true;
+    }
+    public void setFoodCount(int foodCount){
+        this.foodCount = foodCount;
+    }
+    public int getFoodCount(){
+        return foodCount;
+    }
+    
     public boolean isBlocked() {
         return blocked;
     }

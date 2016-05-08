@@ -9,6 +9,7 @@ import aiantwars.EAction;
 import aiantwars.IAntInfo;
 import aiantwars.ILocationInfo;
 import board.Edge;
+import board.Graph;
 import board.IHeuristic;
 import board.Node;
 import java.util.ArrayList;
@@ -31,11 +32,17 @@ public class AntFindPath {
         this.heuristic = heuristic;
     }
 
-    public List<Node> findShortestPath(Node start, Node goal) {
+    public List<Node> findShortestPath(Node start, Node goal , Graph graph) {
         Queue<Node> openSet = new PriorityQueue<>();
         Set<Node> closedSet = new HashSet<>();
         List<Node> path = new ArrayList<>(); 
         
+        
+        //updatet så den kan se rocks
+        for( Node node : graph.getNodes() ){
+            if( node.isRock() )
+                closedSet.add( node );
+        }
         start.setGVal(0);
         Node curNode = start;
         curNode.setPrev(null);
@@ -58,6 +65,7 @@ public class AntFindPath {
                 }
             }
             if (openSet.isEmpty()) {
+                System.out.println("IT FAILED TO CREATE  A NEW ROUT!!");
                 return null;
             }
             if (!curNode.isBlocked()) {
@@ -76,11 +84,11 @@ public class AntFindPath {
         }
     }
 
-    public EAction NextStep(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, Node start, Node goal) {
+    public EAction NextStep(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, Node start, Node goal , Graph graph) {
         System.out.println(start);
         System.out.println(goal);
         List<Node> nodes;
-        nodes = findShortestPath(start, goal);
+        nodes = findShortestPath(start, goal, graph);
         System.out.println("Nodes in path: " + nodes);
         int vX = 0;
         int vY = 0;

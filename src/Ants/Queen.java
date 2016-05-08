@@ -20,16 +20,22 @@ public class Queen {
 
     AntMethods antM = new AntMethods();
     AntFindPath fRoute = new AntFindPath(new EulerHeristic());
+    int posX;
+    int posY;
+    
+    public EAction generalQueenControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph graph, int startPos) {
 
-    public EAction generalQueenControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos) {
-
+         if(possibleActions.contains(EAction.LayEgg)){
+            return EAction.LayEgg;
+        }
+        
         // Position 1
         // <editor-fold defaultstate="collapsed">
         if (startPos == 1) {
             if (thisLocation.getFoodCount() != 0) {
                 return EAction.PickUpFood;
             }
-            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5, 5));
+            return fRoute.NextStep(thisAnt, visibleLocations,  graph.getNode(thisLocation.getX(), thisLocation.getY()),  graph.getNode(5, 5), graph);
         }
         // </editor-fold>
         
@@ -39,7 +45,7 @@ public class Queen {
             if (thisLocation.getFoodCount() != 0) {
                 return EAction.PickUpFood;
             }
-            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5, 5));
+            return fRoute.NextStep(thisAnt, visibleLocations, graph.getNode(thisLocation.getX(), thisLocation.getY()), graph.getNode(5, 5), graph);
         }
         // </editor-fold>
         
@@ -49,7 +55,7 @@ public class Queen {
             if (thisLocation.getFoodCount() != 0) {
                 return EAction.PickUpFood;
             }
-            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5, 5));
+            return fRoute.NextStep(thisAnt, visibleLocations, graph.getNode(thisLocation.getX(), thisLocation.getY()), graph.getNode(5, 5),graph);
         }
         // </editor-fold>
         
@@ -62,16 +68,16 @@ public class Queen {
             for (ILocationInfo loc : visibleLocations) {
                 if (loc.isFilled()) {
                     System.out.println("Soil inc !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    g.getNode(loc.getX(), loc.getY()).setBlocked(true);
-                    System.out.println(g.getNode(loc.getX(), loc.getY()));
+                    graph.getNode(loc.getX(), loc.getY()).setBlocked(true);
+                    System.out.println(graph.getNode(loc.getX(), loc.getY()));
                 }
                 if (loc.isRock()) {
                     System.out.println("ROOOOOOOOOOOOOOOOOOOOOOOCKED");
-                    g.getNode(loc.getX(), loc.getY()).setBlocked(true);
-                    System.out.println(g.getNode(loc.getX(), loc.getY()));
+                    graph.getNode(loc.getX(), loc.getY()).setBlocked(true);
+                    System.out.println(graph.getNode(loc.getX(), loc.getY()));
                 }
             }
-            return fRoute.NextStep(thisAnt, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(5, 5));
+            return fRoute.NextStep(thisAnt, visibleLocations, graph.getNode(thisLocation.getX(), thisLocation.getY()), graph.getNode(5, 5),graph);
         } else {
             System.out.println("Pass in main");
             return EAction.Pass;
@@ -94,4 +100,11 @@ public class Queen {
 
         }
     }
+    
+         public int getYpos(){
+         return this.posY;
+     }
+     public int getXpos(){
+         return this.posX;
+     }
 }
