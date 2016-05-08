@@ -128,11 +128,11 @@ public class AntControl implements aiantwars.IAntAI {
         
         addLocationsInfoToGraph(visibleLocations);
         
-        if (thisAnt.getAntType().equals(EAntType.QUEEN)) {
-            return queen.generalQueenControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos);
+        if ( thisAnt.getAntType().equals( EAntType.QUEEN )) {
+            return queen.generalQueenControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos,roundNumber);
         }
-        if (thisAnt.getAntType().equals(EAntType.CARRIER)) {
-            return carrier.generalCarrierControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, roundNumber,queen);
+        if ( thisAnt.getAntType().equals( EAntType.CARRIER )) {
+            return carrier.generalCarrierControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph ,queen ,roundNumber);
         }
         return EAction.Pass;
     }
@@ -140,17 +140,15 @@ public class AntControl implements aiantwars.IAntAI {
     private void addLocationsInfoToGraph(List<ILocationInfo> visibleLocations){
         for(ILocationInfo location : visibleLocations){
               Node node = graph.getNode( location.getX() , location.getY() );
-              if( node.isRock() ){ 
-                  System.out.println("node is rock");
-              }else{
-                  if( location.isRock() ){
-                      node.setRock();
-                  }else if(location.isFilled()){
-                      node.setBlocked(true);
-                  }else if(location.getFoodCount() > 0 ){
-                      node.setFoodCount(location.getFoodCount());
-                  }
-              }
+            if( location.isRock() ){
+                node.setRock();
+            } if(location.isFilled()){
+                node.setBlocked(true);
+            } if( !location.isFilled() ){
+                node.setBlocked(false);
+            } if(location.getFoodCount() > 0 ){
+                node.setFoodCount(location.getFoodCount());
+            }
         }
     }
 
@@ -161,7 +159,7 @@ public class AntControl implements aiantwars.IAntAI {
 
     @Override
     public void onAttacked(IAntInfo thisAnt, int dir, IAntInfo attacker, int damage) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println(thisAnt.antID() +" WAS ATTACKED!!!!!!!!!!!!!!!!!");
     }
     
     @Override
