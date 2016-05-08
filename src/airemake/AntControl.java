@@ -32,6 +32,8 @@ public class AntControl implements aiantwars.IAntAI {
     
     Graph graph = new Graph(); // collective map
     int startPos;
+    int starX;
+    int starY;
     int worldSizeX;
     int worldSizeY;
     int roundNumber;
@@ -128,7 +130,7 @@ public class AntControl implements aiantwars.IAntAI {
         addLocationsInfoToGraph(visibleLocations);
         
         if ( thisAnt.getAntType().equals( EAntType.QUEEN )) {
-            return queen.generalQueenControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos,roundNumber);
+            return queen.generalQueenControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos,roundNumber, starX, starY);
         }
         if ( thisAnt.getAntType().equals( EAntType.CARRIER )) {
             return carrier.generalCarrierControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph ,queen ,roundNumber);

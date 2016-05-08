@@ -71,7 +71,7 @@ public class AntFindPath {
                     do {
                         res.add(curNode);
                         curNode = curNode.getPrev();
-                        
+
                     } while (curNode != null);
                     Collections.reverse(res);
                     return res;
@@ -85,14 +85,27 @@ public class AntFindPath {
 
         List<Node> nodes;
         nodes = findShortestPath(start, goal, graph);
-        int vX;
-        int vY;
         int v = thisAnt.getDirection();
+
+        int nX = 0;
+        int nY = 0;
+
+        if (nodes.size() >= 2) {
+            nX = (int) nodes.get(1).getXPos();
+            nY = (int) nodes.get(1).getYPos();
+        }
+
+        return findDirection(nX, nY, thisLocation, visibleLocations, thisAnt, true);
+    }
+
+    public EAction findDirection(int nX, int nY, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, IAntInfo thisAnt, boolean move) {
+        int v = thisAnt.getDirection();
+        int vX = -1;
+        int vY = -1;
         if (!visibleLocations.isEmpty()) {
             vX = visibleLocations.get(0).getX();
             vY = visibleLocations.get(0).getY();
         } else {
-            System.out.println("V; " + v);
             switch (v) {
                 case 0:
                     vX = thisLocation.getX();
@@ -112,39 +125,25 @@ public class AntFindPath {
                     break;
             }
         }
-        int nX = 0;
-        int nY = 0;
 
-        if(nodes.size() >= 2) {
-        nX = (int) nodes.get(1).getXPos();
-        nY = (int) nodes.get(1).getYPos();
-        } else {
-            System.out.println("Pass in Node array check");
-            return EAction.Pass;
-        }
-        
-        if (vX == nX && vY == nY) {
+        if (move == true && vX == nX && vY == nY) {
             return EAction.MoveForward;
-        } else if (vX != nX || vY != nY) {
-            if (vX == nX || vY == nY) {
-                return EAction.TurnLeft;
-            } else if (vX > nX && vY > nY && v == 0
-                    || vX < nX && vY > nY && v == 3
-                    || vX < nX && vY < nY && v == 2
-                    || vX > nX && vY < nY && v == 1) {
-                return EAction.TurnLeft;
-            } else if (vX < nX && vY > nY && v == 0
-                    || vX < nX && vY < nY && v == 3
-                    || vX > nX && vY < nY && v == 2
-                    || vX > nX && vY > nY && v == 1) {
-                return EAction.TurnRight;
-            } else {
-                System.out.println("Pass in second if statement");
-                return EAction.Pass;
-            }
+        } else if (vX == nX || vY == nY) {
+            return EAction.TurnLeft;
+        } else if (vX > nX && vY > nY && v == 0
+                || vX < nX && vY > nY && v == 3
+                || vX < nX && vY < nY && v == 2
+                || vX > nX && vY < nY && v == 1) {
+            return EAction.TurnLeft;
+        } else if (vX < nX && vY > nY && v == 0
+                || vX < nX && vY < nY && v == 3
+                || vX > nX && vY < nY && v == 2
+                || vX > nX && vY > nY && v == 1) {
+            return EAction.TurnRight;
         } else {
-            System.out.println("Pass in first if statement");
+            System.out.println("Pass in second if statement");
             return EAction.Pass;
         }
     }
+
 }

@@ -24,7 +24,7 @@ public class Queen {
     AntFindPath fRoute = new AntFindPath(new EulerHeristic());
     int posX,posY ;
     
-    public EAction generalQueenControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber) {
+    public EAction generalQueenControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
         setPosX( thisLocation.getX() );
         setPosY( thisLocation.getY() );
         
@@ -39,14 +39,53 @@ public class Queen {
         }
         
         if (roundNumber > 20) {
-            return startProduction(thisAnt, thisLocation, visibleLocations, possibleActions, g, startPos, roundNumber);
+            return startProduction(thisAnt, thisLocation, visibleLocations, possibleActions, g, startPos, roundNumber, starX, starY);
         } else {
             return EAction.Pass;
         }
         
     }
     
-    public EAction startProduction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber) {
+    public EAction startProduction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
+        // Position 1 // South West
+        // <editor-fold defaultstate="collapsed">
+        if (startPos == 1) {
+            if(thisAnt.getFoodLoad() <= 10 && thisLocation.getFoodCount() != 0) {
+                return EAction.PickUpFood;
+            } else if(thisAnt.getFoodLoad() == 5) {
+                if(thisLocation.getX() != posX && thisLocation.getY() != posY) {
+                fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(posX, posY), g);
+                }
+            }
+            
+        }
+        // </editor-fold>
+        
+        // Position 2 // North East
+        // <editor-fold defaultstate="collapsed">
+        if (startPos == 2) {
+            return EAction.Pass;
+        }
+        // </editor-fold>
+        
+        // Position 3 // South East
+        // <editor-fold defaultstate="collapsed">
+        if (startPos == 3) {
+            return EAction.Pass;
+        }
+        // </editor-fold>
+        
+        // Position 4 and else // South West
+        // <editor-fold defaultstate="collapsed">
+        if (startPos == 4) {
+            return EAction.Pass;
+        } else {
+            return EAction.Pass;
+        }
+        // </editor-fold>
+    }
+    
+    public EAction stallGame(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber) {
         // Position 1 // South West
         // <editor-fold defaultstate="collapsed">
         if (startPos == 1) {
@@ -61,14 +100,14 @@ public class Queen {
         }
         // </editor-fold>
         
-        // Position 3 // South West
+        // Position 3 // South East
         // <editor-fold defaultstate="collapsed">
         if (startPos == 3) {
             return EAction.Pass;
         }
         // </editor-fold>
         
-        // Position 4 and else
+        // Position 4 and else // South West
         // <editor-fold defaultstate="collapsed">
         if (startPos == 4) {
             return EAction.Pass;
@@ -78,12 +117,6 @@ public class Queen {
         // </editor-fold>
     }
     
-    public Node getNodeByXAndY(int x, int y, List<Node> lN) {
-        for(Node n : lN) {
-            if(x == n.getXPos() && y == n.getYPos()) return n;
-        }
-        return null;
-    }
     
     public void setPosX(int x){
         this.posX = x;
