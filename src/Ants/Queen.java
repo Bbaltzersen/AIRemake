@@ -53,10 +53,16 @@ public class Queen {
             if(thisAnt.getFoodLoad() <= 10 && thisLocation.getFoodCount() != 0) {
                 return EAction.PickUpFood;
             } else if(thisAnt.getFoodLoad() == 5) {
-                if(thisLocation.getX() != posX && thisLocation.getY() != posY) {
-                fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(posX, posY), g);
+                if(thisLocation.getX() != starX && thisLocation.getY() != starY) {
+                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(posX, posY), g);
+                } else if (thisLocation.getX() == starX && thisLocation.getY() == starY) {
+                    return fRoute.findDirection(starX + 1, starY, thisLocation, visibleLocations, thisAnt, false);
+                } else if (possibleActions.contains(EAction.LayEgg)) {
+                    return EAction.LayEgg;
+                } else {
+                    return EAction.Pass;
                 }
-            }
+            } 
             
         }
         // </editor-fold>
@@ -64,21 +70,39 @@ public class Queen {
         // Position 2 // North East
         // <editor-fold defaultstate="collapsed">
         if (startPos == 2) {
-            return EAction.Pass;
+            if(thisAnt.getFoodLoad() <= 10 && thisLocation.getFoodCount() != 0) {
+                return EAction.PickUpFood;
+            } else if(thisAnt.getFoodLoad() == 5) {
+                if(thisLocation.getX() != starX && thisLocation.getY() != starY) {
+                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(posX, posY), g);
+                }
+            }
         }
         // </editor-fold>
         
         // Position 3 // South East
         // <editor-fold defaultstate="collapsed">
         if (startPos == 3) {
-            return EAction.Pass;
+            if(thisAnt.getFoodLoad() <= 10 && thisLocation.getFoodCount() != 0) {
+                return EAction.PickUpFood;
+            } else if(thisAnt.getFoodLoad() == 5) {
+                if(thisLocation.getX() != posX && thisLocation.getY() != posY) {
+                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(posX, posY), g);
+                }
+            }
         }
         // </editor-fold>
         
         // Position 4 and else // South West
         // <editor-fold defaultstate="collapsed">
         if (startPos == 4) {
-            return EAction.Pass;
+            if(thisAnt.getFoodLoad() <= 10 && thisLocation.getFoodCount() != 0) {
+                return EAction.PickUpFood;
+            } else if(thisAnt.getFoodLoad() == 5) {
+                if(thisLocation.getX() != posX && thisLocation.getY() != posY) {
+                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(posX, posY), g);
+                }
+            }
         } else {
             return EAction.Pass;
         }
