@@ -93,6 +93,7 @@ public class AntFindPath {
         System.out.println("Nodes in path: " + nodes);
         int vX = -1;
         int vY = -1;
+        int v = thisAnt.getDirection();
         if (!visibleLocations.isEmpty()) {
             vX = visibleLocations.get(0).getX();
             vY = visibleLocations.get(0).getY();
@@ -107,9 +108,15 @@ public class AntFindPath {
         } else if (vX != nX || vY != nY) {
             if (vX == nX || vY == nY) {
                 return EAction.TurnLeft;
-            } else if (vX < nX && vY < nY || vX > nX && vY > nY || vX > nX && vY < nY) {
+            } else if (vX > nX && vY > nY && v == 0 ||              
+                       vX < nX && vY > nY && v == 3 || 
+                       vX < nX && vY < nY && v == 2 || 
+                       vX > nX && vY < nY && v == 1  ) {
                 return EAction.TurnLeft;
-            } else if (vX < nX && vY > nY) {
+            } else if (vX < nX && vY > nY && v == 0 ||              
+                       vX < nX && vY < nY && v == 3 || 
+                       vX > nX && vY < nY && v == 2 || 
+                       vX > nX && vY > nY && v == 1 ) {
                 return EAction.TurnRight;
             } else {
                 System.out.println("Pass in second if statement");
