@@ -31,54 +31,55 @@ public class AntFindPath {
         this.heuristic = heuristic;
     }
 
-    public ArrayList<Node> findShortestPath(Node start, Node goal) {
+    public List<Node> findShortestPath(Node start, Node goal) {
         Queue<Node> openSet = new PriorityQueue<>();
         Set<Node> closedSet = new HashSet<>();
+        List<Node> path = new ArrayList<>(); 
         
         start.setGVal(0);
         Node curNode = start;
         curNode.setPrev(null);
         while (true) {
             for (Edge edge : curNode) {
+
                 Node other = edge.getEnd();
-                if (!closedSet.contains(other) && !other.isBlocked()) {
-                    double newG = edge.getWeight() + curNode.getGVal();
-                    if (other.getGVal() > newG) {
-                        other.setGVal(newG);
-                        other.setPrev(curNode);
-                    }
-                    if (!openSet.contains(other)) {
-                        other.setHVal(heuristic.getMinimumDist(other, goal));
-                        openSet.add(other);
+                if (!other.isBlocked()) {
+                    if (!closedSet.contains(other)) {
+                        double newG = edge.getWeight() + curNode.getGVal();
+                        if (other.getGVal() > newG) {
+                            other.setGVal(newG);
+                            other.setPrev(curNode);
+                        }
+                        if (!openSet.contains(other)) {
+                            other.setHVal(heuristic.getMinimumDist(other, goal));
+                            openSet.add(other);
+                        }
                     }
                 }
             }
             if (openSet.isEmpty()) {
                 return null;
             }
-            closedSet.add(curNode);
+            if (!curNode.isBlocked()) {
+                closedSet.add(curNode);
+                path.add(curNode);
+            }
+            
             curNode = openSet.poll();
             {
                 if (curNode == goal) {
-                    ArrayList<Node> res = new ArrayList<>();
-                    do {
-                        res.add(curNode);
-                        Node changeNode = curNode;
-                        curNode.setGVal(0);
-                        curNode.setHVal(0);
-                        curNode = curNode.getPrev();
-                    } while (curNode != null);
-                    Collections.reverse(res);
-                    return res;
+                    path.add(goal);
+                    return path;
                 }
             }
+            
         }
     }
 
     public EAction NextStep(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, Node start, Node goal) {
         System.out.println(start);
         System.out.println(goal);
-        ArrayList<Node> nodes;
+        List<Node> nodes;
         nodes = findShortestPath(start, goal);
         System.out.println("Nodes in path: " + nodes);
         int vX = 0;

@@ -42,6 +42,16 @@ public class Graph
        edges.add(edge);
     }
     
+    public void setBlocked(int x, int y, boolean a) {
+        System.out.println("Inside SETBLOCKED");
+        for(Node node : nodes) {
+            if(node.getXPos() == x && node.getYPos() == y) {
+                node.setBlocked(a);
+                System.out.println("NOW BLOCKED");
+            }
+        }
+    }
+    
     public Node getNode(int x, int y) {
         for(Node node : nodes) {
             if(node.getXPos() == x && node.getYPos() == y) {
