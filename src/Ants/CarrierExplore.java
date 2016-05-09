@@ -38,6 +38,8 @@ public class CarrierExplore {
         }
         if(possibleActions.contains(EAction.DigOut)) {
             return EAction.DigOut;
+        } else {
+            return EAction.Pass;
         }
         
     }
