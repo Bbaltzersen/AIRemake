@@ -33,7 +33,7 @@ public class Queen {
         }
 
         if (roundNumber < 50) {
- 
+
             return startProduction(thisAnt, thisLocation, visibleLocations, possibleActions, g, startPos, roundNumber, starX, starY);
         } else {
             return EAction.Pass;
@@ -44,9 +44,9 @@ public class Queen {
     public EAction startProduction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
         // Position 1 // South West
         // <editor-fold defaultstate="collapsed">
-  
+
         if (startPos == 1) {
-            
+
             if (thisAnt.getFoodLoad() < 10 && thisLocation.getFoodCount() != 0) {
                 g.getNode(0, 1).setFoodCount(thisLocation.getFoodCount() - 1);
                 return EAction.PickUpFood;
@@ -82,18 +82,18 @@ public class Queen {
                 return EAction.PickUpFood;
 
             } else if (g.getNode(starX, starY - 1).getFoodCount() != 0 || !g.getNode(starX, starY - 1).isDiscovered()) {
-       
+
                 return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY - 1), g);
             } else if (g.getNode(starX - 1, starY).getFoodCount() != 0 && !g.getNode(1, 0).isDiscovered() && thisAnt.getFoodLoad() != 10) {
-          
+
                 return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY - 1), g);
             } else if (thisLocation.getX() != starX || thisLocation.getY() != starY) {
-     
+
                 return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
             } else if (thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getFoodLoad() >= 5) {
-          
+
                 if (thisAnt.getDirection() != 2) {
-            
+
                     return fRoute.findDirection(starX, starY - 1, thisLocation, visibleLocations, thisAnt, false);
                 } else {
 
@@ -114,16 +114,16 @@ public class Queen {
                 return EAction.PickUpFood;
 
             } else if (g.getNode(starX + 1, starY).getFoodCount() != 0 || !g.getNode(starX + 1, starY).isDiscovered()) {
-      
+
                 return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX + 1, starY), g);
             } else if (g.getNode(starX, starY - 1).getFoodCount() != 0 && !g.getNode(starX, starY - 1).isDiscovered() && thisAnt.getFoodLoad() != 10) {
-       
+
                 return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX - 1, starY), g);
             } else if (thisLocation.getX() != starX || thisLocation.getY() != starY) {
-           
+
                 return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
             } else if (thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getFoodLoad() >= 5) {
-          
+
                 if (thisAnt.getDirection() != 2) {
 
                     return fRoute.findDirection(starX - 1, starY, thisLocation, visibleLocations, thisAnt, false);
@@ -138,7 +138,7 @@ public class Queen {
         // Position 4 and else // South West
         //<editor-fold defaultstate="collapsed">
         if (startPos == 3) {
-        
+
             System.out.println(thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getFoodLoad() >= 5);
 
             if (thisAnt.getFoodLoad() < 10 && thisLocation.getFoodCount() != 0) {
@@ -152,7 +152,7 @@ public class Queen {
 
                 return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX + 1, starY), g);
             } else if (thisLocation.getX() != starX || thisLocation.getY() != starY) {
-     
+
                 return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
             } else if (thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getFoodLoad() >= 5) {
 
@@ -167,7 +167,7 @@ public class Queen {
                 return EAction.Pass;
             }
         } else {
-       
+
             return EAction.Pass;
         }
         // </editor-fold>
@@ -181,17 +181,16 @@ public class Queen {
                 g.getNode(0, 1).setFoodCount(thisLocation.getFoodCount() - 1);
                 return EAction.PickUpFood;
 
-            }else if(g.getNode(starX+1, starY).getFoodCount() >= 10) {
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX+1, starY), g);
-            }else if(thisLocation.getX() == starX+1 && thisLocation.getY() == starY && g.getNode(starX+1, starY).getFoodCount() == 0) {
+            } else if (g.getNode(starX + 1, starY).getFoodCount() >= 10) {
+                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX + 1, starY), g);
+            } else if (thisLocation.getX() == starX + 1 && thisLocation.getY() == starY && g.getNode(starX + 1, starY).getFoodCount() == 0) {
                 return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
-            }else if(thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getDirection() != 1) {
+            } else if (thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getDirection() != 1) {
                 return fRoute.findDirection(1, 0, thisLocation, visibleLocations, thisAnt, false);
             } else {
                 return EAction.Pass;
             }
-            
-            
+
         }
         // </editor-fold>
 
@@ -202,11 +201,11 @@ public class Queen {
                 g.getNode(starX + 1, starY).setFoodCount(thisLocation.getFoodCount() - 1);
                 return EAction.PickUpFood;
 
-            }else if(g.getNode(starX + 1, starY).getFoodCount() >= 10) {
+            } else if (g.getNode(starX + 1, starY).getFoodCount() >= 10) {
                 return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX + 1, starY), g);
-            }else if(thisLocation.getX() == starX+1 && thisLocation.getY() == starY && g.getNode(starX+1, starY).getFoodCount() == 0) {
+            } else if (thisLocation.getX() == starX + 1 && thisLocation.getY() == starY && g.getNode(starX + 1, starY).getFoodCount() == 0) {
                 return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
-            }else if(thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getDirection() != 1) {
+            } else if (thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getDirection() != 1) {
                 return fRoute.findDirection(starX + 1, starY, thisLocation, visibleLocations, thisAnt, false);
             } else {
                 return EAction.Pass;
@@ -221,11 +220,11 @@ public class Queen {
                 g.getNode(starX - 1, starY).setFoodCount(thisLocation.getFoodCount() - 1);
                 return EAction.PickUpFood;
 
-            }else if(g.getNode(starX - 1, starY).getFoodCount() >= 10) {
+            } else if (g.getNode(starX - 1, starY).getFoodCount() >= 10) {
                 return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX - 1, starY), g);
-            }else if(thisLocation.getX() == starX+1 && thisLocation.getY() == starY && g.getNode(starX+1, starY).getFoodCount() == 0) {
+            } else if (thisLocation.getX() == starX + 1 && thisLocation.getY() == starY && g.getNode(starX + 1, starY).getFoodCount() == 0) {
                 return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
-            }else if(thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getDirection() != 1) {
+            } else if (thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getDirection() != 1) {
                 return fRoute.findDirection(starX - 1, starY, thisLocation, visibleLocations, thisAnt, false);
             } else {
                 return EAction.Pass;
@@ -240,11 +239,11 @@ public class Queen {
                 g.getNode(0, 1).setFoodCount(thisLocation.getFoodCount() - 1);
                 return EAction.PickUpFood;
 
-            }else if(g.getNode(starX, starY - 1).getFoodCount() >= 10) {
+            } else if (g.getNode(starX, starY - 1).getFoodCount() >= 10) {
                 return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY - 1), g);
-            }else if(thisLocation.getX() == starX+1 && thisLocation.getY() == starY && g.getNode(starX, starY - 1).getFoodCount() == 0) {
+            } else if (thisLocation.getX() == starX + 1 && thisLocation.getY() == starY && g.getNode(starX, starY - 1).getFoodCount() == 0) {
                 return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
-            }else if(thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getDirection() != 1) {
+            } else if (thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getDirection() != 1) {
                 return fRoute.findDirection(starX, starY - 1, thisLocation, visibleLocations, thisAnt, false);
             } else {
                 return EAction.Pass;

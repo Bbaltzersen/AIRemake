@@ -26,50 +26,43 @@ public class CarrierExplore {
         for (Node n : nodes) {
             n.resetNode();
         } 
-        if (thisAnt.getFoodLoad() < 10 && thisLocation.getFoodCount() != 0) {
-                g.getNode(0, 1).setFoodCount(thisLocation.getFoodCount() - 1);
+        if (thisAnt.getFoodLoad() < 10 && thisLocation.getFoodCount() != 0 && g.getNode(thisLocation.getX(), thisLocation.getY()) != getToStartGoal(starX, starY, startPos, g) ) {
+                g.getNode(thisLocation.getX(), thisLocation.getY()).setFoodCount(thisLocation.getFoodCount() - 1);
                 return EAction.PickUpFood;
 
         } else if (thisAnt.getFoodLoad() == 10){
-            return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(1,1), g);
+            return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), getToStartGoal(starX, starY, startPos, g), g);
+        } if(g.getNode(thisLocation.getX(), thisLocation.getY()) == getToStartGoal(starX, starY, startPos, g)) {
+            g.getNode(thisLocation.getX(), thisLocation.getY()).setFoodCount(thisLocation.getFoodCount() + 1);
+            return EAction.DropFood;
         }
         if(possibleActions.contains(EAction.DigOut)) {
             return EAction.DigOut;
         }
-        return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(new AntControl().getWorldSizeX()/2, new AntControl().getWorldSizeY()/2), g);
+        
     }
     
-    public Node getXFromPos(int starX, int starY, int sPos, Graph g) {
+    public Node getToStartGoal(int starX, int starY, int sPos, Graph g) {
+        System.out.println(starY + ", "+ starX);
         if(sPos == 1) {
+            System.out.println("node pos1´: " +g.getNode(starX+1, starY));
             return g.getNode(starX+1, starY);
         }
         if(sPos == 2) {
-            return g.getNode(starX-1, starY);
+            System.out.println("node pos2 :"+ g.getNode(starX, starY-1));
+            System.out.println(g.getNode(0, 8));
+            System.out.println(g.getNode(8, 0));
+            return g.getNode(starX, starY-1);
         }
         if(sPos == 3) {
+            System.out.println("node pos3 "+g.getNode(starX, starY+1));
             return g.getNode(starX, starY+1);
         }
         if(sPos == 4){
+            System.out.println("node pos3: "+g.getNode(starX, starY-1));
             return g.getNode(starX, starY-1);
         }else {
            return g.getNode(starX, starY);
-        }
-    }
-    
-    public int getYFromPos(int y) {
-        if(y == 1) {
-            return 0;
-        }
-        if(y == 2) {
-            return new AntControl().getWorldSizeY() - 1;
-        }
-        if(y == 3) {
-            return 0;
-        }
-        if(y == 4){
-            return new AntControl().getWorldSizeY() - 1;
-        }else {
-        return 0;
         }
     }
 }
