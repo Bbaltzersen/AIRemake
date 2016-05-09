@@ -5,7 +5,7 @@
  */
 package airemake;
 
-import Ants.AntMethods;
+import Ants.CarrierExplore;
 import Ants.CarrierLogic;
 //import static Ants.CarrierLogic.generalCarrierControl;
 import Ants.Queen;
@@ -27,7 +27,7 @@ import java.util.List;
 public class AntControl implements aiantwars.IAntAI {
     
     Queen queen = new Queen();
-    CarrierLogic carrier = new CarrierLogic();
+    CarrierExplore carrier = new CarrierExplore();
     
     Graph graph = new Graph(); // collective map
     int startPos;
@@ -35,6 +35,14 @@ public class AntControl implements aiantwars.IAntAI {
     int starY;
     int worldSizeX;
     int worldSizeY;
+
+    public int getWorldSizeX() {
+        return worldSizeX;
+    }
+
+    public int getWorldSizeY() {
+        return worldSizeY;
+    }
     int roundNumber;
 
     // <editor-fold defaultstate="collapsed">  
@@ -75,8 +83,6 @@ public class AntControl implements aiantwars.IAntAI {
             if (thisLocation.getX() > 0 && thisLocation.getY() > 0) {
                 this.startPos = 4; // North east
             }
-            System.out.println("start: " + startPos);
-            System.out.println(thisLocation.getX() + ", " + thisLocation.getY());
             this.starX = thisLocation.getX();
             this.starY = thisLocation.getY();
             // </editor-fold>
@@ -88,7 +94,6 @@ public class AntControl implements aiantwars.IAntAI {
                     nodes[x][y] = graph.createNode("N", x, y);
                 }
             }
-            System.out.println("Success B " + graph.getNodes());
             // </editor-fold>
 
             // Create Edges
@@ -116,7 +121,6 @@ public class AntControl implements aiantwars.IAntAI {
                     }
                 }
             }
-            System.out.println("Getting List: " + graph.getNodes().size());
             // </editor-fold>
         }
     }
@@ -135,7 +139,7 @@ public class AntControl implements aiantwars.IAntAI {
             return queen.generalQueenControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
         }
         if (thisAnt.getAntType().equals(EAntType.CARRIER)) {
-            return carrier.generalCarrierControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, queen, roundNumber);
+            return carrier.exploreRandom(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
         }
         return EAction.Pass;
     }
@@ -166,32 +170,26 @@ public class AntControl implements aiantwars.IAntAI {
     
     @Override
     public void onAttacked(IAntInfo thisAnt, int dir, IAntInfo attacker, int damage) {
-        System.out.println(thisAnt.antID() + " WAS ATTACKED!!!!!!!!!!!!!!!!!");
-    }
+        }
     
     @Override
     public void onDeath(IAntInfo thisAnt) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        }
     
     @Override
     public void onStartMatch(int worldSizeX, int worldSizeY) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+        }
     
     @Override
     public void onStartRound(int round) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+      }
     
     @Override
     public void onEndRound(int yourMajor, int yourMinor, int enemyMajor, int enemyMinor) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+       }
     
     @Override
     public void onEndMatch(int yourScore, int yourWins, int enemyScore, int enemyWins) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+     }
     
 }
