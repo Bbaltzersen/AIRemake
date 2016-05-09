@@ -32,11 +32,15 @@ public class Queen {
             n.resetNode();
         }
 
-        if (roundNumber < 50) {
+        if(thisAnt.getHealth() > 10 && possibleActions.contains(EAction.EatFood)) {
+            return EAction.EatFood;
+        }
+        
+        if (roundNumber < 15) {
 
             return startProduction(thisAnt, thisLocation, visibleLocations, possibleActions, g, startPos, roundNumber, starX, starY);
         } else {
-            return EAction.Pass;
+            return stallGame(thisAnt, thisLocation, visibleLocations, possibleActions, g, startPos, roundNumber, starX, starY);
         }
 
     }
