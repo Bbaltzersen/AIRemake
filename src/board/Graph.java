@@ -43,11 +43,9 @@ public class Graph
     }
     
     public void setBlocked(int x, int y, boolean a) {
-        System.out.println("Inside SETBLOCKED");
         for(Node node : nodes) {
             if(node.getXPos() == x && node.getYPos() == y) {
                 node.setBlocked(a);
-                System.out.println("NOW BLOCKED");
             }
         }
     }

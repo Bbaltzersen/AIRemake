@@ -23,7 +23,6 @@ public class CarrierExplore {
     AntFindPath fRoute = new AntFindPath(new EulerHeristic());
 
     public EAction exploreRandom(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
-        System.out.println(g.getNode(thisLocation.getX(), thisLocation.getY()) != getToStartGoal(starX, starY, startPos, g));
         List<Node> nodes = g.getNodes();
         for (Node n : nodes) {
             n.resetNode();
@@ -38,7 +37,6 @@ public class CarrierExplore {
         if (possibleActions.contains(EAction.DigOut)) {
             return EAction.DigOut;
         } else if (thisAnt.getFoodLoad() < 10) {
-            System.out.println("got in here!");
             return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(new AntControl().getWorldSizeX() / 2, new AntControl().getWorldSizeY() / 2), g);
 
         } else {
