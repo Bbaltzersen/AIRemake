@@ -89,16 +89,18 @@ public class AntFindPath {
 
         int nX = 0;
         int nY = 0;
-
+        if(nodes != null) {
         if (nodes.size() >= 2) {
             nX = (int) nodes.get(1).getXPos();
             nY = (int) nodes.get(1).getYPos();
+        }
         }
 
         return findDirection(nX, nY, thisLocation, visibleLocations, thisAnt, true);
     }
 
     public EAction findDirection(int nX, int nY, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, IAntInfo thisAnt, boolean move) {
+       
         int v = thisAnt.getDirection();
         int vX = -1;
         int vY = -1;
@@ -119,12 +121,14 @@ public class AntFindPath {
                     vX = thisLocation.getX();
                     vY = -1;
                     break;
-                default:
+                case 3:
                     vX = -1;
                     vY = thisLocation.getY();
                     break;
+                       
             }
         }
+        System.out.println();
 
         if (move == true && vX == nX && vY == nY) {
             return EAction.MoveForward;
@@ -141,7 +145,7 @@ public class AntFindPath {
                 || vX > nX && vY > nY && v == 1) {
             return EAction.TurnRight;
         } else {
-            System.out.println("Pass in second if statement");
+           
             return EAction.Pass;
         }
     }
