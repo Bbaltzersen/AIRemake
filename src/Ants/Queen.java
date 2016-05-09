@@ -36,7 +36,7 @@ public class Queen {
             return EAction.EatFood;
         }
         
-        if (roundNumber < 15) {
+        if (roundNumber < 50) {
 
             return startProduction(thisAnt, thisLocation, visibleLocations, possibleActions, g, startPos, roundNumber, starX, starY);
         } else {
