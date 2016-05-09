@@ -35,10 +35,6 @@ public class CarrierExplore {
         } else if (thisAnt.getFoodLoad() == 10) {
             return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), getToStartGoal(starX, starY, startPos, g), g);
         }
-        if (g.getNode(thisLocation.getX(), thisLocation.getY()) == getToStartGoal(starX, starY, startPos, g)) {
-            g.getNode(thisLocation.getX(), thisLocation.getY()).setFoodCount(thisLocation.getFoodCount() + 1);
-            return EAction.DropFood;
-        }
         if (possibleActions.contains(EAction.DigOut)) {
             return EAction.DigOut;
         } else if (thisAnt.getFoodLoad() < 10) {
