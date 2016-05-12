@@ -25,7 +25,7 @@ public class CarrierExplore {
     public EAction exploreRandom(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
         List<Node> nodes = g.getNodes();
         for (Node n : nodes) {
-            n.resetNode();
+            n.resetNode(); // du bruger resetNode flere steder, hvorfor?? er det kun for at sætte previous node til null??
         }
         if (thisAnt.getFoodLoad() < 10 && thisLocation.getFoodCount() != 0 ) {
             g.getNode(thisLocation.getX(), thisLocation.getY()).setFoodCount(thisLocation.getFoodCount() - 1);

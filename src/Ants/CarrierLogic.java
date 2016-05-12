@@ -20,7 +20,8 @@ public class CarrierLogic {
            
     public  EAction generalCarrierControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations
             , List<EAction> possibleActions, Graph graph,Queen queen , int roundNumber) {
-        
+     
+        //hvis der er food på nodes i graph, -tilføj til foodNodes
         List<Node> foodNodes = new ArrayList();
         for(Node node : graph.getNodes()){
             if(node.getFoodCount() > 0){
@@ -62,41 +63,62 @@ public class CarrierLogic {
     private  EAction findFood(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation
             , List<EAction> possibleActions, Graph graph, int roundNumber,Queen queen) {
        
-        Node targetNode;
+        Node targetNode = null;
         
         if( thisLocation.getFoodCount() > 0 ){
+            System.out.println("carrier eats food");
            return EAction.PickUpFood;
         }
         else {
             // her vil jeg gerne lave en algoritme som lopper igennem alle nodes som indeholder food, og vælge den der er tættest på denne carrier ant.
-            List<Node> shortestPathToFood = new ArrayList(); 
-            List<Node>temp = new ArrayList();
+            List<Node> shortestPathToFood = null;//new ArrayList(); 
+            List<Node>temp;// = new ArrayList();
             
             for( Node node : graph.getNodes() ){
                 if( node.getFoodCount() > 0){
                     temp = fRoute.findShortestPath( graph.getNode( thisLocation.getX(), thisLocation.getY() ), node, graph );
-                    try{
-                        if( temp.size() < shortestPathToFood.size() || shortestPathToFood.isEmpty() ){
-                            shortestPathToFood = temp;
-                        }
-                    }catch(Exception e){
-                        System.out.println("EXCEPTION THROWN : "+e);
+                    if(temp != null){
+    //                    try{
+    //                        System.out.println("temp Array size = "+temp.size());
+    //                        System.out.println("shortest path size = "+shortestPathToFood.size());
+
+                            if(shortestPathToFood == null){
+                                shortestPathToFood = temp;
+                            }
+                            else if( temp.size() < shortestPathToFood.size() ){ //shortestPathToFood.isEmpty()
+                                shortestPathToFood = temp;
+                            }
+    //                    }catch(Exception nullPointer){
+    //                        System.out.println("EXCEPTION THROWN, no visible food on map: "+nullPointer);
+    //                    }
                     }
                 }
+            }   
+//            for( Node node : shortestPathToFood){
+//                System.out.println(node.getXPos()+" , "+node.getYPos()+" THIS WAS SHORTEST PATH TO FOOD!!");
+//            }
+            try{
+                targetNode = shortestPathToFood.get( shortestPathToFood.size() -1); 
+            }catch(Exception nullPointer){
+                System.out.println("nullPointer exception target node.."+nullPointer);
             }
             
-            for( Node node : shortestPathToFood){
-                System.out.println(node.getXPos()+" , "+node.getYPos()+" THIS WAS SHORTEST PATH TO FOOD!!");
-            }
-            targetNode = shortestPathToFood.get( shortestPathToFood.size()-1 );
         }
         
-      try{
+        if(targetNode != null){
             return  fRoute.NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
                     , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph);
-        }catch(Exception e){
+        }else{
+            System.out.println("tried next step, but ended up walk around");
             return antM.walkAround(possibleActions,thisLocation,queen,  thisAnt);
         }
+//      try{
+//            return  fRoute.NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
+//                    , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph);
+//        }catch(Exception e){
+//            System.out.println("tried next step, but ended up walk around");
+//            return antM.walkAround(possibleActions,thisLocation,queen,  thisAnt);
+//        }
       }
     
     

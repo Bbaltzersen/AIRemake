@@ -36,7 +36,8 @@ public class AntFindPath {
         Queue<Node> openSet = new PriorityQueue<>();
         Set<Node> closedSet = new HashSet<>();
         start.setGVal(0);
-
+        
+        
         Node curNode = start;
         while (true) {
 
@@ -82,25 +83,27 @@ public class AntFindPath {
     }
 
     public EAction NextStep(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, Node start, Node goal, Graph graph) {
-
+        
         List<Node> nodes;
         nodes = findShortestPath(start, goal, graph);
         int v = thisAnt.getDirection();
 
+        //List<Node> shortestPath = findShortestPath(start, goal, graph);
+        System.out.println("moving from "+start+" to "+goal);
         int nX = 0;
         int nY = 0;
         if(nodes != null) {
-        if (nodes.size() >= 2) {
-            nX = (int) nodes.get(1).getXPos();
-            nY = (int) nodes.get(1).getYPos();
-        }
+            if (nodes.size() >= 2) { //hvorfor 2 ??
+                nX = (int) nodes.get(1).getXPos();
+                nY = (int) nodes.get(1).getYPos();
+            }
         }
 
-        return findDirection(nX, nY, thisLocation, visibleLocations, thisAnt, true);
+        return findDirection(nX, nY, thisLocation, visibleLocations, thisAnt, true); // hvorfor skal return ikke være i if statement oven over?, og ellers return EAction.pass hvis if statement ikke er true?
     }
 
     public EAction findDirection(int nX, int nY, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, IAntInfo thisAnt, boolean move) {
-       
+        
         int v = thisAnt.getDirection();
         int vX = -1;
         int vY = -1;
@@ -145,7 +148,7 @@ public class AntFindPath {
                 || vX > nX && vY > nY && v == 1) {
             return EAction.TurnRight;
         } else {
-           
+            
             return EAction.Pass;
         }
     }

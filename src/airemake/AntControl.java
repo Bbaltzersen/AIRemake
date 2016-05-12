@@ -27,7 +27,8 @@ import java.util.List;
 public class AntControl implements aiantwars.IAntAI {
     
     Queen queen = new Queen();
-    CarrierExplore carrier = new CarrierExplore();
+    //CarrierExplore carrier = new CarrierExplore();
+    CarrierLogic carrierLogic = new CarrierLogic();
     
     Graph graph = new Graph(); // collective map
     int startPos;
@@ -132,19 +133,20 @@ public class AntControl implements aiantwars.IAntAI {
     
     @Override
     public EAction chooseAction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions) {
-        
-        addLocationsInfoToGraph(visibleLocations);
+        System.out.println(thisAnt.antID()+", "+thisAnt.getAntType()+"----------------------------------------------------------------------------------------------------------------------------------");
+        addLocationsInfoToGraph(visibleLocations,thisLocation);
         
         if (thisAnt.getAntType().equals(EAntType.QUEEN)) {
             return queen.generalQueenControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
         }
         if (thisAnt.getAntType().equals(EAntType.CARRIER)) {
-            return carrier.exploreRandom(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
+            
+            return carrierLogic.generalCarrierControl( thisAnt,  thisLocation,  visibleLocations, possibleActions,  graph, queen ,  roundNumber);
         }
         return EAction.Pass;
     }
     
-    private void addLocationsInfoToGraph(List<ILocationInfo> visibleLocations) {
+    private void addLocationsInfoToGraph(List<ILocationInfo> visibleLocations,ILocationInfo thisLocation) {
         for (ILocationInfo location : visibleLocations) {
             Node node = graph.getNode(location.getX(), location.getY());
             node.setDiscovered(true);
@@ -161,6 +163,8 @@ public class AntControl implements aiantwars.IAntAI {
                 node.setFoodCount(location.getFoodCount());
             }            
         }
+       Node node = graph.getNode(thisLocation.getX(), thisLocation.getY());
+       node.setFoodCount(thisLocation.getFoodCount());
     }
     
     @Override
@@ -170,6 +174,7 @@ public class AntControl implements aiantwars.IAntAI {
     
     @Override
     public void onAttacked(IAntInfo thisAnt, int dir, IAntInfo attacker, int damage) {
+        System.out.println("was attacked");
         }
     
     @Override
