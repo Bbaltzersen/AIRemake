@@ -29,7 +29,6 @@ public class Node implements Iterable<Edge>, Comparable<Node>
     private final double xPos;
     private final double yPos;
     private boolean blocked;
-    private boolean antHere;
     private int foodCount;
     private boolean rock;
     private boolean discovered;
@@ -55,13 +54,6 @@ public class Node implements Iterable<Edge>, Comparable<Node>
         return foodCount;
     }
     
-    public boolean isAntHere() {
-        return antHere;
-    }
-
-    public void setAntHere(boolean antHere) {
-        this.antHere = antHere;
-    }
     
     public boolean isBlocked() {
         return blocked;
