@@ -19,9 +19,9 @@ import java.util.Random;
  */
 public class AntMethods {
     
-    public AntMethods()
-    {
-    }
+//    public AntMethods()
+//    {
+//    }
 
     public int totalFoodInFront(List<ILocationInfo> visibleLocations) {
         int foodCount = 0;
@@ -29,35 +29,40 @@ public class AntMethods {
         return foodCount;
     }
 
-     public EAction walkAround(List<EAction> possibleActions, ILocationInfo thisLocation,Queen queen,IAntInfo thisAnt){
+     public static EAction walkAround(List<EAction> possibleActions, ILocationInfo thisLocation,Queen queen,IAntInfo thisAnt){
         if( thisAnt.getAntType() == EAntType.CARRIER ){
             List<EAction> actions = new ArrayList();
             
             if(possibleActions.contains(EAction.MoveForward))
                 actions.add(EAction.MoveForward);
+            
             if(possibleActions.contains(EAction.TurnLeft))
                 actions.add(EAction.TurnLeft);
+            
             if(possibleActions.contains(EAction.TurnRight))
                 actions.add(EAction.TurnRight);
-            if(possibleActions.contains(EAction.MoveForward))
-                actions.add(EAction.MoveForward);
             
-            Random rand = new Random();
-//            System.out.println("Array action.size() = " +actions.size());
-//            int x = rand.nextInt( actions.size());
-//            System.out.println("randInt num = "+x);
-           
-            
-            try{
-                return  actions.get( rand.nextInt( actions.size() ) );
-            }catch(Exception e){
-                System.out.println("ERROR: "+ e.toString());
-            }
-           
-            return EAction.Pass;
-                
-        }
-        else return EAction.Pass;
-    }
+                if( !actions.isEmpty() ){
+                Random rand = new Random();
+                System.out.println("Array action.size() = " +actions.size());
+                int x = rand.nextInt( actions.size() );
+                System.out.println("randInt num = "+x);
 
+
+                try{
+                    System.out.println("CARRIER RETURNED WALKAROUND ");
+
+                    EAction a = actions.get( x  );
+                    System.out.println("returned action : "+a.name() );
+                    return  a;
+                }catch(Exception e){
+                    System.out.println("ERROR: "+ e.toString());
+                }
+
+                return EAction.Pass;
+
+            }
+        }
+        return EAction.Pass;
+     }
 }

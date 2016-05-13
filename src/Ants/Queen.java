@@ -5,6 +5,8 @@
  */
 package Ants;
 
+import static Ants.AntFindPath.NextStep;
+import static Ants.AntFindPath.findDirection;
 import aiantwars.EAction;
 import aiantwars.IAntInfo;
 import aiantwars.ILocationInfo;
@@ -20,13 +22,16 @@ import java.util.List;
 public class Queen {
 
     AntMethods antM = new AntMethods();
-    AntFindPath fRoute = new AntFindPath(new EulerHeristic());
+//    AntFindPath fRoute = new AntFindPath(new EulerHeristic());
     int posX, posY;
 
     public EAction generalQueenControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
         setPosX(thisLocation.getX());
         setPosY(thisLocation.getY());
 
+        if ( thisAnt.getHitPoints() < 15 && possibleActions.contains(EAction.EatFood) ){
+            return EAction.EatFood;
+        }
         List<Node> nodes = g.getNodes();
         for (Node n : nodes) {
             n.resetNode();
@@ -58,17 +63,17 @@ public class Queen {
             } //Go to 0,1
             else if (g.getNode(0, 1).getFoodCount() != 0 || !g.getNode(0, 1).isDiscovered()) {
 
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(0, 1), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(0, 1), g);
             } else if (g.getNode(1, 0).getFoodCount() != 0 && !g.getNode(1, 0).isDiscovered() && thisAnt.getFoodLoad() != 10) {
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(1, 0), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(1, 0), g);
             } else if (thisLocation.getX() != 0 || thisLocation.getY() != 0) {
 
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(0, 0), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(0, 0), g);
             } else if (thisLocation.getX() == 0 && thisLocation.getY() == 0 && thisAnt.getFoodLoad() >= 5) {
 
                 if (thisAnt.getDirection() != 1) {
 
-                    return fRoute.findDirection(1, 0, thisLocation, visibleLocations, thisAnt, false);
+                    return findDirection(1, 0, thisLocation, visibleLocations, thisAnt, false);
                 } else {
 
                     return EAction.LayEgg;
@@ -87,18 +92,18 @@ public class Queen {
 
             } else if (g.getNode(starX, starY - 1).getFoodCount() != 0 || !g.getNode(starX, starY - 1).isDiscovered()) {
 
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY - 1), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY - 1), g);
             } else if (g.getNode(starX - 1, starY).getFoodCount() != 0 && !g.getNode(1, 0).isDiscovered() && thisAnt.getFoodLoad() != 10) {
 
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY - 1), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY - 1), g);
             } else if (thisLocation.getX() != starX || thisLocation.getY() != starY) {
 
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
             } else if (thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getFoodLoad() >= 5) {
 
                 if (thisAnt.getDirection() != 2) {
 
-                    return fRoute.findDirection(starX, starY - 1, thisLocation, visibleLocations, thisAnt, false);
+                    return findDirection(starX, starY - 1, thisLocation, visibleLocations, thisAnt, false);
                 } else {
 
                     return EAction.LayEgg;
@@ -119,18 +124,18 @@ public class Queen {
 
             } else if (g.getNode(starX + 1, starY).getFoodCount() != 0 || !g.getNode(starX + 1, starY).isDiscovered()) {
 
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX + 1, starY), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX + 1, starY), g);
             } else if (g.getNode(starX, starY - 1).getFoodCount() != 0 && !g.getNode(starX, starY - 1).isDiscovered() && thisAnt.getFoodLoad() != 10) {
 
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX - 1, starY), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX - 1, starY), g);
             } else if (thisLocation.getX() != starX || thisLocation.getY() != starY) {
 
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
             } else if (thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getFoodLoad() >= 5) {
 
                 if (thisAnt.getDirection() != 2) {
 
-                    return fRoute.findDirection(starX - 1, starY, thisLocation, visibleLocations, thisAnt, false);
+                    return findDirection(starX - 1, starY, thisLocation, visibleLocations, thisAnt, false);
                 } else {
 
                     return EAction.LayEgg;
@@ -146,23 +151,23 @@ public class Queen {
             System.out.println(thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getFoodLoad() >= 5);
 
             if (thisAnt.getFoodLoad() < 10 && thisLocation.getFoodCount() != 0) {
-                g.getNode(thisLocation.getX(), thisLocation.getY()).setFoodCount(thisLocation.getFoodCount() - 1);
+                g.getNode(thisLocation.getX(), thisLocation.getY() ).setFoodCount( thisLocation.getFoodCount() - 1 );
                 return EAction.PickUpFood;
 
             } else if (g.getNode(starX - 1, starY).getFoodCount() != 0 || !g.getNode(starX - 1, starY).isDiscovered()) {
 
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX - 1, starY), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX - 1, starY), g);
             } else if (g.getNode(starX, starY + 1).getFoodCount() != 0 && !g.getNode(starX, starY + 1).isDiscovered() && thisAnt.getFoodLoad() != 10) {
 
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX + 1, starY), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX + 1, starY), g);
             } else if (thisLocation.getX() != starX || thisLocation.getY() != starY) {
 
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
             } else if (thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getFoodLoad() >= 5) {
 
                 if (thisAnt.getDirection() != 0) {
 
-                    return fRoute.findDirection(starX, starY + 1, thisLocation, visibleLocations, thisAnt, false);
+                    return findDirection(starX, starY + 1, thisLocation, visibleLocations, thisAnt, false);
                 } else {
 
                     return EAction.LayEgg;
@@ -186,11 +191,11 @@ public class Queen {
                 return EAction.PickUpFood;
 
             } else if (g.getNode(starX + 1, starY).getFoodCount() >= 10) {
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX + 1, starY), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX + 1, starY), g);
             } else if (thisLocation.getX() == starX + 1 && thisLocation.getY() == starY && g.getNode(starX + 1, starY).getFoodCount() == 0) {
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
             } else if (thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getDirection() != 1) {
-                return fRoute.findDirection(1, 0, thisLocation, visibleLocations, thisAnt, false);
+                return findDirection(1, 0, thisLocation, visibleLocations, thisAnt, false);
             } else {
                 return EAction.Pass;
             }
@@ -206,11 +211,11 @@ public class Queen {
                 return EAction.PickUpFood;
 
             } else if (g.getNode(starX + 1, starY).getFoodCount() >= 10) {
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX + 1, starY), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX + 1, starY), g);
             } else if (thisLocation.getX() == starX + 1 && thisLocation.getY() == starY && g.getNode(starX + 1, starY).getFoodCount() == 0) {
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
             } else if (thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getDirection() != 1) {
-                return fRoute.findDirection(starX + 1, starY, thisLocation, visibleLocations, thisAnt, false);
+                return findDirection(starX + 1, starY, thisLocation, visibleLocations, thisAnt, false);
             } else {
                 return EAction.Pass;
             }
@@ -225,11 +230,11 @@ public class Queen {
                 return EAction.PickUpFood;
 
             } else if (g.getNode(starX - 1, starY).getFoodCount() >= 10) {
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX - 1, starY), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX - 1, starY), g);
             } else if (thisLocation.getX() == starX + 1 && thisLocation.getY() == starY && g.getNode(starX + 1, starY).getFoodCount() == 0) {
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
             } else if (thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getDirection() != 1) {
-                return fRoute.findDirection(starX - 1, starY, thisLocation, visibleLocations, thisAnt, false);
+                return findDirection(starX - 1, starY, thisLocation, visibleLocations, thisAnt, false);
             } else {
                 return EAction.Pass;
             }
@@ -244,11 +249,11 @@ public class Queen {
                 return EAction.PickUpFood;
 
             } else if (g.getNode(starX, starY - 1).getFoodCount() >= 10) {
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY - 1), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY - 1), g);
             } else if (thisLocation.getX() == starX + 1 && thisLocation.getY() == starY && g.getNode(starX, starY - 1).getFoodCount() == 0) {
-                return fRoute.NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
+                return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g);
             } else if (thisLocation.getX() == starX && thisLocation.getY() == starY && thisAnt.getDirection() != 1) {
-                return fRoute.findDirection(starX, starY - 1, thisLocation, visibleLocations, thisAnt, false);
+                return findDirection(starX, starY - 1, thisLocation, visibleLocations, thisAnt, false);
             } else {
                 return EAction.Pass;
             }

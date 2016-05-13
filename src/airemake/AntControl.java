@@ -5,8 +5,9 @@
  */
 package airemake;
 
-import Ants.CarrierExplore;
+//import Ants.CarrierExplore;
 import Ants.CarrierLogic;
+import static Ants.CarrierLogic.generalCarrierControl;
 //import static Ants.CarrierLogic.generalCarrierControl;
 import Ants.Queen;
 import aiantwars.EAction;
@@ -28,7 +29,7 @@ public class AntControl implements aiantwars.IAntAI {
     
     Queen queen = new Queen();
     //CarrierExplore carrier = new CarrierExplore();
-    CarrierLogic carrierLogic = new CarrierLogic();
+//    CarrierLogic carrierLogic = new CarrierLogic();
     
     Graph graph = new Graph(); // collective map
     int startPos;
@@ -134,6 +135,7 @@ public class AntControl implements aiantwars.IAntAI {
     @Override
     public EAction chooseAction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions) {
         System.out.println(thisAnt.antID()+", "+thisAnt.getAntType()+"----------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("this ant healt and hitpoint: "+thisAnt.getHealth()+" : "+thisAnt.getHitPoints());
         addLocationsInfoToGraph(visibleLocations,thisLocation);
         
         if (thisAnt.getAntType().equals(EAntType.QUEEN)) {
@@ -141,7 +143,7 @@ public class AntControl implements aiantwars.IAntAI {
         }
         if (thisAnt.getAntType().equals(EAntType.CARRIER)) {
             
-            return carrierLogic.generalCarrierControl( thisAnt,  thisLocation,  visibleLocations, possibleActions,  graph, queen ,  roundNumber);
+            return generalCarrierControl( thisAnt,  thisLocation,  visibleLocations, possibleActions,  graph, queen ,  roundNumber);
         }
         return EAction.Pass;
     }

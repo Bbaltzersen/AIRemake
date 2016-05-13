@@ -26,13 +26,25 @@ import java.util.Set;
  */
 public class AntFindPath {
 
-    private final IHeuristic heuristic;
+    private static double getMinimumDist(Node start, Node goal) {
+        
+            double heuristicX = start.getXPos() -   goal.getXPos();
+            double heuristicY = start.getYPos()  -   goal.getYPos();
 
-    public AntFindPath(IHeuristic heuristic) {
-        this.heuristic = heuristic;
+            //sæt heuristic value til positiv værdi 
+                if(heuristicX < 0) { heuristicX = heuristicX * -1; }
+                if(heuristicY < 0) { heuristicY = heuristicY * -1; }
+        
+        return heuristicX + heuristicY;
     }
 
-    public List<Node> findShortestPath(Node start, Node goal, Graph graph) {
+//    private  final IHeuristic heuristic;
+//
+//    public AntFindPath(IHeuristic heuristic) {
+//        this.heuristic = heuristic;
+//    }
+
+    public static List<Node> findShortestPath(Node start, Node goal, Graph graph) {
         Queue<Node> openSet = new PriorityQueue<>();
         Set<Node> closedSet = new HashSet<>();
         start.setGVal(0);
@@ -40,9 +52,7 @@ public class AntFindPath {
         
         Node curNode = start;
         while (true) {
-
             for (Edge edge : curNode) {
-
                 Node other = edge.getEnd();
                 if (!closedSet.contains(other) && !other.isBlocked() && !other.isRock()) {
                     double newG = edge.getWeight() + curNode.getGVal();
@@ -51,7 +61,7 @@ public class AntFindPath {
                         other.setPrev(curNode);
                     }
                     if (!openSet.contains(other)) {
-                        other.setHVal(heuristic.getMinimumDist(other, goal));
+                        other.setHVal(getMinimumDist(other, goal));
                         openSet.add(other);
                     }
                 }
@@ -82,32 +92,34 @@ public class AntFindPath {
         }
     }
 
-    public EAction NextStep(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, Node start, Node goal, Graph graph) {
+    public static EAction NextStep(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, Node start, Node goal, Graph graph) {
         
-        List<Node> nodes;
-        nodes = findShortestPath(start, goal, graph);
+        
+//        List<Node> nodes;
+//        nodes = findShortestPath(start, goal, graph);
         int v = thisAnt.getDirection();
-
-        //List<Node> shortestPath = findShortestPath(start, goal, graph);
-        System.out.println("moving from "+start+" to "+goal);
+        List<Node> shortestPath = findShortestPath(start, goal, graph);
+        
+        System.out.println("nextStep start to goal "+start+" to "+goal);
         int nX = 0;
         int nY = 0;
-        if(nodes != null) {
-            if (nodes.size() >= 2) { //hvorfor 2 ??
-                nX = (int) nodes.get(1).getXPos();
-                nY = (int) nodes.get(1).getYPos();
+        if(shortestPath != null) {
+            if (shortestPath.size() >= 2) { //hvorfor 2 ??
+                nX = (int) shortestPath.get(1).getXPos();
+                nY = (int) shortestPath.get(1).getYPos();
             }
         }
 
         return findDirection(nX, nY, thisLocation, visibleLocations, thisAnt, true); // hvorfor skal return ikke være i if statement oven over?, og ellers return EAction.pass hvis if statement ikke er true?
     }
 
-    public EAction findDirection(int nX, int nY, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, IAntInfo thisAnt, boolean move) {
+    public static EAction findDirection(int nX, int nY, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, IAntInfo thisAnt, boolean move) {
+        System.out.println("FIND DIRECTION "+thisAnt.getAntType()+", "+thisAnt.antID());
         
         int v = thisAnt.getDirection();
         int vX = -1;
         int vY = -1;
-        if (!visibleLocations.isEmpty()) {
+        if ( !visibleLocations.isEmpty() ) {
             vX = visibleLocations.get(0).getX();
             vY = visibleLocations.get(0).getY();
         } else {
@@ -131,21 +143,29 @@ public class AntFindPath {
                        
             }
         }
+        System.out.println("this direction:"+v+" vX:"+vX+" vY:"+vY+" nX:"+nX+" nY:"+nY);
         System.out.println();
 
-        if (move == true && vX == nX && vY == nY) {
-            return EAction.MoveForward;
-        } else if (vX == nX || vY == nY) {
+        if( indexExists( visibleLocations ,0 )  ){
+            if (move == true && vX == nX && vY == nY &&  !visibleLocations.get(0).isFilled() ) {
+                System.out.println("moveforward");
+                return EAction.MoveForward;
+            }
+        }
+         if (vX == nX || vY == nY) {
+            System.out.println("turnleft");
             return EAction.TurnLeft;
         } else if (vX > nX && vY > nY && v == 0
                 || vX < nX && vY > nY && v == 3
                 || vX < nX && vY < nY && v == 2
                 || vX > nX && vY < nY && v == 1) {
+            System.out.println("turnleft");
             return EAction.TurnLeft;
         } else if (vX < nX && vY > nY && v == 0
                 || vX < nX && vY < nY && v == 3
                 || vX > nX && vY < nY && v == 2
                 || vX > nX && vY > nY && v == 1) {
+            System.out.println("turnright");
             return EAction.TurnRight;
         } else {
             
@@ -153,4 +173,9 @@ public class AntFindPath {
         }
     }
 
+    private static boolean indexExists(final List list, final int index) {
+        return index >= 0 && index < list.size();
+    }
+
+ 
 }
