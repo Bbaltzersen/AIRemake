@@ -7,6 +7,8 @@ package Ants;
 
 import static Ants.AntFindPath.NextStep;
 import static Ants.AntFindPath.findDirection;
+import static Ants.AntFindPath.getLength;
+import static Ants.AntMethods.homeNodes;
 import aiantwars.EAction;
 import aiantwars.IAntInfo;
 import aiantwars.ILocationInfo;
@@ -21,7 +23,7 @@ import java.util.List;
  */
 public class Queen {
 
-    AntMethods antM = new AntMethods();
+//    AntMethods antM = new AntMethods();
 //    AntFindPath fRoute = new AntFindPath(new EulerHeristic());
     int posX, posY;
 
@@ -183,15 +185,14 @@ public class Queen {
     }
 
     public EAction stallGame(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
-         List<Node> home = antM.homeNodes(g, startPos, starX, starY, thisAnt);
-        AntFindPath antP = new AntFindPath();
+         List<Node> home = homeNodes(g, startPos, starX, starY, thisAnt);
 
         if (!home.isEmpty()) {
             List<Node> closestPath = null;
             int sortNumber = 100000;
             int v = thisAnt.getDirection();
             for (Node n : home) {
-                List<Node> sortList = antP.getLength(g.getNode(thisLocation.getX(), thisLocation.getY()), n, g);
+                List<Node> sortList = getLength(g.getNode(thisLocation.getX(), thisLocation.getY()), n, g);
                 if (sortList != null && !sortList.isEmpty()) {
 
                     if (sortList.size() < sortNumber) {

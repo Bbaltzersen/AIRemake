@@ -21,9 +21,6 @@ import java.util.Random;
  */
 public class AntMethods {
     
-//    public AntMethods()
-//    {
-//    }
 
     public int totalFoodInFront(List<ILocationInfo> visibleLocations) {
         int foodCount = 0;
@@ -68,7 +65,7 @@ public class AntMethods {
         return EAction.Pass;
      }
      
-     public List<Node> homeNodes(Graph g, int startPos, int starX, int starY, IAntInfo thisAnt) {
+     public static List<Node> homeNodes(Graph g, int startPos, int starX, int starY, IAntInfo thisAnt) {
         List<Node> listOfBlockedNodes = new ArrayList();
         if(startPos==1){
             for(int x = starX; x <= starX+2; x++) {
@@ -123,5 +120,37 @@ public class AntMethods {
             }
         }
         return listOfBlockedNodes;
+    }
+     
+     public static boolean isInQueenArea(Node node, int startPos, Graph graph){
+         
+         if(startPos == 1){ 
+             if( node.getXPos() < 2 && node.getYPos() < 2  ){
+                 System.out.println("returned food to queen pos 1");
+                 return true;// South West
+             }
+         }
+         if(startPos == 2){
+             if( node.getXPos() < 2 && node.getYPos() > graph.getWorldSizeY()-3 ){
+                 System.out.println("returned food to queen pos 2");
+                 return true;// North West
+             }
+         }
+         if(startPos == 3){
+             if( node.getXPos() > graph.getWorldSizeX()-3 && node.getYPos() < 2 ){
+                 System.out.println("returned food to queen pos 3");
+                 return true;// South East
+             }
+         }
+         if(startPos == 4){
+             if( node.getXPos() > graph.getWorldSizeX()-3 && node.getYPos() > graph.getWorldSizeY()-3 ){
+                 System.out.println("returned food to queen pos 4");
+                 return true;// North east
+             }
+         }
+         
+         return false;
+         
+         
     }
 }

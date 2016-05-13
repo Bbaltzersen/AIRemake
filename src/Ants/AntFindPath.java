@@ -129,23 +129,29 @@ public class AntFindPath {
                        
             }
         }
+        System.out.println("this direction:"+v+" vX:"+vX+" vY:"+vY+" nX:"+nX+" nY:"+nY);
         System.out.println();
 
-        if (move == true && vX == nX && vY == nY && !visibleLocations.get(0).isFilled()) {
+        if (move == true && vX == nX && vY == nY && !visibleLocations.get(0).isFilled() &&  visibleLocations.get(0).getAnt() == null) {
+           System.out.println("moveforward");
             return EAction.MoveForward;
         } else if(move == true && vX == nX && vY == nY && !visibleLocations.get(0).isFilled() && possibleActions.contains(EAction.DigOut)){
+            System.out.println("digout");
             return EAction.DigOut;
         }else if (vX == nX || vY == nY) {
+            System.out.println("turnleft");
             return EAction.TurnLeft;
         } else if (vX > nX && vY > nY && v == 0
                 || vX < nX && vY > nY && v == 3
                 || vX < nX && vY < nY && v == 2
                 || vX > nX && vY < nY && v == 1) {
+            System.out.println("turnleft");
             return EAction.TurnLeft;
         } else if (vX < nX && vY > nY && v == 0
                 || vX < nX && vY < nY && v == 3
                 || vX > nX && vY < nY && v == 2
                 || vX > nX && vY > nY && v == 1) {
+            System.out.println("turnRight");
             return EAction.TurnRight;
         } else {
             
@@ -153,7 +159,7 @@ public class AntFindPath {
         }
     }
     
-    public List<Node> getLength(Node start, Node goal, Graph graph) {
+    public static List<Node> getLength(Node start, Node goal, Graph graph) {
         System.out.println("Start: " + start);
         System.out.println("End: " + goal);
         System.out.println("Graph: " + graph.getNodes().size());

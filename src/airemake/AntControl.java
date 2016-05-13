@@ -143,7 +143,7 @@ public class AntControl implements aiantwars.IAntAI {
         }
         if (thisAnt.getAntType().equals(EAntType.CARRIER)) {
             
-            return generalCarrierControl( thisAnt,  thisLocation,  visibleLocations, possibleActions,  graph, queen ,  roundNumber);
+            return generalCarrierControl( thisAnt,  thisLocation,  visibleLocations, possibleActions,  graph, queen ,  roundNumber, startPos);
         }
         return EAction.Pass;
     }

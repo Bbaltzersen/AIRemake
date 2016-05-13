@@ -58,4 +58,24 @@ public class Graph
         }
         return null;
     }
+    
+    public int getWorldSizeX(){
+        Node res = null;
+        for(Node temp : nodes){
+            if( res == null || temp.getXPos() > res.getXPos() ){
+                res = temp;
+            }
+        }
+        return (int) res.getXPos() +1;
+    }
+    
+    public int getWorldSizeY(){
+        Node res = null;
+        for(Node temp : nodes){
+            if( res == null || temp.getYPos() > res.getYPos() ){
+                res = temp;
+            }
+        }
+        return (int) res.getYPos() +1;
+    }
 }
