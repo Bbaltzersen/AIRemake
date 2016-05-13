@@ -3,6 +3,7 @@ package Ants;
 import static Ants.AntFindPath.NextStep;
 import static Ants.AntFindPath.findShortestPath;
 import static Ants.AntMethods.isInQueenArea;
+import static Ants.AntMethods.moveAwayFromQueenArea;
 import static Ants.AntMethods.walkAround;
 import aiantwars.EAction;
 import aiantwars.IAntInfo;
@@ -24,7 +25,7 @@ public class CarrierLogic {
         //hvis der er food på nodes i graph, -tilføj til foodNodes
         List<Node> foodNodes = new ArrayList();
         for(Node node : graph.getNodes()){
-            if(node.getFoodCount() > 0){
+            if( node.getFoodCount() > 0 &&  !isInQueenArea( node,  startPos, graph ) ){
                 foodNodes.add(node);
                 System.out.println("node containing food "+node.getXPos()+","+node.getYPos());
             }
@@ -83,10 +84,19 @@ public class CarrierLogic {
             System.out.println("carrier eats food");
            return EAction.PickUpFood;
         }
+        
+//        if(thisAnt.getFoodLoad() < 1 && isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) ){
+//            Node node = moveAwayFromQueenArea( startPos,  graph,  thisLocation);
+//            System.out.println("TRYING TO GET AWAY!!!!!!!");
+//            return NextStep( thisAnt, thisLocation, visibleLocations, graph.getNode(thisLocation.getX(), thisLocation.getX() ) , node  ,graph, possibleActions);
+//        }  
+        
         if( isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph )  &&  thisAnt.getFoodLoad() > 0  &&  possibleActions.contains(EAction.DropFood) ){
             System.out.println("dropping food near queen");
             return EAction.DropFood;
         }
+        
+        
         if( !visibleLocations.isEmpty() ){
             if(visibleLocations.get(0) != null){
                 if(visibleLocations.get(0).getFoodCount() > 0 && !visibleLocations.get(0).isRock() && !visibleLocations.get(0).isFilled() ){

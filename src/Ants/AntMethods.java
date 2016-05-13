@@ -34,6 +34,9 @@ public class AntMethods {
             
             if(possibleActions.contains(EAction.MoveForward))
                 actions.add(EAction.MoveForward);
+             actions.add(EAction.MoveForward);
+              actions.add(EAction.MoveForward);
+               actions.add(EAction.MoveForward);
             
             if(possibleActions.contains(EAction.TurnLeft))
                 actions.add(EAction.TurnLeft);
@@ -152,5 +155,45 @@ public class AntMethods {
          return false;
          
          
+    }
+     
+     public static Node moveAwayFromQueenArea(int startPos, Graph graph, ILocationInfo thisLocation){
+        
+        if(startPos == 1){ // nede venstre
+            return graph.getNode( graph.getWorldSizeX()-1, graph.getWorldSizeY()-1 );
+        }
+        
+        if(startPos == 2){// oppe venstre
+            return graph.getNode( graph.getWorldSizeX()-1 , 0 );
+        }
+        
+        if(startPos == 3){// nede højre
+            return graph.getNode( 0, graph.getWorldSizeY()-1 );
+        }
+        
+        if(startPos == 4){ // oppe højre
+            return graph.getNode(0, 0);
+        }
+        else return graph.getNode(graph.getWorldSizeX()/2, graph.getWorldSizeY()/2 );
+        
+        
+        
+        
+//          if (thisLocation.getX() == 0 && thisLocation.getY() == 0) {
+//                this.startPos = 1; // South West
+//            }
+//            if (thisLocation.getX() == 0 && thisLocation.getY() > 0) {
+//                this.startPos = 2; // North West
+//            }
+//            if (thisLocation.getX() > 0 && thisLocation.getY() == 0) {
+//                this.startPos = 3; // South East
+//            }
+//            if (thisLocation.getX() > 0 && thisLocation.getY() > 0) {
+//                this.startPos = 4; // North east
+        
+        
+        
+        
+        
     }
 }
