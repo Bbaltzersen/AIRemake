@@ -16,11 +16,7 @@ import java.util.List;
  * @author maze <martinweberhansen at gmail.com>
  */
 public class CarrierLogic {
-    AntMethods antM = new AntMethods();
-//    AntFindPath fRoute = new AntFindPath(new EulerHeristic());
     
-   // public CarrierLogic(){}
-           
     public static EAction generalCarrierControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations
             , List<EAction> possibleActions, Graph graph,Queen queen , int roundNumber) {
      
@@ -50,7 +46,8 @@ public class CarrierLogic {
     }
 
     //use the A star to move to queens location..
-    private  static EAction goToQueen(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation, List<EAction> possibleActions, Graph  graph, int roundNumber, Queen queen) {
+    private  static EAction goToQueen(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation
+            , List<EAction> possibleActions, Graph  graph, int roundNumber, Queen queen) {
        
         // implement here: if thisAnt is near the queen drop food
         

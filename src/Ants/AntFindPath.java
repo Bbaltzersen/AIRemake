@@ -38,17 +38,10 @@ public class AntFindPath {
         return heuristicX + heuristicY;
     }
 
-//    private  final IHeuristic heuristic;
-//
-//    public AntFindPath(IHeuristic heuristic) {
-//        this.heuristic = heuristic;
-//    }
-
     public static List<Node> findShortestPath(Node start, Node goal, Graph graph) {
         Queue<Node> openSet = new PriorityQueue<>();
         Set<Node> closedSet = new HashSet<>();
         start.setGVal(0);
-        
         
         Node curNode = start;
         while (true) {
@@ -66,37 +59,29 @@ public class AntFindPath {
                     }
                 }
             }
-
             if (openSet.isEmpty()) {
                 return null;
             }
             if (!curNode.isBlocked()) {
                 closedSet.add(curNode);
             }
-
             curNode = openSet.poll();
             {
                 if (curNode == goal) {
-
                     ArrayList<Node> res = new ArrayList<>();
                     do {
                         res.add(curNode);
                         curNode = curNode.getPrev();
-
                     } while (curNode != null);
                     Collections.reverse(res);
                     return res;
                 }
             }
-
         }
     }
 
     public static EAction NextStep(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, Node start, Node goal, Graph graph) {
         
-        
-//        List<Node> nodes;
-//        nodes = findShortestPath(start, goal, graph);
         int v = thisAnt.getDirection();
         List<Node> shortestPath = findShortestPath(start, goal, graph);
         
@@ -109,11 +94,11 @@ public class AntFindPath {
                 nY = (int) shortestPath.get(1).getYPos();
             }
         }
-
-        return findDirection(nX, nY, thisLocation, visibleLocations, thisAnt, true); // hvorfor skal return ikke være i if statement oven over?, og ellers return EAction.pass hvis if statement ikke er true?
+        return findDirection(nX, nY, thisLocation, visibleLocations, thisAnt, true); //hvad bruger du boolean move til ??
     }
 
     public static EAction findDirection(int nX, int nY, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, IAntInfo thisAnt, boolean move) {
+        
         System.out.println("FIND DIRECTION "+thisAnt.getAntType()+", "+thisAnt.antID());
         
         int v = thisAnt.getDirection();
@@ -140,14 +125,13 @@ public class AntFindPath {
                     vX = -1;
                     vY = thisLocation.getY();
                     break;
-                       
             }
         }
         System.out.println("this direction:"+v+" vX:"+vX+" vY:"+vY+" nX:"+nX+" nY:"+nY);
         System.out.println();
 
         if( indexExists( visibleLocations ,0 )  ){
-            if (move == true && vX == nX && vY == nY &&  !visibleLocations.get(0).isFilled() ) {
+            if (move == true && vX == nX && vY == nY &&  !visibleLocations.get(0).isFilled() && visibleLocations.get(0).getAnt() == null ) {
                 System.out.println("moveforward");
                 return EAction.MoveForward;
             }
@@ -168,7 +152,6 @@ public class AntFindPath {
             System.out.println("turnright");
             return EAction.TurnRight;
         } else {
-            
             return EAction.Pass;
         }
     }
@@ -176,6 +159,4 @@ public class AntFindPath {
     private static boolean indexExists(final List list, final int index) {
         return index >= 0 && index < list.size();
     }
-
- 
 }
