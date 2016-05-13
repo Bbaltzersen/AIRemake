@@ -110,6 +110,7 @@ public class CarrierLogic {
             
             for( Node node : graph.getNodes() ){
                 if( node.getFoodCount() > 0 &&  !isInQueenArea( node , startPos , graph )){
+                    System.out.println("Trying to get food from : " + node);
                     temp = findShortestPath( graph.getNode( thisLocation.getX(), thisLocation.getY() ), node, graph );
                     if( temp != null ){
                         if( shortestPathToFood == null ){
