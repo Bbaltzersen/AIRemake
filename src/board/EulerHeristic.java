@@ -5,6 +5,8 @@
  */
 package board;
 
+import board.IHeuristic;
+
 /**
  *
  * @author Tobias Grundtvig

@@ -5,6 +5,8 @@
  */
 package board;
 
+import board.Node;
+
 /**
  *
  * @author Tobias Grundtvig

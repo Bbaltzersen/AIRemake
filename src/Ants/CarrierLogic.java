@@ -59,7 +59,7 @@ public class CarrierLogic {
         if(antLocX == queenLocX || antLocX == queenLocX-1 || antLocX == queenLocX+1 && antLocY == queenLocY || antLocY == queenLocY-1 || antLocY == queenLocY+1){
             return EAction.DropFood;
         }else{
-            return  NextStep(thisAnt,thisLocation, visibleLocations,    graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  graph.getNode(queen.getPosX(),queen.getPosY()), graph);
+            return  NextStep(thisAnt,thisLocation, visibleLocations,    graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  graph.getNode(queen.getPosX(),queen.getPosY()), graph, possibleActions);
         }
     }
     
@@ -78,14 +78,14 @@ public class CarrierLogic {
                 if(visibleLocations.get(0).getFoodCount() > 0 && !visibleLocations.get(0).isRock() && !visibleLocations.get(0).isFilled() ){
                     System.out.println("FOOD LIGGER 1 FORAN...");
                     return  NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
-                            , graph.getNode( (int) visibleLocations.get(0).getX() , (int) visibleLocations.get(0).getY() ) ,graph);
+                            , graph.getNode( (int) visibleLocations.get(0).getX() , (int) visibleLocations.get(0).getY() ) ,graph, possibleActions);
                 } 
             }
             if( indexExists( visibleLocations,1 ) ){
                  if(visibleLocations.get(1).getFoodCount() > 0 && !visibleLocations.get(1).isRock() && !visibleLocations.get(1).isFilled() ){
                      System.out.println("FOOD LIGGER 2 FORAN..");
                 return  NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
-                        , graph.getNode( (int) visibleLocations.get(1).getX() , (int) visibleLocations.get(1).getY() ) ,graph);
+                        , graph.getNode( (int) visibleLocations.get(1).getX() , (int) visibleLocations.get(1).getY() ) ,graph, possibleActions);
                 }
             }
         }
@@ -118,7 +118,7 @@ public class CarrierLogic {
         if(targetNode != null){
             System.out.println("CARRIER FIND FOOD TARGET NOT NULL");
             return  NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
-                    , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph);
+                    , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph, possibleActions);
         }else{
             System.out.println("CARRIER FIND FOOD TARGET WAS NULL");
             return walkAround(possibleActions,thisLocation,queen,  thisAnt);

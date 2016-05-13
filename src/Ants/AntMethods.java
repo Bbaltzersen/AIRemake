@@ -9,6 +9,8 @@ import aiantwars.EAction;
 import aiantwars.EAntType;
 import aiantwars.IAntInfo;
 import aiantwars.ILocationInfo;
+import board.Graph;
+import board.Node;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -65,4 +67,61 @@ public class AntMethods {
         }
         return EAction.Pass;
      }
+     
+     public List<Node> homeNodes(Graph g, int startPos, int starX, int starY, IAntInfo thisAnt) {
+        List<Node> listOfBlockedNodes = new ArrayList();
+        if(startPos==1){
+            for(int x = starX; x <= starX+2; x++) {
+                for(int y = starY; y <= starY+2; y++) {
+                    Node nodexy = g.getNode(x, y);
+                    if(nodexy.isBlocked() && thisAnt.getAntType() == EAntType.CARRIER) {
+                        listOfBlockedNodes.add(nodexy);
+                    }
+                    if(nodexy.getFoodCount() != 0 && thisAnt.getAntType() == EAntType.QUEEN) {
+                        listOfBlockedNodes.add(nodexy);
+                    }
+                }
+            }
+        }
+        if(startPos==2) {
+            for(int x = starX; x <= starX+2; x++) {
+                for(int y = starY-2; y <= starY; y++) {
+                    Node nodexy = g.getNode(x, y);
+                    if(nodexy.isBlocked() && thisAnt.getAntType() == EAntType.CARRIER) {
+                        listOfBlockedNodes.add(nodexy);
+                    }
+                    if(nodexy.getFoodCount() != 0 && thisAnt.getAntType() == EAntType.QUEEN) {
+                        listOfBlockedNodes.add(nodexy);
+                    }
+                }
+            }
+        }
+        if(startPos==3) {
+            for(int x = starX-2; x <= starX; x++) {
+                for(int y = starY; y <= starY+2; y++) {
+                    Node nodexy = g.getNode(x, y);
+                    if(nodexy.isBlocked() && thisAnt.getAntType() == EAntType.CARRIER) {
+                        listOfBlockedNodes.add(nodexy);
+                    }
+                    if(nodexy.getFoodCount() != 0 && thisAnt.getAntType() == EAntType.QUEEN) {
+                        listOfBlockedNodes.add(nodexy);
+                    }
+                }
+            }
+        }
+        if(startPos==4) {
+            for(int x = starX-2; x <= starX; x++) {
+                for(int y = starY-2; y <= starY; y++) {
+                    Node nodexy = g.getNode(x, y);
+                    if(nodexy.isBlocked() && thisAnt.getAntType() == EAntType.CARRIER) {
+                        listOfBlockedNodes.add(nodexy);
+                    }
+                    if(nodexy.getFoodCount() != 0 && thisAnt.getAntType() == EAntType.QUEEN) {
+                        listOfBlockedNodes.add(nodexy);
+                    }
+                }
+            }
+        }
+        return listOfBlockedNodes;
+    }
 }

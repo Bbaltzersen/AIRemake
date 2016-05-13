@@ -80,31 +80,32 @@ public class AntFindPath {
         }
     }
 
-    public static EAction NextStep(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, Node start, Node goal, Graph graph) {
+    public static EAction NextStep(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, Node start, Node goal, Graph graph, List<EAction> possibleActions) {
         
-        int v = thisAnt.getDirection();
-        List<Node> shortestPath = findShortestPath(start, goal, graph);
-        
-        System.out.println("nextStep start to goal "+start+" to "+goal);
+        List<Node> nodes;
+        nodes = findShortestPath(start, goal, graph);
+
+        //List<Node> shortestPath = findShortestPath(start, goal, graph);
+        System.out.println("moving from "+start+" to "+goal);
         int nX = 0;
         int nY = 0;
-        if(shortestPath != null) {
-            if (shortestPath.size() >= 2) { //hvorfor 2 ??
-                nX = (int) shortestPath.get(1).getXPos();
-                nY = (int) shortestPath.get(1).getYPos();
+        if(nodes != null) {
+            if (nodes.size() >= 2) { //hvorfor 2 ??
+                nX = (int) nodes.get(1).getXPos();
+                nY = (int) nodes.get(1).getYPos();
             }
+            return findDirection(nX, nY, thisLocation, visibleLocations, thisAnt, possibleActions, true);
+        } else {
+            return EAction.Pass;
         }
-        return findDirection(nX, nY, thisLocation, visibleLocations, thisAnt, true); //hvad bruger du boolean move til ??
     }
 
-    public static EAction findDirection(int nX, int nY, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, IAntInfo thisAnt, boolean move) {
-        
-        System.out.println("FIND DIRECTION "+thisAnt.getAntType()+", "+thisAnt.antID());
+    public static EAction findDirection(int nX, int nY, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, IAntInfo thisAnt, List<EAction> possibleActions ,boolean move) {
         
         int v = thisAnt.getDirection();
         int vX = -1;
         int vY = -1;
-        if ( !visibleLocations.isEmpty() ) {
+        if (!visibleLocations.isEmpty()) {
             vX = visibleLocations.get(0).getX();
             vY = visibleLocations.get(0).getY();
         } else {
@@ -125,35 +126,42 @@ public class AntFindPath {
                     vX = -1;
                     vY = thisLocation.getY();
                     break;
+                       
             }
         }
-        System.out.println("this direction:"+v+" vX:"+vX+" vY:"+vY+" nX:"+nX+" nY:"+nY);
         System.out.println();
 
-        if( indexExists( visibleLocations ,0 )  ){
-            if (move == true && vX == nX && vY == nY &&  !visibleLocations.get(0).isFilled() && visibleLocations.get(0).getAnt() == null ) {
-                System.out.println("moveforward");
-                return EAction.MoveForward;
-            }
-        }
-         if (vX == nX || vY == nY) {
-            System.out.println("turnleft");
+        if (move == true && vX == nX && vY == nY && !visibleLocations.get(0).isFilled()) {
+            return EAction.MoveForward;
+        } else if(move == true && vX == nX && vY == nY && !visibleLocations.get(0).isFilled() && possibleActions.contains(EAction.DigOut)){
+            return EAction.DigOut;
+        }else if (vX == nX || vY == nY) {
             return EAction.TurnLeft;
         } else if (vX > nX && vY > nY && v == 0
                 || vX < nX && vY > nY && v == 3
                 || vX < nX && vY < nY && v == 2
                 || vX > nX && vY < nY && v == 1) {
-            System.out.println("turnleft");
             return EAction.TurnLeft;
         } else if (vX < nX && vY > nY && v == 0
                 || vX < nX && vY < nY && v == 3
                 || vX > nX && vY < nY && v == 2
                 || vX > nX && vY > nY && v == 1) {
-            System.out.println("turnright");
             return EAction.TurnRight;
         } else {
+            
             return EAction.Pass;
         }
+    }
+    
+    public List<Node> getLength(Node start, Node goal, Graph graph) {
+        System.out.println("Start: " + start);
+        System.out.println("End: " + goal);
+        System.out.println("Graph: " + graph.getNodes().size());
+        System.out.println("In method " +findShortestPath(start, goal, graph));
+        List<Node> nodes;
+        nodes = findShortestPath(start, goal, graph);
+        System.out.println(nodes);
+        return nodes;
     }
 
     private static boolean indexExists(final List list, final int index) {
