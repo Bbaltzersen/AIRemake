@@ -12,7 +12,6 @@ import static Ants.AntMethods.homeNodes;
 import aiantwars.EAction;
 import aiantwars.IAntInfo;
 import aiantwars.ILocationInfo;
-import board.EulerHeristic;
 import board.Graph;
 import board.Node;
 import java.util.List;
@@ -187,7 +186,12 @@ public class Queen {
     public EAction stallGame(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
          List<Node> home = homeNodes(g, startPos, starX, starY, thisAnt);
 
-        if (!home.isEmpty()) {
+        if (!home.isEmpty() && thisAnt.getFoodLoad() < 10) {
+            if (thisAnt.getFoodLoad() < 10 && thisLocation.getFoodCount() != 0) {
+                g.getNode(0, 1).setFoodCount(thisLocation.getFoodCount() - 1);
+                return EAction.PickUpFood;
+
+            }
             List<Node> closestPath = null;
             int sortNumber = 100000;
             int v = thisAnt.getDirection();
@@ -210,10 +214,12 @@ public class Queen {
                 }
             }
 
+            System.out.println("The way to go: "+home);
             return AntFindPath.findDirection(nX, nY, thisLocation, visibleLocations, thisAnt, possibleActions, true);
 
         }
-        if (home.isEmpty() && thisLocation.getX() != starX && thisLocation.getY() != starY) {
+        System.out.println(home.isEmpty() && thisLocation.getX() != starX && thisLocation.getY() != starY || thisAnt.getFoodLoad() <=  10 && thisLocation.getX() != starX && thisLocation.getY() != starY);
+        if (home.isEmpty() && thisLocation.getX() != starX && thisLocation.getY() != starY || thisAnt.getFoodLoad() >=  10 && thisLocation.getX() != starX && thisLocation.getY() != starY) {
             return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g, possibleActions);
         } else {
             return EAction.Pass;
