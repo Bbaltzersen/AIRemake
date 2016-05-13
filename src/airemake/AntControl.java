@@ -137,15 +137,26 @@ public class AntControl implements aiantwars.IAntAI {
         System.out.println(thisAnt.antID()+", "+thisAnt.getAntType()+"----------------------------------------------------------------------------------------------------------------------------------");
         System.out.println("this ant healt and hitpoint: "+thisAnt.getHealth()+" : "+thisAnt.getHitPoints());
         addLocationsInfoToGraph(visibleLocations,thisLocation);
-        
+        graph.getNode(thisLocation.getX(), thisLocation.getY()).setAntHere(true);
+        EAction move;
         if (thisAnt.getAntType().equals(EAntType.QUEEN)) {
-            return queen.generalQueenControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
+             move = queen.generalQueenControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
         }
         if (thisAnt.getAntType().equals(EAntType.CARRIER)) {
             
-            return generalCarrierControl( thisAnt,  thisLocation,  visibleLocations, possibleActions,  graph, queen ,  roundNumber, startPos);
+            move = generalCarrierControl( thisAnt,  thisLocation,  visibleLocations, possibleActions,  graph, queen ,  roundNumber, startPos);
+        } else {
+            return EAction.Pass;
         }
-        return EAction.Pass;
+        
+        // Check if move is forward
+        if(move.equals(EAction.MoveForward) || move.equals(EAction.MoveBackward)) {
+             graph.getNode(thisLocation.getX(), thisLocation.getY()).setAntHere(false);
+             return move;
+        } else {
+            return move;
+        }
+        
     }
     
     private void addLocationsInfoToGraph(List<ILocationInfo> visibleLocations,ILocationInfo thisLocation) {
