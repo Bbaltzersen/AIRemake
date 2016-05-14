@@ -22,6 +22,11 @@ public class CarrierLogic {
     public static EAction generalCarrierControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations
             , List<EAction> possibleActions, Graph graph,Queen queen , int roundNumber, int startPos) {
      
+        List<Node> nodes = graph.getNodes();
+        for (Node n : nodes) {
+            n.resetNode();
+        }
+        
         //hvis der er food på nodes i graph, -tilføj til foodNodes
         List<Node> foodNodes = new ArrayList();
         for(Node node : graph.getNodes()){
