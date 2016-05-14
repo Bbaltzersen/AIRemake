@@ -128,19 +128,19 @@ public class AntMethods {
      public static boolean isInQueenArea(Node node, int startPos, Graph graph){
          
          if(startPos == 1){ 
-             if( node.getXPos() < 2 && node.getYPos() < 2  ){
+             if( node.getXPos() < 3 && node.getYPos() < 3  ){
                  System.out.println("returned food to queen pos 1");
                  return true;// South West
              }
          }
          if(startPos == 2){
-             if( node.getXPos() < 2 && node.getYPos() > graph.getWorldSizeY()-3 ){
+             if( node.getXPos() < 3 && node.getYPos() > graph.getWorldSizeY()-3 ){
                  System.out.println("returned food to queen pos 2");
                  return true;// North West
              }
          }
          if(startPos == 3){
-             if( node.getXPos() > graph.getWorldSizeX()-3 && node.getYPos() < 2 ){
+             if( node.getXPos() > graph.getWorldSizeX()-3 && node.getYPos() < 3 ){
                  System.out.println("returned food to queen pos 3");
                  return true;// South East
              }

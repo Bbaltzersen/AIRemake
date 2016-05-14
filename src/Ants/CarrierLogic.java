@@ -25,7 +25,7 @@ public class CarrierLogic {
         //hvis der er food på nodes i graph, -tilføj til foodNodes
         List<Node> foodNodes = new ArrayList();
         for(Node node : graph.getNodes()){
-            if( node.getFoodCount() > 0 &&  !isInQueenArea( node,  startPos, graph ) ){
+            if( node.getFoodCount() > 0 &&  !isInQueenArea( node,  startPos, graph ) && !node.isBlocked() ){
                 foodNodes.add(node);
                 System.out.println("node containing food "+node.getXPos()+","+node.getYPos());
             }
@@ -51,25 +51,22 @@ public class CarrierLogic {
     private  static EAction goToQueen(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation
             , List<EAction> possibleActions, Graph  graph, int roundNumber, Queen queen, int startPos) {
        
-        // implement here: if thisAnt is near the queen drop food
-        
-        int antLocX = thisLocation.getX();
-        int antLocY = thisLocation.getY();
-        int queenLocX = queen.getPosX();
-        int queenLocY = queen.getPosY();
-        
-        
-        if(isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && possibleActions.contains(EAction.DropFood) ){
+        Node target = null;
+        if( isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && possibleActions.contains(EAction.DropFood) ){
             System.out.println("food dropet near queen");
              return EAction.DropFood;
         }
-        
-        
-//        if(antLocX == queenLocX || antLocX == queenLocX-1 || antLocX == queenLocX+1 && antLocY == queenLocY || antLocY == queenLocY-1 || antLocY == queenLocY+1){
-//            return EAction.DropFood;
-//        }
         else{
-            return  NextStep(thisAnt,thisLocation, visibleLocations, graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  graph.getNode(queen.getPosX(),queen.getPosY() ), graph, possibleActions);
+            if(startPos == 1)
+               target = graph.getNode(0, 0);
+            if(startPos == 2)
+                target = graph.getNode( 0, graph.getWorldSizeY()-1 );
+            if(startPos == 3)
+                target = graph.getNode( graph.getWorldSizeX()-1 , 0 );
+            if(startPos == 4)
+               target =  graph.getNode(0, 0);
+                
+            return  NextStep(thisAnt,thisLocation, visibleLocations, graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  target  , graph, possibleActions);
         }
     }
     
@@ -80,8 +77,8 @@ public class CarrierLogic {
         Node targetNode = null;
 //        isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph )
         
-        if( thisLocation.getFoodCount() > 0  &&   !isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) ){
-            System.out.println("carrier eats food");
+        if( thisLocation.getFoodCount() > 0  &&   !isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && possibleActions.contains(EAction.PickUpFood)){
+            System.out.println("carrier pick up food");
            return EAction.PickUpFood;
         }
         
@@ -120,7 +117,6 @@ public class CarrierLogic {
             
             for( Node node : graph.getNodes() ){
                 if( node.getFoodCount() > 0 &&  !isInQueenArea( node , startPos , graph )){
-                    System.out.println("Trying to get food from : " + node);
                     temp = findShortestPath( graph.getNode( thisLocation.getX(), thisLocation.getY() ), node, graph );
                     if( temp != null ){
                         if( shortestPathToFood == null ){
@@ -142,8 +138,11 @@ public class CarrierLogic {
         
         if(targetNode != null){
             System.out.println("CARRIER FIND FOOD TARGET NOT NULL");
-            return  NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
+            EAction ret =   NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
                     , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph, possibleActions);
+            
+            System.out.println("result "+ret+" on node : "+targetNode.getXPos() +", "+ (int) targetNode.getYPos());
+            return ret;
         }else{
             System.out.println("CARRIER FIND FOOD TARGET WAS NULL");
             return walkAround(possibleActions,thisLocation,queen,  thisAnt);
@@ -166,6 +165,7 @@ public class CarrierLogic {
         
         return heuristicX + heuristicY;
     }
+    
     
 }
 

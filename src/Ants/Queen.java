@@ -55,7 +55,7 @@ public class Queen {
         // Position 1 // South West
         // <editor-fold defaultstate="collapsed">
 
-        if (startPos == 1) {
+        if (startPos == 1) {  
 
             if (thisAnt.getFoodLoad() < 10 && thisLocation.getFoodCount() != 0) {
                 g.getNode(0, 1).setFoodCount(thisLocation.getFoodCount() - 1);

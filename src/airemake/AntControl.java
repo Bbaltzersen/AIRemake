@@ -29,7 +29,7 @@ public class AntControl implements aiantwars.IAntAI {
     
     Queen queen = new Queen();
     //CarrierExplore carrier = new CarrierExplore();
-//    CarrierLogic carrierLogic = new CarrierLogic();
+    //CarrierLogic carrierLogic = new CarrierLogic();
     
     Graph graph = new Graph(); // collective map
     int startPos;
