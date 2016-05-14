@@ -64,7 +64,7 @@ public class CarrierLogic {
             if(startPos == 3)
                 target = graph.getNode( graph.getWorldSizeX()-1 , 0 );
             if(startPos == 4)
-               target =  graph.getNode(0, 0);
+               target =  graph.getNode(graph.getWorldSizeX()-1,graph.getWorldSizeY()-1 );
                 
             return  NextStep(thisAnt,thisLocation, visibleLocations, graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  target  , graph, possibleActions);
         }
