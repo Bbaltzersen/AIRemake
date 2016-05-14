@@ -129,7 +129,6 @@ public class AntControl implements aiantwars.IAntAI {
     
     @Override
     public void onStartTurn(IAntInfo thisAnt, int turn) {        
-        this.roundNumber = turn;
     }
     
     @Override
@@ -188,6 +187,7 @@ public class AntControl implements aiantwars.IAntAI {
     
     @Override
     public void onStartRound(int round) {
+        this.roundNumber = round;
       }
     
     @Override

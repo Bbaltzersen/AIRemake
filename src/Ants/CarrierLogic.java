@@ -3,12 +3,10 @@ package Ants;
 import static Ants.AntFindPath.NextStep;
 import static Ants.AntFindPath.findShortestPath;
 import static Ants.AntMethods.isInQueenArea;
-import static Ants.AntMethods.moveAwayFromQueenArea;
 import static Ants.AntMethods.walkAround;
 import aiantwars.EAction;
 import aiantwars.IAntInfo;
 import aiantwars.ILocationInfo;
-import board.EulerHeristic;
 import board.Graph;
 import board.Node;
 import java.util.ArrayList;
@@ -26,42 +24,34 @@ public class CarrierLogic {
         for (Node n : nodes) {
             n.resetNode();
         }
-        
-        //hvis der er food på nodes i graph, -tilføj til foodNodes
         List<Node> foodNodes = new ArrayList();
         for(Node node : graph.getNodes()){
             if( node.getFoodCount() > 0 &&  !isInQueenArea( node,  startPos, graph ) && !node.isBlocked() ){
                 foodNodes.add(node);
-                System.out.println("node containing food "+node.getXPos()+","+node.getYPos());
             }
         }
         
-        if(thisAnt.getFoodLoad() >=               15)      //thisAnt.getAntType().getMaxFoodLoad())
+        if(thisAnt.getFoodLoad()  >=  thisAnt.getAntType().getMaxFoodLoad() )    
         {
-            System.out.println("Foodload at max, returning to queen" +thisAnt.asString());
             return goToQueen(thisAnt,visibleLocations, thisLocation,  possibleActions,  graph,  roundNumber, queen, startPos);
         } 
         else if ( !foodNodes.isEmpty() ){
-            System.out.println("Foodload not at max, trying to find new route to food.. : " +thisAnt.getAntType());
             return findFood(thisAnt, visibleLocations,thisLocation,  possibleActions,  graph,  roundNumber, queen , startPos);
         }
         else{
-           
-                    return walkAround( possibleActions, thisLocation, queen,  thisAnt );
+            return walkAround( possibleActions, thisLocation, queen,  thisAnt );
         }
-        //return EAction.Pass;
     }
 
-    //use the A star to move to queens location..
     private  static EAction goToQueen(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation
             , List<EAction> possibleActions, Graph  graph, int roundNumber, Queen queen, int startPos) {
        
-        Node target = null;
+        
         if( isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && possibleActions.contains(EAction.DropFood) ){
-            System.out.println("food dropet near queen");
              return EAction.DropFood;
         }
         else{
+            Node target = null;
             if(startPos == 1)
                target = graph.getNode(0, 0);
             if(startPos == 2)
@@ -80,21 +70,12 @@ public class CarrierLogic {
             , List<EAction> possibleActions, Graph graph, int roundNumber,Queen queen, int startPos) {
        
         Node targetNode = null;
-//        isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph )
         
         if( thisLocation.getFoodCount() > 0  &&   !isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && possibleActions.contains(EAction.PickUpFood)){
-            System.out.println("carrier pick up food");
            return EAction.PickUpFood;
         }
         
-//        if(thisAnt.getFoodLoad() < 1 && isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) ){
-//            Node node = moveAwayFromQueenArea( startPos,  graph,  thisLocation);
-//            System.out.println("TRYING TO GET AWAY!!!!!!!");
-//            return NextStep( thisAnt, thisLocation, visibleLocations, graph.getNode(thisLocation.getX(), thisLocation.getX() ) , node  ,graph, possibleActions);
-//        }  
-        
         if( isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph )  &&  thisAnt.getFoodLoad() > 0  &&  possibleActions.contains(EAction.DropFood) ){
-            System.out.println("dropping food near queen");
             return EAction.DropFood;
         }
         
@@ -102,14 +83,12 @@ public class CarrierLogic {
         if( !visibleLocations.isEmpty() ){
             if(visibleLocations.get(0) != null){
                 if(visibleLocations.get(0).getFoodCount() > 0 && !visibleLocations.get(0).isRock() && !visibleLocations.get(0).isFilled() ){
-                    System.out.println("FOOD LIGGER 1 FORAN...");
                     return  NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
                             , graph.getNode( (int) visibleLocations.get(0).getX() , (int) visibleLocations.get(0).getY() ) ,graph, possibleActions);
                 } 
             }
             if( indexExists( visibleLocations,1 ) ){
                  if(visibleLocations.get(1).getFoodCount() > 0 && !visibleLocations.get(1).isRock() && !visibleLocations.get(1).isFilled() ){
-                     System.out.println("FOOD LIGGER 2 FORAN..");
                 return  NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
                         , graph.getNode( (int) visibleLocations.get(1).getX() , (int) visibleLocations.get(1).getY() ) ,graph, possibleActions);
                 }
@@ -117,8 +96,8 @@ public class CarrierLogic {
         }
         else {
             // her vil jeg gerne lave en algoritme som lopper igennem alle nodes som indeholder food, og vælge den der er tættest på denne carrier ant.
-            List<Node> shortestPathToFood = null;//new ArrayList(); 
-            List<Node>temp;// = new ArrayList();
+            List<Node> shortestPathToFood = null;
+            List<Node>temp;
             
             for( Node node : graph.getNodes() ){
                 if( node.getFoodCount() > 0 &&  !isInQueenArea( node , startPos , graph )){
@@ -127,7 +106,7 @@ public class CarrierLogic {
                         if( shortestPathToFood == null ){
                             shortestPathToFood = temp;
                         }
-                        else if( temp.size() < shortestPathToFood.size() ){ //shortestPathToFood.isEmpty()
+                        else if( temp.size() < shortestPathToFood.size() ){ // her tester den kun for hvor mange nodes der er, ikke hvor mange "moves"
                             shortestPathToFood = temp;
                         }
                     }
@@ -136,20 +115,14 @@ public class CarrierLogic {
             try{
                 targetNode = shortestPathToFood.get( shortestPathToFood.size() -1); 
             }catch(Exception nullPointer){
-                System.out.println("nullPointer exception target node.."+nullPointer);
+                System.out.println("exception: "+nullPointer);
             }
             
         }
         
-        if(targetNode != null){
-            System.out.println("CARRIER FIND FOOD TARGET NOT NULL");
-            EAction ret =   NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
-                    , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph, possibleActions);
-            
-            System.out.println("result "+ret+" on node : "+targetNode.getXPos() +", "+ (int) targetNode.getYPos());
-            return ret;
+        if(targetNode != null){//hvis den fandt en rute, så tag nextStep()
+            return   NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() ) , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph, possibleActions);
         }else{
-            System.out.println("CARRIER FIND FOOD TARGET WAS NULL");
             return walkAround(possibleActions,thisLocation,queen,  thisAnt);
         }
       }

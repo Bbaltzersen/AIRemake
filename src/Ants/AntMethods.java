@@ -128,33 +128,26 @@ public class AntMethods {
      public static boolean isInQueenArea(Node node, int startPos, Graph graph){
          
          if(startPos == 1){ 
-             if( node.getXPos() < 3 && node.getYPos() < 3  ){
-                 System.out.println("returned food to queen pos 1");
+             if( node.getXPos() < 3 && node.getYPos() < 3  ){ 
                  return true;// South West
              }
          }
          if(startPos == 2){
              if( node.getXPos() < 3 && node.getYPos() > graph.getWorldSizeY()-3 ){
-                 System.out.println("returned food to queen pos 2");
                  return true;// North West
              }
          }
          if(startPos == 3){
              if( node.getXPos() > graph.getWorldSizeX()-3 && node.getYPos() < 3 ){
-                 System.out.println("returned food to queen pos 3");
                  return true;// South East
              }
          }
          if(startPos == 4){
              if( node.getXPos() > graph.getWorldSizeX()-3 && node.getYPos() > graph.getWorldSizeY()-3 ){
-                 System.out.println("returned food to queen pos 4");
                  return true;// North east
              }
          }
-         
          return false;
-         
-         
     }
      
      public static Node moveAwayFromQueenArea(int startPos, Graph graph, ILocationInfo thisLocation){
@@ -162,38 +155,15 @@ public class AntMethods {
         if(startPos == 1){ // nede venstre
             return graph.getNode( graph.getWorldSizeX()-1, graph.getWorldSizeY()-1 );
         }
-        
         if(startPos == 2){// oppe venstre
             return graph.getNode( graph.getWorldSizeX()-1 , 0 );
         }
-        
         if(startPos == 3){// nede højre
             return graph.getNode( 0, graph.getWorldSizeY()-1 );
         }
-        
         if(startPos == 4){ // oppe højre
             return graph.getNode(0, 0);
         }
         else return graph.getNode(graph.getWorldSizeX()/2, graph.getWorldSizeY()/2 );
-        
-        
-        
-        
-//          if (thisLocation.getX() == 0 && thisLocation.getY() == 0) {
-//                this.startPos = 1; // South West
-//            }
-//            if (thisLocation.getX() == 0 && thisLocation.getY() > 0) {
-//                this.startPos = 2; // North West
-//            }
-//            if (thisLocation.getX() > 0 && thisLocation.getY() == 0) {
-//                this.startPos = 3; // South East
-//            }
-//            if (thisLocation.getX() > 0 && thisLocation.getY() > 0) {
-//                this.startPos = 4; // North east
-        
-        
-        
-        
-        
     }
 }

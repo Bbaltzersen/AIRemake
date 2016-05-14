@@ -83,7 +83,6 @@ public class AntFindPath {
         List<Node> nodes;
         nodes = findShortestPath(start, goal, graph);
 
-        //List<Node> shortestPath = findShortestPath(start, goal, graph);
         System.out.println("moving from "+start+" to "+goal);
         int nX = 0;
         int nY = 0;
