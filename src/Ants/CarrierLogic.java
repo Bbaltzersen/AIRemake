@@ -170,6 +170,12 @@ public class CarrierLogic {
                 graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).setWall(true);
                 return EAction.DropSoil;
             }
+            
+            if( isInWallArea( graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ),  startPos,  graph)  ){
+                System.out.println("JEG ER I DET RIGTIGE OMRÅDE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! MEN DER VAR IKKE NOK BOOOOOOOST!!!!!!!!!!!!!!!!!!!!!!!!!");
+                graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).setWall(true);
+                return EAction.DropSoil;
+            }
         }
            
         
@@ -183,7 +189,7 @@ public class CarrierLogic {
                 
                 
                 
-                if( !node.isWall() && thisLocation.getY() != node.getYPos()  ||  thisLocation.getX() != node.getXPos()){
+                if( (!node.isWall() && thisLocation.getY() != node.getYPos())  ||  (!node.isWall() && thisLocation.getX() != node.getXPos()) ) {
                     System.out.println("WALLL : "+node.getXPos()+", "+node.getYPos() +" thisLocation"+thisLocation.getX()+", "+thisLocation.getY());
                     buildWall.add(node);
                 }

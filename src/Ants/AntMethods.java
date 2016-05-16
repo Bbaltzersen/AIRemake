@@ -38,15 +38,18 @@ public class AntMethods {
         }
         for(Node node : undiscoveredNodes ){
             tempRoute = findShortestPath( graph.getNode( thisLocation.getX(), thisLocation.getY() ),node ,graph );
-            
-            if( shortestPathToUndiscovered == null || tempRoute.size() < shortestPathToUndiscovered.size() )
-                shortestPathToUndiscovered = tempRoute;
-         }    
             try{
-                targetNode =shortestPathToUndiscovered.get(shortestPathToUndiscovered.size()-1 );
-            }catch(Exception nullPointer){
-                System.out.println("nullPointer Exception: "+nullPointer);
+                if( shortestPathToUndiscovered == null || tempRoute.size() < shortestPathToUndiscovered.size() )
+                    shortestPathToUndiscovered = tempRoute;
+            }catch(NullPointerException e){
+                System.out.println("exception: "+e);
             }
+        }
+        try{
+            targetNode =shortestPathToUndiscovered.get(shortestPathToUndiscovered.size()-1 );
+        }catch(Exception nullPointer){
+            System.out.println("nullPointer Exception: "+nullPointer);
+        }
        
         if(targetNode != null){
             return NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() ) , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph, possibleActions);

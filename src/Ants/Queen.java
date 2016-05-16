@@ -35,7 +35,7 @@ public class Queen {
         }
 
 
-        if (roundNumber < 20) {
+        if (roundNumber < 50) {
 
             return startProduction(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
         } else {
