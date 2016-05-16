@@ -23,6 +23,11 @@ public class CarrierLogic {
     public static EAction generalCarrierControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations
             , List<EAction> possibleActions, Graph graph,Queen queen , int roundNumber, int startPos) {
      
+        if( !thisAnt.carriesSoil() &&possibleActions.contains(EAction.DigOut) && !isInWallArea( graph.getNode( visibleLocations.get(0).getX(), visibleLocations.get(0).getY() ) ,  startPos,  graph) ){
+            return EAction.DigOut;
+        }
+        
+            
         List<Node> nodes = graph.getNodes();
         for (Node n : nodes) {
             n.resetNode();
@@ -35,7 +40,7 @@ public class CarrierLogic {
             }
         }
         
-        if(thisAnt.getFoodLoad()  >=  15 ) //thisAnt.getAntType().getMaxFoodLoad()    
+        if(thisAnt.getFoodLoad()  >=  5 ) //thisAnt.getAntType().getMaxFoodLoad()    
         {
             return goToQueen(thisAnt,visibleLocations, thisLocation,  possibleActions,  graph,  roundNumber, queen, startPos);
         } 
@@ -49,11 +54,23 @@ public class CarrierLogic {
 
     private  static EAction goToQueen(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation
             , List<EAction> possibleActions, Graph  graph, int roundNumber, Queen queen, int startPos) {
-       
+        System.out.println("GO TO QUEEN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("GO TO QUEEN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("GO TO QUEEN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("GO TO QUEEN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("GO TO QUEEN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if( isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && thisAnt.carriesSoil() ||
+                isInWallArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && thisAnt.carriesSoil() ){
+            System.out.println("BUILD WALLL");
+            return buildWall( thisAnt, visibleLocations, thisLocation, possibleActions, graph, roundNumber, queen, startPos);
+        }
         
         if( isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && possibleActions.contains(EAction.DropFood) ){
              return EAction.DropFood;
         }
+        
+    
+        
         else{
             Node target = null;
             if(startPos == 1)
@@ -130,40 +147,92 @@ public class CarrierLogic {
     
     private static EAction buildWall(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation
             , List<EAction> possibleActions, Graph  graph, int roundNumber, Queen queen, int startPos){
+        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
+        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
+        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
+        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
+        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
+        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
+        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
+        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
+        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
+        
+        if( !visibleLocations.isEmpty() ){
+            if( isInWallArea( graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ),  startPos,  graph)){
+                System.out.println("JEG ER I DET RIGTIGE OMRÅDE");
+                System.out.println("JEG ER I DET RIGTIGE OMRÅDE");
+                System.out.println("JEG ER I DET RIGTIGE OMRÅDE");
+                System.out.println("JEG ER I DET RIGTIGE OMRÅDE");
+            }
+            
+            if( isInWallArea( graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ),  startPos,  graph)  &&  possibleActions.contains(EAction.DropSoil)){
+                System.out.println("JEG ER I DET RIGTIGE OMRÅDE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).setWall(true);
+                return EAction.DropSoil;
+            }
+        }
+           
         
         Node targetNode = null;
-        List<Node> tempRoute = null;
+        List<Node> tempRoute =  null;
         List<Node> shortestPathToWallToBuild = null;
-        
         List<Node> buildWall = new ArrayList();
+        
         for( Node node : graph.getNodes() ){
             if( isInWallArea( node,  startPos,  graph )){
-                if( !node.isWall() ){
-                    System.out.println("WALLL : "+node.getXPos()+", "+node.getYPos());
+                
+                
+                
+                if( !node.isWall() && thisLocation.getY() != node.getYPos()  ||  thisLocation.getX() != node.getXPos()){
+                    System.out.println("WALLL : "+node.getXPos()+", "+node.getYPos() +" thisLocation"+thisLocation.getX()+", "+thisLocation.getY());
                     buildWall.add(node);
                 }
             }
         }
-        for( Node node : buildWall ){
-              tempRoute = findShortestPath( graph.getNode( thisLocation.getX(), thisLocation.getY() ) , node , graph ); 
-              if( shortestPathToWallToBuild == null || tempRoute.size() < shortestPathToWallToBuild.size() )
-                  shortestPathToWallToBuild = tempRoute;
-             }      
-              
-            try{
-                targetNode = shortestPathToWallToBuild.get(shortestPathToWallToBuild.size()-1 );
-            }catch(NullPointerException e){
-                System.out.println("NullPointerException: "+e);
-            }
-              if(targetNode != null){
-            return NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() ) , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph, possibleActions);
-        }else{
-            return walkAround( possibleActions, thisLocation, queen,  thisAnt );
-        }
-              
-       
         
+         
+          
+         
+        
+        try{
+             System.out.println("shortestPathToWallToBuild size: "+shortestPathToWallToBuild.size());
+            System.out.println("tempRoute size : "+tempRoute.size());
+        }catch(Exception e){
+            System.out.println("LOOORTE "+e);
+        }
+       
+        if( !buildWall.isEmpty() ){
+            for( Node node : buildWall ){
+                  tempRoute = findShortestPath( graph.getNode( thisLocation.getX(), thisLocation.getY() ) , node , graph ); 
+                  
+                  if( shortestPathToWallToBuild == null && tempRoute != null ){
+                          shortestPathToWallToBuild = tempRoute;
+                  }
+                  else if( tempRoute != null && shortestPathToWallToBuild != null ){
+                        if( tempRoute.size() < shortestPathToWallToBuild.size() )
+                            shortestPathToWallToBuild = tempRoute;
+                  }
+            } 
+        }     
+     
+        System.out.println("this ant direction: "+thisAnt.getDirection());
+        System.out.println("this ant position: "+thisLocation.getX()+", "+thisLocation.getY());
+        
+        
+        try{
+            targetNode = shortestPathToWallToBuild.get(shortestPathToWallToBuild.size()-1 );
+            System.out.println("targetNode: "+targetNode.getXPos()+", "+targetNode.getYPos());
+        }catch(NullPointerException e){
+            System.out.println("nullPointerException "+e);
+        }
+        if(targetNode != null ){
+          
+        
+                return NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() ) , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph, possibleActions);
+         }
+       return walkAround( possibleActions, thisLocation, queen,  thisAnt );
     }
+  
 
     private  static boolean indexExists(final List list, final int index) {
         return index >= 0 && index < list.size();

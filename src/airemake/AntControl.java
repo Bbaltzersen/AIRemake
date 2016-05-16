@@ -1,6 +1,7 @@
 package airemake;
 
 //import Ants.CarrierExplore;
+import static Ants.AntMethods.isInWallArea;
 import Ants.CarrierLogic;
 import static Ants.CarrierLogic.generalCarrierControl;
 //import static Ants.CarrierLogic.generalCarrierControl;
@@ -145,7 +146,8 @@ public class AntControl implements aiantwars.IAntAI {
         for (ILocationInfo location : visibleLocations) {
             Node node = graph.getNode(location.getX(), location.getY());
             node.setDiscovered(true);
-            if (location.isRock()) {
+            node.setFoodCount(location.getFoodCount());
+            if ( location.isRock() ) {
                 node.setRock();
             }
             if (location.isFilled()) {
@@ -153,10 +155,13 @@ public class AntControl implements aiantwars.IAntAI {
             }
             if (!location.isFilled()) {
                 node.setBlocked(false);
+            }     
+            if( isInWallArea( node,  startPos,  graph)    &&   node.isWall()   ||   node.isRock() ){
+                node.setWall(true);
             }
-            if (location.getFoodCount() > 0) {
-                node.setFoodCount(location.getFoodCount());
-            }            
+            if( isInWallArea( node,  startPos,  graph)    &&   !location.isFilled()   ||   !node.isRock() ){
+                node.setWall(false);
+            }
         }
        Node node = graph.getNode(thisLocation.getX(), thisLocation.getY());
        node.setFoodCount(thisLocation.getFoodCount());

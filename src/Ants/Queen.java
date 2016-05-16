@@ -26,21 +26,6 @@ public class Queen {
         setPosX(thisLocation.getX());
         setPosY(thisLocation.getY());
         
-//           for( Node node : graph.getNodes() ){
-//            if( isInQueenArea( node,  startPos,  graph ))
-//                System.out.println("node is in queen area: "+node.getXPos()+", "+node.getYPos());
-//        }
-           
-           List<Node> buildWall = new ArrayList();
-        for( Node node : graph.getNodes() ){
-            if( isInWallArea( node,  startPos,  graph )){
-//                if( !node.isWall() ){
-                    System.out.println("WALLL : "+node.getXPos()+", "+node.getYPos());
-                    buildWall.add(node);
-//                }
-            }
-        }
-
         if (thisAnt.getHitPoints() < 15 && possibleActions.contains(EAction.EatFood)) {
             return EAction.EatFood;
         }
@@ -49,9 +34,6 @@ public class Queen {
             n.resetNode();
         }
 
-        if (thisAnt.getHealth() > 10 && possibleActions.contains(EAction.EatFood)) {
-            return EAction.EatFood;
-        }
 
         if (roundNumber < 20) {
 

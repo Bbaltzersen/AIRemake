@@ -188,25 +188,23 @@ public class AntMethods {
     
     public static boolean isInWallArea(Node node, int startPos, Graph graph){
         
-        
-        
         if(startPos == 1){
-             if( node.getXPos() > 3 && node.getYPos() > 3  && node.getXPos() < 5 && node.getYPos() < 5){ 
+             if(  !isInQueenArea( node,startPos,graph ) && node.getXPos() < 4 && node.getYPos() < 4){ 
                  return true;// South West
              }
          }
          if(startPos == 2){
-             if( node.getXPos() > 3 && node.getYPos() < graph.getWorldSizeY()-4  &&  node.getXPos() < 5  && node.getYPos() > graph.getWorldSizeY()-6){
+             if(  !isInQueenArea( node,startPos,graph )  &&  node.getXPos() < 4  && node.getYPos() > graph.getWorldSizeY()-5){
                  return true;// North West
              }
          }
          if(startPos == 3){
-             if( node.getXPos() < graph.getWorldSizeX()-4 && node.getYPos() > 3  &&  node.getXPos() > graph.getWorldSizeX()-6 && node.getYPos() < 5 ){
+             if(  !isInQueenArea( node,startPos,graph )  &&  node.getXPos() > graph.getWorldSizeX()-5 && node.getYPos() < 4 ){
                  return true;// South East
              }
          }
          if(startPos == 4){
-             if( node.getXPos() < graph.getWorldSizeX()-4 && node.getYPos() < graph.getWorldSizeY()-4   &&  node.getXPos() > graph.getWorldSizeX()-6 && node.getYPos() > graph.getWorldSizeY()-6){
+             if(  !isInQueenArea( node,startPos,graph )  &&  node.getXPos() > graph.getWorldSizeX()-5 && node.getYPos() > graph.getWorldSizeY()-5){
                  return true;// North east
              }
          }
