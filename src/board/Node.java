@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package board;
 
 import java.util.ArrayList;
@@ -31,8 +26,17 @@ public class Node implements Iterable<Edge>, Comparable<Node>
     private boolean blocked;
     private int foodCount;
     private boolean rock;
+    private boolean wall;
     private boolean discovered;
 
+    public boolean isWall(){
+        return this.wall;
+    }
+    
+    public void setWall(boolean isWall){
+        this.wall = isWall;
+    }
+    
     public boolean isDiscovered() {
         return discovered;
     }

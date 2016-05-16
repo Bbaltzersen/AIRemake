@@ -5,6 +5,8 @@
  */
 package Ants;
 
+import static Ants.AntFindPath.getLength;
+import static Ants.AntMethods.homeNodes;
 import aiantwars.EAction;
 import aiantwars.IAntInfo;
 import aiantwars.ILocationInfo;
@@ -19,15 +21,15 @@ import java.util.List;
  * @author bbalt
  */
 public class CarrierBuildAndGuard {
-    AntFindPath antP = new AntFindPath();
-    AntMethods antM = new AntMethods();
+//    AntFindPath antP = new AntFindPath();
+//    AntMethods antM = new AntMethods();
     public EAction generalCarrierBuild(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
         buildArea(thisAnt, thisLocation, visibleLocations, possibleActions, g, startPos, roundNumber, starX, starY);
         return EAction.Pass;
     }
     
     public EAction buildArea(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
-        List<Node> blocksAtHome = antM.homeNodes(g, startPos, starX, starY, thisAnt);
+        List<Node> blocksAtHome = homeNodes(g, startPos, starX, starY, thisAnt);
         System.out.println(blocksAtHome.isEmpty() + ", " + thisAnt.carriesSoil());
         if(!blocksAtHome.isEmpty() && !thisAnt.carriesSoil()){
             
@@ -42,7 +44,7 @@ public class CarrierBuildAndGuard {
         int v = thisAnt.getDirection();
         for(Node n : blocksAtHome) {
            // antP.NextStep(thisAnt, thisLocation, visibleLocations, n, n, g, possibleActions);
-            List<Node> sortList = antP.getLength(g.getNode(thisLocation.getX(), thisLocation.getY()), n, g);
+            List<Node> sortList = getLength(g.getNode(thisLocation.getX(), thisLocation.getY()), n, g);
             if(sortList!=null && !sortList.isEmpty()) {
             if(sortList.size() < sortNumber){
                 closestPath = sortList;

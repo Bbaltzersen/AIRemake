@@ -2,7 +2,9 @@ package Ants;
 
 import static Ants.AntFindPath.NextStep;
 import static Ants.AntFindPath.findShortestPath;
+import static Ants.AntMethods.findUndiscoveredFood;
 import static Ants.AntMethods.isInQueenArea;
+import static Ants.AntMethods.isInWallArea;
 import static Ants.AntMethods.walkAround;
 import aiantwars.EAction;
 import aiantwars.IAntInfo;
@@ -17,6 +19,7 @@ import java.util.List;
  */
 public class CarrierLogic {
     
+    
     public static EAction generalCarrierControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations
             , List<EAction> possibleActions, Graph graph,Queen queen , int roundNumber, int startPos) {
      
@@ -27,11 +30,12 @@ public class CarrierLogic {
         List<Node> foodNodes = new ArrayList();
         for(Node node : graph.getNodes()){
             if( node.getFoodCount() > 0 &&  !isInQueenArea( node,  startPos, graph ) && !node.isBlocked() ){
+
                 foodNodes.add(node);
             }
         }
         
-        if(thisAnt.getFoodLoad()  >=  thisAnt.getAntType().getMaxFoodLoad() )    
+        if(thisAnt.getFoodLoad()  >=  15 ) //thisAnt.getAntType().getMaxFoodLoad()    
         {
             return goToQueen(thisAnt,visibleLocations, thisLocation,  possibleActions,  graph,  roundNumber, queen, startPos);
         } 
@@ -74,12 +78,9 @@ public class CarrierLogic {
         if( thisLocation.getFoodCount() > 0  &&   !isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && possibleActions.contains(EAction.PickUpFood)){
            return EAction.PickUpFood;
         }
-        
         if( isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph )  &&  thisAnt.getFoodLoad() > 0  &&  possibleActions.contains(EAction.DropFood) ){
             return EAction.DropFood;
         }
-        
-        
         if( !visibleLocations.isEmpty() ){
             if(visibleLocations.get(0) != null){
                 if(visibleLocations.get(0).getFoodCount() > 0 && !visibleLocations.get(0).isRock() && !visibleLocations.get(0).isFilled() ){
@@ -120,14 +121,50 @@ public class CarrierLogic {
             
         }
         
-        if(targetNode != null){//hvis den fandt en rute, så tag nextStep()
+        if(targetNode != null){
             return   NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() ) , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph, possibleActions);
         }else{
-            return walkAround(possibleActions,thisLocation,queen,  thisAnt);
+            return findUndiscoveredFood(possibleActions,thisLocation,queen,  thisAnt,graph,visibleLocations);
         }
       }
     
-    
+    private static EAction buildWall(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation
+            , List<EAction> possibleActions, Graph  graph, int roundNumber, Queen queen, int startPos){
+        
+        Node targetNode = null;
+        List<Node> tempRoute = null;
+        List<Node> shortestPathToWallToBuild = null;
+        
+        List<Node> buildWall = new ArrayList();
+        for( Node node : graph.getNodes() ){
+            if( isInWallArea( node,  startPos,  graph )){
+                if( !node.isWall() ){
+                    System.out.println("WALLL : "+node.getXPos()+", "+node.getYPos());
+                    buildWall.add(node);
+                }
+            }
+        }
+        for( Node node : buildWall ){
+              tempRoute = findShortestPath( graph.getNode( thisLocation.getX(), thisLocation.getY() ) , node , graph ); 
+              if( shortestPathToWallToBuild == null || tempRoute.size() < shortestPathToWallToBuild.size() )
+                  shortestPathToWallToBuild = tempRoute;
+             }      
+              
+            try{
+                targetNode = shortestPathToWallToBuild.get(shortestPathToWallToBuild.size()-1 );
+            }catch(NullPointerException e){
+                System.out.println("NullPointerException: "+e);
+            }
+              if(targetNode != null){
+            return NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() ) , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph, possibleActions);
+        }else{
+            return walkAround( possibleActions, thisLocation, queen,  thisAnt );
+        }
+              
+       
+        
+    }
+
     private  static boolean indexExists(final List list, final int index) {
         return index >= 0 && index < list.size();
     }

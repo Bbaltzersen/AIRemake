@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package board;
 
 import java.util.ArrayList;
@@ -17,27 +12,32 @@ public class Graph
 {
    private final ArrayList<Node> nodes;
    private final ArrayList<Edge> edges;
+   private boolean wallIsBuild;
 
-    public Graph()
-    {
+    public Graph(){
         this.nodes = new ArrayList<>();
         this.edges = new ArrayList<>();
     }
-   
-    public List<Node> getNodes()
-    {
+    
+    public boolean wallIsBuild(){
+        return this.wallIsBuild;
+    }
+    
+    public void setWallIsBuild(boolean value){
+        this.wallIsBuild = value;
+    }
+    
+    public List<Node> getNodes(){
         return nodes;
     }
     
-    public Node createNode(String name, double xPos, double yPos)
-    {
+    public Node createNode(String name, double xPos, double yPos){
         Node res = new Node(name, xPos, yPos);
         nodes.add(res);
         return res;
     }
     
-    public void createEdge(Node begin, Node end, double weight)
-    {
+    public void createEdge(Node begin, Node end, double weight){
        Edge edge = new Edge(begin, end, weight);
        edges.add(edge);
     }

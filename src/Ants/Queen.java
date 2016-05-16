@@ -1,19 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Ants;
 
 import static Ants.AntFindPath.NextStep;
 import static Ants.AntFindPath.findDirection;
 import static Ants.AntFindPath.getLength;
 import static Ants.AntMethods.homeNodes;
+import static Ants.AntMethods.isInQueenArea;
+import static Ants.AntMethods.isInWallArea;
 import aiantwars.EAction;
 import aiantwars.IAntInfo;
 import aiantwars.ILocationInfo;
 import board.Graph;
 import board.Node;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,18 +20,31 @@ import java.util.List;
  */
 public class Queen {
 
-//    AntMethods antM = new AntMethods();
-//    AntFindPath fRoute = new AntFindPath(new EulerHeristic());
     int posX, posY;
 
-    public EAction generalQueenControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
+    public EAction generalQueenControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph graph, int startPos, int roundNumber, int starX, int starY) {
         setPosX(thisLocation.getX());
         setPosY(thisLocation.getY());
+        
+//           for( Node node : graph.getNodes() ){
+//            if( isInQueenArea( node,  startPos,  graph ))
+//                System.out.println("node is in queen area: "+node.getXPos()+", "+node.getYPos());
+//        }
+           
+           List<Node> buildWall = new ArrayList();
+        for( Node node : graph.getNodes() ){
+            if( isInWallArea( node,  startPos,  graph )){
+//                if( !node.isWall() ){
+                    System.out.println("WALLL : "+node.getXPos()+", "+node.getYPos());
+                    buildWall.add(node);
+//                }
+            }
+        }
 
         if (thisAnt.getHitPoints() < 15 && possibleActions.contains(EAction.EatFood)) {
             return EAction.EatFood;
         }
-        List<Node> nodes = g.getNodes();
+        List<Node> nodes = graph.getNodes();
         for (Node n : nodes) {
             n.resetNode();
         }
@@ -44,9 +55,9 @@ public class Queen {
 
         if (roundNumber < 20) {
 
-            return startProduction(thisAnt, thisLocation, visibleLocations, possibleActions, g, startPos, roundNumber, starX, starY);
+            return startProduction(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
         } else {
-            return stallGame(thisAnt, thisLocation, visibleLocations, possibleActions, g, startPos, roundNumber, starX, starY);
+            return stallGame(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
         }
 
     }

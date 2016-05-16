@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package airemake;
 
 //import Ants.CarrierExplore;
@@ -191,7 +186,7 @@ public class AntControl implements aiantwars.IAntAI {
       }
     
     @Override
-    public void onEndRound(int yourMajor, int yourMinor, int enemyMajor, int enemyMinor) {
+    public void onEndRound(int yourMajor, int yourMinor, int enemyMajor, int enemyMinor) {            
        }
     
     @Override

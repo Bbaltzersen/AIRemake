@@ -1,10 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Ants;
 
+import static Ants.AntFindPath.NextStep;
+import static Ants.AntFindPath.findShortestPath;
 import aiantwars.EAction;
 import aiantwars.EAntType;
 import aiantwars.IAntInfo;
@@ -28,47 +25,69 @@ public class AntMethods {
         return foodCount;
     }
 
-     public static EAction walkAround(List<EAction> possibleActions, ILocationInfo thisLocation,Queen queen,IAntInfo thisAnt){
+    public static EAction findUndiscoveredFood(List<EAction> possibleActions, ILocationInfo thisLocation,Queen queen,IAntInfo thisAnt, Graph graph,List<ILocationInfo> visibleLocations){
+        Node targetNode = null;
+        List <Node> shortestPathToUndiscovered = null;
+        List <Node> tempRoute = null;
+        
+        List<Node> undiscoveredNodes = new ArrayList();
+        for( Node node : graph.getNodes() ){
+            if( node.isDiscovered() == false ){
+                undiscoveredNodes.add(node);
+            }
+        }
+        for(Node node : undiscoveredNodes ){
+            tempRoute = findShortestPath( graph.getNode( thisLocation.getX(), thisLocation.getY() ),node ,graph );
+            
+            if( shortestPathToUndiscovered == null || tempRoute.size() < shortestPathToUndiscovered.size() )
+                shortestPathToUndiscovered = tempRoute;
+         }    
+            try{
+                targetNode =shortestPathToUndiscovered.get(shortestPathToUndiscovered.size()-1 );
+            }catch(Exception nullPointer){
+                System.out.println("nullPointer Exception: "+nullPointer);
+            }
+       
+        if(targetNode != null){
+            return NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() ) , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph, possibleActions);
+        }else{
+            return walkAround( possibleActions, thisLocation, queen,  thisAnt );
+        }
+    }
+    
+    public static EAction walkAround(List<EAction> possibleActions, ILocationInfo thisLocation,Queen queen,IAntInfo thisAnt){
         if( thisAnt.getAntType() == EAntType.CARRIER ){
             List<EAction> actions = new ArrayList();
             
-            if(possibleActions.contains(EAction.MoveForward))
+            if(possibleActions.contains(EAction.MoveForward)){
                 actions.add(EAction.MoveForward);
-             actions.add(EAction.MoveForward);
-              actions.add(EAction.MoveForward);
-               actions.add(EAction.MoveForward);
-            
+                actions.add(EAction.MoveForward);
+                actions.add(EAction.MoveForward);
+                actions.add(EAction.MoveForward);
+            }
+                
             if(possibleActions.contains(EAction.TurnLeft))
                 actions.add(EAction.TurnLeft);
             
             if(possibleActions.contains(EAction.TurnRight))
                 actions.add(EAction.TurnRight);
             
-                if( !actions.isEmpty() ){
+            if( !actions.isEmpty() ){
                 Random rand = new Random();
-                System.out.println("Array action.size() = " +actions.size());
                 int x = rand.nextInt( actions.size() );
-                System.out.println("randInt num = "+x);
-
 
                 try{
-                    System.out.println("CARRIER RETURNED WALKAROUND ");
-
-                    EAction a = actions.get( x  );
-                    System.out.println("returned action : "+a.name() );
-                    return  a;
+                    return  actions.get( rand.nextInt( actions.size() )  );
                 }catch(Exception e){
                     System.out.println("ERROR: "+ e.toString());
                 }
-
                 return EAction.Pass;
-
             }
         }
         return EAction.Pass;
      }
      
-     public static List<Node> homeNodes(Graph g, int startPos, int starX, int starY, IAntInfo thisAnt) {
+    public static List<Node> homeNodes(Graph g, int startPos, int starX, int starY, IAntInfo thisAnt) {
         List<Node> listOfBlockedNodes = new ArrayList();
         if(startPos==1){
             for(int x = starX; x <= starX+2; x++) {
@@ -125,32 +144,32 @@ public class AntMethods {
         return listOfBlockedNodes;
     }
      
-     public static boolean isInQueenArea(Node node, int startPos, Graph graph){
+    public static boolean isInQueenArea(Node node, int startPos, Graph graph){
          
-         if(startPos == 1){ 
+         if(startPos == 1){
              if( node.getXPos() < 3 && node.getYPos() < 3  ){ 
                  return true;// South West
              }
          }
          if(startPos == 2){
-             if( node.getXPos() < 3 && node.getYPos() > graph.getWorldSizeY()-3 ){
+             if( node.getXPos() < 3 && node.getYPos() > graph.getWorldSizeY()-4 ){
                  return true;// North West
              }
          }
          if(startPos == 3){
-             if( node.getXPos() > graph.getWorldSizeX()-3 && node.getYPos() < 3 ){
+             if( node.getXPos() > graph.getWorldSizeX()-4 && node.getYPos() < 3 ){
                  return true;// South East
              }
          }
          if(startPos == 4){
-             if( node.getXPos() > graph.getWorldSizeX()-3 && node.getYPos() > graph.getWorldSizeY()-3 ){
+             if( node.getXPos() > graph.getWorldSizeX()-4 && node.getYPos() > graph.getWorldSizeY()-4 ){
                  return true;// North east
              }
          }
          return false;
     }
      
-     public static Node moveAwayFromQueenArea(int startPos, Graph graph, ILocationInfo thisLocation){
+    public static Node moveAwayFromQueenArea(int startPos, Graph graph, ILocationInfo thisLocation){
         
         if(startPos == 1){ // nede venstre
             return graph.getNode( graph.getWorldSizeX()-1, graph.getWorldSizeY()-1 );
@@ -166,4 +185,33 @@ public class AntMethods {
         }
         else return graph.getNode(graph.getWorldSizeX()/2, graph.getWorldSizeY()/2 );
     }
+    
+    public static boolean isInWallArea(Node node, int startPos, Graph graph){
+        
+        
+        
+        if(startPos == 1){
+             if( node.getXPos() > 3 && node.getYPos() > 3  && node.getXPos() < 5 && node.getYPos() < 5){ 
+                 return true;// South West
+             }
+         }
+         if(startPos == 2){
+             if( node.getXPos() > 3 && node.getYPos() < graph.getWorldSizeY()-4  &&  node.getXPos() < 5  && node.getYPos() > graph.getWorldSizeY()-6){
+                 return true;// North West
+             }
+         }
+         if(startPos == 3){
+             if( node.getXPos() < graph.getWorldSizeX()-4 && node.getYPos() > 3  &&  node.getXPos() > graph.getWorldSizeX()-6 && node.getYPos() < 5 ){
+                 return true;// South East
+             }
+         }
+         if(startPos == 4){
+             if( node.getXPos() < graph.getWorldSizeX()-4 && node.getYPos() < graph.getWorldSizeY()-4   &&  node.getXPos() > graph.getWorldSizeX()-6 && node.getYPos() > graph.getWorldSizeY()-6){
+                 return true;// North east
+             }
+         }
+        return false;
+    }
+    
+    
 }
