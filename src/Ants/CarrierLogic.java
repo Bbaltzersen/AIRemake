@@ -23,15 +23,23 @@ public class CarrierLogic {
     
     public static EAction generalCarrierControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations
             , List<EAction> possibleActions, Graph graph,Queen queen , int roundNumber, int startPos) {
-     
-        if(thisAnt.getActionPoints() > 30 && possibleActions.contains(EAction.EatFood)){
-            return EAction.EatFood;
-        }
-        if( !thisAnt.carriesSoil() &&possibleActions.contains(EAction.DigOut) && !isInWallArea( graph.getNode( visibleLocations.get(0).getX(), visibleLocations.get(0).getY() ) ,  startPos,  graph) ){
-            return EAction.DigOut;
-        }
-        
-            
+  
+        if( !visibleLocations.isEmpty() ){
+            if(thisAnt.getHitPoints() < 20 && possibleActions.contains(EAction.EatFood)){
+                return EAction.EatFood;
+            }
+            if( !thisAnt.carriesSoil() &&possibleActions.contains(EAction.DigOut) && !isInWallArea( graph.getNode( visibleLocations.get(0).getX(), visibleLocations.get(0).getY() ) ,  startPos,  graph) ){
+                return EAction.DigOut;
+            }
+            if( visibleLocations.size() > 1 ){
+                if( !thisAnt.carriesSoil() && visibleLocations.get(1).isFilled()  ){
+                        return EAction.MoveForward;
+                }
+            }
+            if(  !thisAnt.carriesSoil() && visibleLocations.get(0).isFilled() && thisAnt.getActionPoints() < 5){
+                return EAction.Pass;
+            }
+        }    
         List<Node> nodes = graph.getNodes();
         for (Node n : nodes) {
             n.resetNode();
