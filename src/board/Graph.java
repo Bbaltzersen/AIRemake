@@ -19,6 +19,14 @@ public class Graph
         this.edges = new ArrayList<>();
     }
     
+    public void tempBlockedCountertick(){
+        for(Node node : nodes){
+            if( node.isTempBlocked() ){
+                node.tickTempBlockedCounter();
+            }
+        }
+    }
+    
     public boolean wallIsBuild(){
         return this.wallIsBuild;
     }

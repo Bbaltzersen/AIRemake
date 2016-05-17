@@ -42,7 +42,7 @@ public class AntFindPath {
         while (true) {
             for (Edge edge : curNode) {
                 Node other = edge.getEnd();
-                if (!closedSet.contains(other) && !other.isBlocked() && !other.isRock()) {
+                if (!closedSet.contains(other) && !other.isBlocked() && !other.isRock() && !other.isTempBlocked()) {
                     double newG = edge.getWeight() + curNode.getGVal();
                     if (other.getGVal() > newG) {
                         other.setGVal(newG);

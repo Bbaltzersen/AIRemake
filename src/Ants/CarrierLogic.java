@@ -2,6 +2,7 @@ package Ants;
 
 import static Ants.AntFindPath.NextStep;
 import static Ants.AntFindPath.findShortestPath;
+import static Ants.AntMethods.IsInOuterWallArea;
 import static Ants.AntMethods.findUndiscoveredFood;
 import static Ants.AntMethods.isInQueenArea;
 import static Ants.AntMethods.isInWallArea;
@@ -23,6 +24,9 @@ public class CarrierLogic {
     public static EAction generalCarrierControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations
             , List<EAction> possibleActions, Graph graph,Queen queen , int roundNumber, int startPos) {
      
+        if(thisAnt.getActionPoints() > 30 && possibleActions.contains(EAction.EatFood)){
+            return EAction.EatFood;
+        }
         if( !thisAnt.carriesSoil() &&possibleActions.contains(EAction.DigOut) && !isInWallArea( graph.getNode( visibleLocations.get(0).getX(), visibleLocations.get(0).getY() ) ,  startPos,  graph) ){
             return EAction.DigOut;
         }
@@ -34,44 +38,39 @@ public class CarrierLogic {
         }
         List<Node> foodNodes = new ArrayList();
         for(Node node : graph.getNodes()){
-            if( node.getFoodCount() > 0 &&  !isInQueenArea( node,  startPos, graph ) && !node.isBlocked() ){
-
+            if( node.getFoodCount() > 0 &&  !isInQueenArea( node,  startPos, graph ) && !node.isBlocked() && !node.isRock() && !node.isTempBlocked()){
                 foodNodes.add(node);
             }
         }
         
         if(thisAnt.getFoodLoad()  >=  5 ) //thisAnt.getAntType().getMaxFoodLoad()    
         {
+            System.out.println("generalCarrierControl: GO TO QUEEN");
             return goToQueen(thisAnt,visibleLocations, thisLocation,  possibleActions,  graph,  roundNumber, queen, startPos);
         } 
         else if ( !foodNodes.isEmpty() ){
+            System.out.println("generalCarrierControl: FIND FOOD");
             return findFood(thisAnt, visibleLocations,thisLocation,  possibleActions,  graph,  roundNumber, queen , startPos);
         }
         else{
+            System.out.println("generalCarrierControl: walk around");
             return walkAround( possibleActions, thisLocation, queen,  thisAnt );
         }
     }
 
-    private  static EAction goToQueen(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation
+      private  static EAction goToQueen(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation
             , List<EAction> possibleActions, Graph  graph, int roundNumber, Queen queen, int startPos) {
-        System.out.println("GO TO QUEEN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println("GO TO QUEEN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println("GO TO QUEEN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println("GO TO QUEEN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println("GO TO QUEEN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
         if( isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && thisAnt.carriesSoil() ||
-                isInWallArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && thisAnt.carriesSoil() ){
-            System.out.println("BUILD WALLL");
+                isInWallArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && thisAnt.carriesSoil() ||
+                IsInOuterWallArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && thisAnt.carriesSoil() ){
+            System.out.println("going from goToQueen to buildWall.....");
             return buildWall( thisAnt, visibleLocations, thisLocation, possibleActions, graph, roundNumber, queen, startPos);
         }
         
         if( isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && possibleActions.contains(EAction.DropFood) ){
              return EAction.DropFood;
-        }
-        
-    
-        
-        else{
+        }else{
             Node target = null;
             if(startPos == 1)
                target = graph.getNode(0, 0);
@@ -100,13 +99,15 @@ public class CarrierLogic {
         }
         if( !visibleLocations.isEmpty() ){
             if(visibleLocations.get(0) != null){
-                if(visibleLocations.get(0).getFoodCount() > 0 && !visibleLocations.get(0).isRock() && !visibleLocations.get(0).isFilled() ){
+                if(visibleLocations.get(0).getFoodCount() > 0 && !visibleLocations.get(0).isRock() && !visibleLocations.get(0).isFilled() && 
+                        !isInQueenArea(  graph.getNode(visibleLocations.get(0).getX(), visibleLocations.get(0).getY()  ),  startPos,  graph) ){
                     return  NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
                             , graph.getNode( (int) visibleLocations.get(0).getX() , (int) visibleLocations.get(0).getY() ) ,graph, possibleActions);
                 } 
             }
             if( indexExists( visibleLocations,1 ) ){
-                 if(visibleLocations.get(1).getFoodCount() > 0 && !visibleLocations.get(1).isRock() && !visibleLocations.get(1).isFilled() ){
+                 if(visibleLocations.get(1).getFoodCount() > 0 && !visibleLocations.get(1).isRock() && !visibleLocations.get(1).isFilled() &&
+                         !isInQueenArea(  graph.getNode(visibleLocations.get(1).getX(), visibleLocations.get(1).getY()  ),  startPos,  graph)){
                 return  NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() )
                         , graph.getNode( (int) visibleLocations.get(1).getX() , (int) visibleLocations.get(1).getY() ) ,graph, possibleActions);
                 }
@@ -147,35 +148,39 @@ public class CarrierLogic {
     
     private static EAction buildWall(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation
             , List<EAction> possibleActions, Graph  graph, int roundNumber, Queen queen, int startPos){
+        
         System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
         System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
-        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
-        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
-        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
-        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
-        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
-        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
-        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
+       
         
         if( !visibleLocations.isEmpty() ){
-            if( isInWallArea( graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ),  startPos,  graph)){
+            if(  isInWallArea( graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ),  startPos,  graph)    && 
+                                        !graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).isWall()                     &&
+                                        !graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).isBlocked()                &&
+                                        !graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).isTempBlocked()        &&
+                    possibleActions.contains(EAction.DropSoil)){
+                
+                System.out.println("................................................................................");
                 System.out.println("JEG ER I DET RIGTIGE OMRÅDE");
                 System.out.println("JEG ER I DET RIGTIGE OMRÅDE");
                 System.out.println("JEG ER I DET RIGTIGE OMRÅDE");
-                System.out.println("JEG ER I DET RIGTIGE OMRÅDE");
-            }
-            
-            if( isInWallArea( graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ),  startPos,  graph)  &&  possibleActions.contains(EAction.DropSoil)){
-                System.out.println("JEG ER I DET RIGTIGE OMRÅDE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                System.out.println("WALL SET TO TRUE AND PLACED SOIL ON : "+visibleLocations.get(0).getX()+", "+visibleLocations.get(0).getY());
                 graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).setWall(true);
                 return EAction.DropSoil;
+                
             }
             
-            if( isInWallArea( graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ),  startPos,  graph)  ){
-                System.out.println("JEG ER I DET RIGTIGE OMRÅDE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! MEN DER VAR IKKE NOK BOOOOOOOST!!!!!!!!!!!!!!!!!!!!!!!!!");
-                graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).setWall(true);
-                return EAction.DropSoil;
-            }
+//            if( isInWallArea( graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ),  startPos,  graph)  &&  possibleActions.contains(EAction.DropSoil)){
+//                System.out.println("JEG ER I DET RIGTIGE OMRÅDE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//                graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).setWall(true);
+//                return EAction.DropSoil;
+//            }
+//            
+//            if( isInWallArea( graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ),  startPos,  graph)  ){
+//                System.out.println("JEG ER I DET RIGTIGE OMRÅDE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! MEN DER VAR IKKE NOK BOOOOOOOST!!!!!!!!!!!!!!!!!!!!!!!!!");
+//                graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).setWall(true);
+//                return EAction.DropSoil;
+//            }
         }
            
         
@@ -187,10 +192,9 @@ public class CarrierLogic {
         for( Node node : graph.getNodes() ){
             if( isInWallArea( node,  startPos,  graph )){
                 
-                
-                
-                if( (!node.isWall() && thisLocation.getY() != node.getYPos())  ||  (!node.isWall() && thisLocation.getX() != node.getXPos()) ) {
-                    System.out.println("WALLL : "+node.getXPos()+", "+node.getYPos() +" thisLocation"+thisLocation.getX()+", "+thisLocation.getY());
+                if( (!node.isWall() && thisLocation.getY() != node.getYPos() && thisLocation.getX() != node.getXPos())   ||
+                     (!node.isWall() && thisLocation.getX() != node.getXPos() && thisLocation.getY() != node.getYPos()) ) {
+                    System.out.println("WALLL not build yet : "+node.getXPos()+", "+node.getYPos() +" thisLocation"+thisLocation.getX()+", "+thisLocation.getY());
                     buildWall.add(node);
                 }
             }
@@ -221,8 +225,8 @@ public class CarrierLogic {
             } 
         }     
      
-        System.out.println("this ant direction: "+thisAnt.getDirection());
-        System.out.println("this ant position: "+thisLocation.getX()+", "+thisLocation.getY());
+//        System.out.println("this ant direction: "+thisAnt.getDirection());
+//        System.out.println("this ant position: "+thisLocation.getX()+", "+thisLocation.getY());
         
         
         try{
@@ -239,7 +243,6 @@ public class CarrierLogic {
        return walkAround( possibleActions, thisLocation, queen,  thisAnt );
     }
   
-
     private  static boolean indexExists(final List list, final int index) {
         return index >= 0 && index < list.size();
     }

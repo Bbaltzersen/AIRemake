@@ -24,16 +24,15 @@ import java.util.List;
 public class AntControl implements aiantwars.IAntAI {
     
     Queen queen = new Queen();
-    //CarrierExplore carrier = new CarrierExplore();
-    //CarrierLogic carrierLogic = new CarrierLogic();
-    
     Graph graph = new Graph(); // collective map
+    
     int startPos;
     int starX;
     int starY;
     int worldSizeX;
     int worldSizeY;
-
+    int roundNumber;
+    
     public int getWorldSizeX() {
         return worldSizeX;
     }
@@ -41,7 +40,7 @@ public class AntControl implements aiantwars.IAntAI {
     public int getWorldSizeY() {
         return worldSizeY;
     }
-    int roundNumber;
+    
 
     // <editor-fold defaultstate="collapsed">  
     public boolean inside(int x, int y) {
@@ -125,6 +124,15 @@ public class AntControl implements aiantwars.IAntAI {
     
     @Override
     public void onStartTurn(IAntInfo thisAnt, int turn) {        
+        this.roundNumber = turn;
+        graph.tempBlockedCountertick();
+        System.out.println("ROUND NUMBER:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"+turn);
+        for(Node node : graph.getNodes()){
+            
+            if(node.isTempBlocked()){
+                System.out.println("tempBlocked: "+node.getXPos()+", "+node.getYPos()+" time"+node.getTempBlockedCounter());
+            }
+        }System.out.println("ROUND NUMBER:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"+turn);
     }
     
     @Override
@@ -132,11 +140,11 @@ public class AntControl implements aiantwars.IAntAI {
         System.out.println(thisAnt.antID()+", "+thisAnt.getAntType()+"----------------------------------------------------------------------------------------------------------------------------------");
         System.out.println("this ant healt and hitpoint: "+thisAnt.getHealth()+" : "+thisAnt.getHitPoints());
         addLocationsInfoToGraph(visibleLocations,thisLocation);
+        
         if (thisAnt.getAntType().equals(EAntType.QUEEN)) {
             return queen.generalQueenControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
         }
         if (thisAnt.getAntType().equals(EAntType.CARRIER)) {
-            
             return generalCarrierControl( thisAnt,  thisLocation,  visibleLocations, possibleActions,  graph, queen ,  roundNumber, startPos);
         }
         return EAction.Pass;
@@ -150,18 +158,30 @@ public class AntControl implements aiantwars.IAntAI {
             if ( location.isRock() ) {
                 node.setRock();
             }
-            if (location.isFilled()) {
+            if ( location.isFilled() ) {
                 node.setBlocked(true);
             }
             if (!location.isFilled()) {
                 node.setBlocked(false);
             }     
-            if( isInWallArea( node,  startPos,  graph)    &&   node.isWall()   ||   node.isRock() ){
+            if( isInWallArea( node,  startPos,  graph)    &&   node.isWall()   ||  isInWallArea( node,  startPos,  graph)  &&  node.isRock() ){
                 node.setWall(true);
             }
-            if( isInWallArea( node,  startPos,  graph)    &&   !location.isFilled()   ||   !node.isRock() ){
+            if( isInWallArea( node,  startPos,  graph)    &&   !location.isFilled()  ){
                 node.setWall(false);
             }
+           
+            try{
+                int id = location.getAnt().getTeamInfo().getTeamID();
+                if(id == 4){
+                     node.setTempBlockedCounter();
+                }
+            }catch(Exception e){
+                System.out.println("catched getAnt exception: "+e);
+            }
+            
+            
+            
         }
        Node node = graph.getNode(thisLocation.getX(), thisLocation.getY());
        node.setFoodCount(thisLocation.getFoodCount());

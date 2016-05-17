@@ -214,5 +214,31 @@ public class AntMethods {
         return false;
     }
     
+    public static boolean IsInOuterWallArea(Node node, int startPos, Graph graph){
+        
+        if(startPos == 1){
+             if(  !isInQueenArea( node,startPos,graph ) && !isInWallArea( node,startPos,graph )  && node.getXPos() < 5 && node.getYPos() < 5){ 
+                 return true;// South West
+             }
+         }
+         if(startPos == 2){
+             if(  !isInQueenArea( node,startPos,graph )  &&  !isInWallArea( node,startPos,graph )  && node.getXPos() < 5  && node.getYPos() > graph.getWorldSizeY()-6){
+                 return true;// North West
+             }
+         }
+         if(startPos == 3){
+             if(  !isInQueenArea( node,startPos,graph )  &&  !isInWallArea( node,startPos,graph )  && node.getXPos() > graph.getWorldSizeX()-6 && node.getYPos() < 5 ){
+                 return true;// South East
+             }
+         }
+         if(startPos == 4){
+             if(  !isInQueenArea( node,startPos,graph )  &&  !isInWallArea( node,startPos,graph )  &&  node.getXPos() > graph.getWorldSizeX()-6 && node.getYPos() > graph.getWorldSizeY()-6){
+                 return true;// North east
+             }
+         }
+        return false;
+        
+    }
+    
     
 }

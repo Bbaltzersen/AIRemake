@@ -9,8 +9,7 @@ import java.util.Iterator;
  */
 public class Node implements Iterable<Edge>, Comparable<Node>
 {
-    public Node(String name, double xPos, double yPos)
-    {
+    public Node(String name, double xPos, double yPos){
         this.name = name;
         this.xPos = xPos;
         this.yPos = yPos;
@@ -28,7 +27,28 @@ public class Node implements Iterable<Edge>, Comparable<Node>
     private boolean rock;
     private boolean wall;
     private boolean discovered;
-
+    private Node prev;
+    private double gVal;
+    private double hVal;
+    private final ArrayList<Edge> edges;
+    private int tempBlockedCounter;
+    
+    public void setTempBlockedCounter(){
+        tempBlockedCounter = 15;
+    }
+    
+    public void tickTempBlockedCounter(){
+        tempBlockedCounter--;
+    }
+    
+    public boolean isTempBlocked(){
+        return tempBlockedCounter > 0;
+    }
+    
+    public int getTempBlockedCounter(){
+        return this.tempBlockedCounter;
+    }
+    
     public boolean isWall(){
         return this.wall;
     }
@@ -58,7 +78,6 @@ public class Node implements Iterable<Edge>, Comparable<Node>
         return foodCount;
     }
     
-    
     public boolean isBlocked() {
         return blocked;
     }
@@ -66,11 +85,6 @@ public class Node implements Iterable<Edge>, Comparable<Node>
     public void setBlocked(boolean blocked) {
         this.blocked = blocked;
     }
-    private Node prev;
-    private double gVal;
-    private double hVal;
-    private final ArrayList<Edge> edges;
-
     
     public double getXPos()
     {
