@@ -45,15 +45,15 @@ public class CarrierLogic {
         
         if(thisAnt.getFoodLoad()  >=  5 ) //thisAnt.getAntType().getMaxFoodLoad()    
         {
-            System.out.println("generalCarrierControl: GO TO QUEEN");
+//            System.out.println("generalCarrierControl: GO TO QUEEN");
             return goToQueen(thisAnt,visibleLocations, thisLocation,  possibleActions,  graph,  roundNumber, queen, startPos);
         } 
         else if ( !foodNodes.isEmpty() ){
-            System.out.println("generalCarrierControl: FIND FOOD");
+//            System.out.println("generalCarrierControl: FIND FOOD");
             return findFood(thisAnt, visibleLocations,thisLocation,  possibleActions,  graph,  roundNumber, queen , startPos);
         }
         else{
-            System.out.println("generalCarrierControl: walk around");
+//            System.out.println("generalCarrierControl: walk around");
             return walkAround( possibleActions, thisLocation, queen,  thisAnt );
         }
     }
@@ -64,7 +64,7 @@ public class CarrierLogic {
         if( isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && thisAnt.carriesSoil() ||
                 isInWallArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && thisAnt.carriesSoil() ||
                 IsInOuterWallArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && thisAnt.carriesSoil() ){
-            System.out.println("going from goToQueen to buildWall.....");
+//            System.out.println("going from goToQueen to buildWall.....");
             return buildWall( thisAnt, visibleLocations, thisLocation, possibleActions, graph, roundNumber, queen, startPos);
         }
         
@@ -134,7 +134,7 @@ public class CarrierLogic {
             try{
                 targetNode = shortestPathToFood.get( shortestPathToFood.size() -1); 
             }catch(Exception nullPointer){
-                System.out.println("exception: "+nullPointer);
+//                System.out.println("exception: "+nullPointer);
             }
             
         }
@@ -148,11 +148,7 @@ public class CarrierLogic {
     
     private static EAction buildWall(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation
             , List<EAction> possibleActions, Graph  graph, int roundNumber, Queen queen, int startPos){
-        
-        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
-        System.out.println("I TRYING TO BUILD A WALL HERE!!!!!!!!!");
-       
-        
+
         if( !visibleLocations.isEmpty() ){
             if(  isInWallArea( graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ),  startPos,  graph)    && 
                                         !graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).isWall()                     &&
@@ -160,27 +156,22 @@ public class CarrierLogic {
                                         !graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).isTempBlocked()        &&
                     possibleActions.contains(EAction.DropSoil)){
                 
-                System.out.println("................................................................................");
-                System.out.println("JEG ER I DET RIGTIGE OMRÅDE");
-                System.out.println("JEG ER I DET RIGTIGE OMRÅDE");
-                System.out.println("JEG ER I DET RIGTIGE OMRÅDE");
-                System.out.println("WALL SET TO TRUE AND PLACED SOIL ON : "+visibleLocations.get(0).getX()+", "+visibleLocations.get(0).getY());
                 graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).setWall(true);
                 return EAction.DropSoil;
-                
             }
-            
-//            if( isInWallArea( graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ),  startPos,  graph)  &&  possibleActions.contains(EAction.DropSoil)){
-//                System.out.println("JEG ER I DET RIGTIGE OMRÅDE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//                graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).setWall(true);
-//                return EAction.DropSoil;
-//            }
-//            
-//            if( isInWallArea( graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ),  startPos,  graph)  ){
-//                System.out.println("JEG ER I DET RIGTIGE OMRÅDE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! MEN DER VAR IKKE NOK BOOOOOOOST!!!!!!!!!!!!!!!!!!!!!!!!!");
-//                graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).setWall(true);
-//                return EAction.DropSoil;
-//            }
+        }
+        
+        if( !visibleLocations.isEmpty() ){
+            if(  isInWallArea( graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ),  startPos,  graph)    && 
+                                        !graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).isWall()                     &&
+                                        !graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).isBlocked()                &&
+                                        !graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).isTempBlocked()        &&
+                                        
+                    thisAnt.getActionPoints() < 4){
+                
+                
+                return EAction.Pass;
+            }
         }
            
         
@@ -194,7 +185,7 @@ public class CarrierLogic {
                 
                 if( (!node.isWall() && thisLocation.getY() != node.getYPos() && thisLocation.getX() != node.getXPos())   ||
                      (!node.isWall() && thisLocation.getX() != node.getXPos() && thisLocation.getY() != node.getYPos()) ) {
-                    System.out.println("WALLL not build yet : "+node.getXPos()+", "+node.getYPos() +" thisLocation"+thisLocation.getX()+", "+thisLocation.getY());
+//                    System.out.println("WALLL not build yet : "+node.getXPos()+", "+node.getYPos() +" thisLocation"+thisLocation.getX()+", "+thisLocation.getY());
                     buildWall.add(node);
                 }
             }
@@ -205,10 +196,10 @@ public class CarrierLogic {
          
         
         try{
-             System.out.println("shortestPathToWallToBuild size: "+shortestPathToWallToBuild.size());
-            System.out.println("tempRoute size : "+tempRoute.size());
+//             System.out.println("shortestPathToWallToBuild size: "+shortestPathToWallToBuild.size());
+//            System.out.println("tempRoute size : "+tempRoute.size());
         }catch(Exception e){
-            System.out.println("LOOORTE "+e);
+//            System.out.println("LOOORTE "+e);
         }
        
         if( !buildWall.isEmpty() ){
@@ -231,9 +222,9 @@ public class CarrierLogic {
         
         try{
             targetNode = shortestPathToWallToBuild.get(shortestPathToWallToBuild.size()-1 );
-            System.out.println("targetNode: "+targetNode.getXPos()+", "+targetNode.getYPos());
+//            System.out.println("targetNode: "+targetNode.getXPos()+", "+targetNode.getYPos());
         }catch(NullPointerException e){
-            System.out.println("nullPointerException "+e);
+//            System.out.println("nullPointerException "+e);
         }
         if(targetNode != null ){
           

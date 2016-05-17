@@ -34,7 +34,10 @@ public class Node implements Iterable<Edge>, Comparable<Node>
     private int tempBlockedCounter;
     
     public void setTempBlockedCounter(){
-        tempBlockedCounter = 15;
+        tempBlockedCounter = 5;
+    }
+    public void removeTempBlockedCounter(){
+        tempBlockedCounter = 0;
     }
     
     public void tickTempBlockedCounter(){

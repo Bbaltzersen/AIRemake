@@ -35,7 +35,7 @@ public class Queen {
         }
 
 
-        if (roundNumber < 10) {
+        if (roundNumber < 30) {
 
             return startProduction(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
         } else {
@@ -207,7 +207,7 @@ public class Queen {
                 }
             }
 
-            System.out.println("The way to go: "+home);
+//            System.out.println("The way to go: "+home);
             return AntFindPath.findDirection(nX, nY, thisLocation, visibleLocations, thisAnt, possibleActions, true);
 
         }

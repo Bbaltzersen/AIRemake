@@ -124,21 +124,29 @@ public class AntControl implements aiantwars.IAntAI {
     
     @Override
     public void onStartTurn(IAntInfo thisAnt, int turn) {        
-        this.roundNumber = turn;
-        graph.tempBlockedCountertick();
-        System.out.println("ROUND NUMBER:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"+turn);
-        for(Node node : graph.getNodes()){
-            
-            if(node.isTempBlocked()){
-                System.out.println("tempBlocked: "+node.getXPos()+", "+node.getYPos()+" time"+node.getTempBlockedCounter());
+//        this.roundNumber = turn;
+        
+        if(turn == roundNumber){
+            System.out.println("SAME TURN!!!");
+        }
+        
+        if(turn > roundNumber ){
+            System.out.println("turn: "+turn+" , roundNumber: "+roundNumber);
+            this.roundNumber = turn;
+             graph.tempBlockedCountertick();
+            System.out.println("ROUND NUMBER:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"+turn);
+            for(Node node : graph.getNodes()){  
+                if(node.isTempBlocked()){
+                    System.out.println("tempBlocked: "+node.getXPos()+", "+node.getYPos()+" time"+node.getTempBlockedCounter());
+                }
             }
-        }System.out.println("ROUND NUMBER:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"+turn);
+        }
     }
     
     @Override
     public EAction chooseAction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions) {
-        System.out.println(thisAnt.antID()+", "+thisAnt.getAntType()+"----------------------------------------------------------------------------------------------------------------------------------");
-        System.out.println("this ant healt and hitpoint: "+thisAnt.getHealth()+" : "+thisAnt.getHitPoints());
+//        System.out.println(thisAnt.antID()+", "+thisAnt.getAntType()+"----------------------------------------------------------------------------------------------------------------------------------");
+//        System.out.println("this ant healt and hitpoint: "+thisAnt.getHealth()+" : "+thisAnt.getHitPoints());
         addLocationsInfoToGraph(visibleLocations,thisLocation);
         
         if (thisAnt.getAntType().equals(EAntType.QUEEN)) {
@@ -161,8 +169,9 @@ public class AntControl implements aiantwars.IAntAI {
             if ( location.isFilled() ) {
                 node.setBlocked(true);
             }
-            if (!location.isFilled()) {
+            if ( !location.isFilled() ) {
                 node.setBlocked(false);
+                node.removeTempBlockedCounter();
             }     
             if( isInWallArea( node,  startPos,  graph)    &&   node.isWall()   ||  isInWallArea( node,  startPos,  graph)  &&  node.isRock() ){
                 node.setWall(true);
@@ -173,11 +182,10 @@ public class AntControl implements aiantwars.IAntAI {
            
             try{
                 int id = location.getAnt().getTeamInfo().getTeamID();
-                if(id == 4){
+                if(id == 1){
                      node.setTempBlockedCounter();
                 }
             }catch(Exception e){
-                System.out.println("catched getAnt exception: "+e);
             }
             
             
@@ -207,7 +215,7 @@ public class AntControl implements aiantwars.IAntAI {
     
     @Override
     public void onStartRound(int round) {
-        this.roundNumber = round;
+            
       }
     
     @Override
