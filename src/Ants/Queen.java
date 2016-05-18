@@ -25,7 +25,7 @@ public class Queen {
     public EAction generalQueenControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph graph, int startPos, int roundNumber, int starX, int starY) {
         setPosX(thisLocation.getX());
         setPosY(thisLocation.getY());
-        
+
         if (thisAnt.getHitPoints() < 15 && possibleActions.contains(EAction.EatFood)) {
             return EAction.EatFood;
         }
@@ -34,8 +34,9 @@ public class Queen {
             n.resetNode();
         }
 
-
-        if (roundNumber < 30) {
+        if (thisAnt.getFoodLoad() >= 6) {
+            return missionLayEggs(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
+        } else if (roundNumber < 30) {
 
             return startProduction(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
         } else {
@@ -48,7 +49,7 @@ public class Queen {
         // Position 1 // South West
         // <editor-fold defaultstate="collapsed">
 
-        if (startPos == 1) {  
+        if (startPos == 1) {
 
             if (thisAnt.getFoodLoad() < 10 && thisLocation.getFoodCount() != 0) {
                 g.getNode(0, 1).setFoodCount(thisLocation.getFoodCount() - 1);
@@ -63,15 +64,6 @@ public class Queen {
             } else if (thisLocation.getX() != 0 || thisLocation.getY() != 0) {
 
                 return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(0, 0), g, possibleActions);
-            } else if (thisLocation.getX() == 0 && thisLocation.getY() == 0 && thisAnt.getFoodLoad() >= 5) {
-
-                if (thisAnt.getDirection() != 1) {
-
-                    return findDirection(1, 0, thisLocation, visibleLocations, thisAnt, possibleActions, false);
-                } else {
-
-                    return EAction.LayEgg;
-                }
             } else {
                 return EAction.Pass;
             }
@@ -177,7 +169,7 @@ public class Queen {
     }
 
     public EAction stallGame(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
-         List<Node> home = homeNodes(g, startPos, starX, starY, thisAnt);
+        List<Node> home = homeNodes(g, startPos, starX, starY, thisAnt);
 
         if (!home.isEmpty() && thisAnt.getFoodLoad() < 10) {
             if (thisAnt.getFoodLoad() < 10 && thisLocation.getFoodCount() != 0) {
@@ -211,12 +203,107 @@ public class Queen {
             return AntFindPath.findDirection(nX, nY, thisLocation, visibleLocations, thisAnt, possibleActions, true);
 
         }
-        System.out.println(home.isEmpty() && thisLocation.getX() != starX && thisLocation.getY() != starY || thisAnt.getFoodLoad() <=  10 && thisLocation.getX() != starX && thisLocation.getY() != starY);
-        if (home.isEmpty() && thisLocation.getX() != starX && thisLocation.getY() != starY || thisAnt.getFoodLoad() >=  10 && thisLocation.getX() != starX && thisLocation.getY() != starY) {
+        System.out.println(home.isEmpty() && thisLocation.getX() != starX && thisLocation.getY() != starY || thisAnt.getFoodLoad() <= 10 && thisLocation.getX() != starX && thisLocation.getY() != starY);
+        if (home.isEmpty() && thisLocation.getX() != starX && thisLocation.getY() != starY || thisAnt.getFoodLoad() >= 10 && thisLocation.getX() != starX && thisLocation.getY() != starY) {
             return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g, possibleActions);
         } else {
             return EAction.Pass;
         }
+    }
+
+    public EAction missionLayEggs(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph g, int startPos, int roundNumber, int starX, int starY) {
+        List<Node> listOfBlockedNodes = new ArrayList();
+        System.out.println(faceNode(startPos, g, starX, starY, visibleLocations));
+        if(faceNode(startPos, g, starX, starY, visibleLocations)) {
+            return EAction.LayEgg;
+        }
+        
+        if (startPos == 1) {
+            for (int x = starX; x <= starX + 2; x++) {
+                for (int y = starY + 1; y <= starY + 1; y++) {
+                    Node nodexy = g.getNode(x, y);
+                    listOfBlockedNodes.add(nodexy);
+                }
+            }
+        }
+        if (startPos == 2) {
+            for (int x = starX; x <= starX + 2; x++) {
+                for (int y = starY - 1; y <= starY - 1; y++) {
+                    Node nodexy = g.getNode(x, y);
+                    listOfBlockedNodes.add(nodexy);
+                }
+            }
+        }
+        if (startPos == 3) {
+            for (int x = starX - 2; x <= starX; x++) {
+                for (int y = starY + 1; y <= starY + 1; y++) {
+                    Node nodexy = g.getNode(x, y);
+                    listOfBlockedNodes.add(nodexy);
+                }
+            }
+        }
+        if (startPos == 4) {
+            for (int x = starX - 2; x <= starX; x++) {
+                for (int y = starY - 1; y <= starY - 1; y++) {
+                    Node nodexy = g.getNode(x, y);
+                    listOfBlockedNodes.add(nodexy);
+                }
+            }
+        }
+        for (Node n : listOfBlockedNodes) {
+            System.out.println(n);
+            if (!n.isBlocked() && !n.isDiscovered() && !n.isTempBlocked()) {
+                try {
+                    return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), n, g, possibleActions);
+                } catch (NullPointerException e) {
+                    System.out.println("Nullpoint exception caught: " + e);
+                }
+            }
+        }
+        return EAction.Pass;
+    }
+
+    public boolean faceNode(int startPos, Graph g, int starX, int starY, List<ILocationInfo> visibleLocations) {
+        if(!visibleLocations.isEmpty()) {
+        if (startPos == 1) {
+            for (int x = starX; x <= starX + 2; x++) {
+                for (int y = starY + 1; y <= starY + 1; y++) {
+                    if (g.getNode(visibleLocations.get(0).getX(), visibleLocations.get(0).getY()) == g.getNode(x, y) && !g.getNode(x, y).isBlocked() && !g.getNode(x, y).isRock() && !g.getNode(x, y).isTempBlocked() ) {
+                        return true;
+                    }
+
+                }
+            }
+        }
+        if (startPos == 2) {
+            for (int x = starX; x <= starX + 2; x++) {
+                for (int y = starY - 1; y <= starY - 1; y++) {
+                    if (g.getNode(visibleLocations.get(0).getX(), visibleLocations.get(0).getY()) == g.getNode(x, y) && !g.getNode(x, y).isBlocked() && !g.getNode(x, y).isRock() && !g.getNode(x, y).isTempBlocked() ) {
+                        return true;
+                    }
+                }
+            }
+        }
+        if (startPos == 3) {
+            for (int x = starX - 2; x <= starX; x++) {
+                for (int y = starY + 1; y <= starY + 1; y++) {
+                    if (g.getNode(visibleLocations.get(0).getX(), visibleLocations.get(0).getY()) == g.getNode(x, y) && !g.getNode(x, y).isBlocked() && !g.getNode(x, y).isRock() && !g.getNode(x, y).isTempBlocked() ) {
+                        return true;
+                    }
+                }
+            }
+        }
+        if (startPos == 4) {
+            for (int x = starX - 2; x <= starX; x++) {
+                for (int y = starY - 1; y <= starY - 1; y++) {
+                    if (g.getNode(visibleLocations.get(0).getX(), visibleLocations.get(0).getY()) == g.getNode(x, y) && !g.getNode(x, y).isBlocked() && !g.getNode(x, y).isRock() && !g.getNode(x, y).isTempBlocked() ) {
+                        return true;
+                    }
+                }
+            }
+        }
+        }
+        return false;
     }
 
     public void setPosX(int x) {

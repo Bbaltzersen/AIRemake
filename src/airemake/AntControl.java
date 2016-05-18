@@ -4,7 +4,7 @@ package airemake;
 import static Ants.AntMethods.gateOneLocation;
 import static Ants.AntMethods.gateTwoLocation;
 import static Ants.AntMethods.isInWallArea;
-import Ants.CarrierLogic;
+import Ants.AntNest;
 import static Ants.CarrierLogic.generalCarrierControl;
 //import static Ants.CarrierLogic.generalCarrierControl;
 import Ants.Queen;
@@ -27,6 +27,7 @@ public class AntControl implements aiantwars.IAntAI {
     
     Queen queen = new Queen();
     Graph graph = new Graph(); // collective map
+    AntNest nest = new AntNest();
     
     int startPos;
     int starX;
@@ -62,66 +63,69 @@ public class AntControl implements aiantwars.IAntAI {
 
     @Override
     public void onHatch(IAntInfo thisAnt, ILocationInfo thisLocation, int worldSizeX, int worldSizeY) {
-        if (thisAnt.getAntType().equals(EAntType.QUEEN)) {            
-            Node[][] nodes = new Node[worldSizeX][worldSizeY];
-            IHeuristic h = new EulerHeristic();
-            
-            this.worldSizeX = worldSizeX;
-            this.worldSizeY = worldSizeY;
-
-            // Define Start Position
-            // <editor-fold defaultstate="collapsed"> </editor-fold>
-            if (thisLocation.getX() == 0 && thisLocation.getY() == 0) {
-                this.startPos = 1; // South West
-            }
-            if (thisLocation.getX() == 0 && thisLocation.getY() > 0) {
-                this.startPos = 2; // North West
-            }
-            if (thisLocation.getX() > 0 && thisLocation.getY() == 0) {
-                this.startPos = 3; // South East
-            }
-            if (thisLocation.getX() > 0 && thisLocation.getY() > 0) {
-                this.startPos = 4; // North east
-            }
-            this.starX = thisLocation.getX();
-            this.starY = thisLocation.getY();
-            // </editor-fold>
-
-            // Create Board
-            // <editor-fold defaultstate="collapsed">
-            for (int y = 0; y < worldSizeY; ++y) {
-                for (int x = 0; x < worldSizeX; ++x) {
-                    nodes[x][y] = graph.createNode("N", x, y);
-                }
-            }
-            // </editor-fold>
-
-            // Create Edges
-            // <editor-fold defaultstate="collapsed">
-            for (int y = 0; y < worldSizeY; ++y) {
-                for (int x = 0; x < worldSizeX; ++x) {
-                    Node m = nodes[x][y];
-                    if (m != null) {
-                        //North
-                        int nx = x;
-                        int ny = y + 1;
-                        edgeNeighbour(graph, nodes, nx, ny, m, h);
-                        //East
-                        nx = x + 1;
-                        ny = y;
-                        edgeNeighbour(graph, nodes, nx, ny, m, h);
-                        //South
-                        nx = x;
-                        ny = y - 1;
-                        edgeNeighbour(graph, nodes, nx, ny, m, h);
-                        //West
-                        nx = x - 1;
-                        ny = y;
-                        edgeNeighbour(graph, nodes, nx, ny, m, h);
+        switch (thisAnt.getAntType()) {
+            case QUEEN:
+                Node[][] nodes = new Node[worldSizeX][worldSizeY];
+                IHeuristic h = new EulerHeristic();
+                this.worldSizeX = worldSizeX;
+                this.worldSizeY = worldSizeY;
+                // Define Start Position
+                // <editor-fold defaultstate="collapsed"> </editor-fold>
+                if (thisLocation.getX() == 0 && thisLocation.getY() == 0) {
+                    this.startPos = 1; // South West
+                }   if (thisLocation.getX() == 0 && thisLocation.getY() > 0) {
+                    this.startPos = 2; // North West
+                }   if (thisLocation.getX() > 0 && thisLocation.getY() == 0) {
+                    this.startPos = 3; // South East
+                }   if (thisLocation.getX() > 0 && thisLocation.getY() > 0) {
+                    this.startPos = 4; // North east
+                }   this.starX = thisLocation.getX();
+                this.starY = thisLocation.getY();
+                // </editor-fold>
+                // Create Board
+                // <editor-fold defaultstate="collapsed">
+                for (int y = 0; y < worldSizeY; ++y) {
+                    for (int x = 0; x < worldSizeX; ++x) {
+                        nodes[x][y] = graph.createNode("N", x, y);
                     }
                 }
-            }
-            // </editor-fold>
+                // </editor-fold>
+                // Create Edges
+                // <editor-fold defaultstate="collapsed">
+                for (int y = 0; y < worldSizeY; ++y) {
+                    for (int x = 0; x < worldSizeX; ++x) {
+                        Node m = nodes[x][y];
+                        if (m != null) {
+                            //North
+                            int nx = x;
+                            int ny = y + 1;
+                            edgeNeighbour(graph, nodes, nx, ny, m, h);
+                            //East
+                            nx = x + 1;
+                            ny = y;
+                            edgeNeighbour(graph, nodes, nx, ny, m, h);
+                            //South
+                            nx = x;
+                            ny = y - 1;
+                            edgeNeighbour(graph, nodes, nx, ny, m, h);
+                            //West
+                            nx = x - 1;
+                            ny = y;
+                            edgeNeighbour(graph, nodes, nx, ny, m, h);
+                        }
+                    }
+                }
+                // </editor-fold>
+                break;
+            case CARRIER:
+                nest.setCarriers(nest.getCarriers() + 1);
+                break;
+            case SCOUT:
+                nest.setScouts(nest.getScouts() + 1);
+                break;
+            default:
+                nest.setWarriors(nest.getWarriors() + 1);
+                break;
         }
     }
     
@@ -199,7 +203,11 @@ public class AntControl implements aiantwars.IAntAI {
     
     @Override
     public void onLayEgg(IAntInfo thisAnt, List<EAntType> types, IEgg egg) {
-        egg.set(EAntType.CARRIER, this);
+        if(nest.getCarriers() <= 2) {
+            egg.set(EAntType.CARRIER, this);
+        } else {
+            egg.set(EAntType.WARRIOR, this);
+        }
     }
     
     @Override
@@ -209,6 +217,17 @@ public class AntControl implements aiantwars.IAntAI {
     
     @Override
     public void onDeath(IAntInfo thisAnt) {
+        switch (thisAnt.getAntType()) {
+            case CARRIER:
+                nest.setCarriers(nest.getCarriers() + 1);
+                break;
+            case SCOUT:
+                nest.setScouts(nest.getScouts() + 1);
+                break;
+            default:
+                nest.setWarriors(nest.getWarriors() + 1);
+                break;
+        }
         }
     
     @Override
