@@ -204,7 +204,7 @@ public class Queen {
 
         }
         System.out.println(home.isEmpty() && thisLocation.getX() != starX && thisLocation.getY() != starY || thisAnt.getFoodLoad() <= 10 && thisLocation.getX() != starX && thisLocation.getY() != starY);
-        if (home.isEmpty() && thisLocation.getX() != starX && thisLocation.getY() != starY || thisAnt.getFoodLoad() >= 10 && thisLocation.getX() != starX && thisLocation.getY() != starY) {
+        if (home.isEmpty() && thisLocation.getX() != starX && thisLocation.getY() != starY || thisLocation.getX() != starX && thisLocation.getY() != starY) {
             return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g, possibleActions);
         } else {
             return EAction.Pass;
@@ -251,15 +251,17 @@ public class Queen {
             }
         }
         for (Node n : listOfBlockedNodes) {
-            System.out.println(n);
-            if (!n.isBlocked() && !n.isDiscovered() && !n.isTempBlocked()) {
+            
+            if (!n.isBlocked() && !n.isTempBlocked()) {
                 try {
+                    System.out.println("I AM HERE AND WANTS TO FIND WAY TO LAY EGG");
                     return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), n, g, possibleActions);
                 } catch (NullPointerException e) {
                     System.out.println("Nullpoint exception caught: " + e);
                 }
             }
         }
+        System.out.println("I AM HERE AND WANTS TO FIND WAY TO LAY EGG BUT HAVE TO");
         return EAction.Pass;
     }
 
