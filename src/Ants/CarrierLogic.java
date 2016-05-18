@@ -29,6 +29,10 @@ public class CarrierLogic {
     public static EAction generalCarrierControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations
             , List<EAction> possibleActions, Graph graph,Queen queen , int roundNumber, int startPos) {
   
+        List<Node> nodes = graph.getNodes();
+        for (Node n : nodes) {
+            n.resetNode();
+        }
         
         if( graph.getGateNumber() < 0 ){
                 if( !isGateOneDiscovered( graph, startPos )){
@@ -66,10 +70,7 @@ public class CarrierLogic {
                 return EAction.Pass;
             }
         }    
-        List<Node> nodes = graph.getNodes();
-        for (Node n : nodes) {
-            n.resetNode();
-        }
+        
         List<Node> foodNodes = new ArrayList();
         for(Node node : graph.getNodes()){
             if( node.getFoodCount() > 0 &&  !isInQueenArea( node,  startPos, graph ) && !node.isBlocked() && !node.isRock() && !node.isTempBlocked()){

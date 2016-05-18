@@ -140,7 +140,7 @@ public class AntControl implements aiantwars.IAntAI {
 //        System.out.println(thisAnt.antID()+", "+thisAnt.getAntType()+"----------------------------------------------------------------------------------------------------------------------------------");
 //        System.out.println("this ant healt and hitpoint: "+thisAnt.getHealth()+" : "+thisAnt.getHitPoints());
         
-        
+        System.out.println("GATE NUMBER PICKED: "+graph.getGateNumber());
         for(Node node : gateOneLocation( graph, startPos)){
             System.out.println("GATE "+node.getXPos()+", "+node.getYPos());
         }
@@ -178,7 +178,7 @@ public class AntControl implements aiantwars.IAntAI {
             if( isInWallArea( node,  startPos,  graph)    &&   node.isWall()   ||  isInWallArea( node,  startPos,  graph)  &&  node.isRock() ){
                 node.setWall(true);
             }
-            if( isInWallArea( node,  startPos,  graph)    &&   !location.isFilled()  ){
+            if( isInWallArea( node,  startPos,  graph)    &&   !location.isFilled() &&  !node.isRock()){
                 node.setWall(false);
             }
            
