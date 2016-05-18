@@ -3,7 +3,12 @@ package Ants;
 import static Ants.AntFindPath.NextStep;
 import static Ants.AntFindPath.findShortestPath;
 import static Ants.AntMethods.IsInOuterWallArea;
+import static Ants.AntMethods.determineGate;
 import static Ants.AntMethods.findUndiscoveredFood;
+import static Ants.AntMethods.gateOneLocation;
+import static Ants.AntMethods.gateTwoLocation;
+import static Ants.AntMethods.isGateOneDiscovered;
+import static Ants.AntMethods.isGateTwoDiscovered;
 import static Ants.AntMethods.isInQueenArea;
 import static Ants.AntMethods.isInWallArea;
 import static Ants.AntMethods.walkAround;
@@ -22,21 +27,40 @@ public class CarrierLogic {
     
     
     public static EAction generalCarrierControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations
-            , List<EAction> possibleActions, Graph graph,Queen queen , int roundNumber, int startPos) {
+            , List<EAction> possibleActions, Graph graph,Queen queen , int roundNumber, int startPos, int gateNumber) {
   
-        if( !visibleLocations.isEmpty() ){
-            if(thisAnt.getHitPoints() < 20 && possibleActions.contains(EAction.EatFood)){
-                return EAction.EatFood;
+        if( gateNumber < 0 ){
+            if( !isGateOneDiscovered( graph, startPos )){
+                for(Node node : gateOneLocation( graph, startPos) ){
+                    if( !node.isDiscovered() )
+                        return NextStep(thisAnt,thisLocation, visibleLocations, graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  node  , graph, possibleActions);
+                }   
             }
+            if( !isGateTwoDiscovered( graph, startPos )){
+                for(Node node : gateTwoLocation( graph, startPos) ){
+                    if( !node.isDiscovered() )
+                        return NextStep(thisAnt,thisLocation, visibleLocations, graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  node  , graph, possibleActions);
+                }   
+            }
+        }else{
+            int gateNum = determineGate( graph, startPos);
+            setGateNumber(1);
+        }
+        
+        if(thisAnt.getHitPoints() < 20 && possibleActions.contains(EAction.EatFood)){
+                return EAction.EatFood;
+        }
+        
+        if( !visibleLocations.isEmpty() ){
             if( !thisAnt.carriesSoil() &&possibleActions.contains(EAction.DigOut) && !isInWallArea( graph.getNode( visibleLocations.get(0).getX(), visibleLocations.get(0).getY() ) ,  startPos,  graph) ){
                 return EAction.DigOut;
             }
             if( visibleLocations.size() > 1 ){
-                if( !thisAnt.carriesSoil() && visibleLocations.get(1).isFilled()  ){
-                        return EAction.MoveForward;
+                if( !thisAnt.carriesSoil() && visibleLocations.get(1).isFilled() && possibleActions.contains(EAction.MoveForward) ){
+                    return EAction.MoveForward;
                 }
             }
-            if(  !thisAnt.carriesSoil() && visibleLocations.get(0).isFilled() && thisAnt.getActionPoints() < 5){
+            if(  !thisAnt.carriesSoil() && visibleLocations.get(0).isFilled() && thisAnt.getActionPoints() < 5 &&   !isInWallArea( graph.getNode( visibleLocations.get(0).getX(),visibleLocations.get(0).getY() ) , startPos,  graph ) ){
                 return EAction.Pass;
             }
         }    
@@ -53,15 +77,12 @@ public class CarrierLogic {
         
         if(thisAnt.getFoodLoad()  >=  5 ) //thisAnt.getAntType().getMaxFoodLoad()    
         {
-//            System.out.println("generalCarrierControl: GO TO QUEEN");
             return goToQueen(thisAnt,visibleLocations, thisLocation,  possibleActions,  graph,  roundNumber, queen, startPos);
         } 
         else if ( !foodNodes.isEmpty() ){
-//            System.out.println("generalCarrierControl: FIND FOOD");
             return findFood(thisAnt, visibleLocations,thisLocation,  possibleActions,  graph,  roundNumber, queen , startPos);
         }
         else{
-//            System.out.println("generalCarrierControl: walk around");
             return walkAround( possibleActions, thisLocation, queen,  thisAnt );
         }
     }
@@ -72,7 +93,7 @@ public class CarrierLogic {
         if( isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && thisAnt.carriesSoil() ||
                 isInWallArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && thisAnt.carriesSoil() ||
                 IsInOuterWallArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && thisAnt.carriesSoil() ){
-//            System.out.println("going from goToQueen to buildWall.....");
+
             return buildWall( thisAnt, visibleLocations, thisLocation, possibleActions, graph, roundNumber, queen, startPos);
         }
         
@@ -130,21 +151,19 @@ public class CarrierLogic {
                 if( node.getFoodCount() > 0 &&  !isInQueenArea( node , startPos , graph )){
                     temp = findShortestPath( graph.getNode( thisLocation.getX(), thisLocation.getY() ), node, graph );
                     if( temp != null ){
-                        if( shortestPathToFood == null ){
+                        if( shortestPathToFood == null || temp.size() < shortestPathToFood.size()){
                             shortestPathToFood = temp;
                         }
-                        else if( temp.size() < shortestPathToFood.size() ){ // her tester den kun for hvor mange nodes der er, ikke hvor mange "moves"
-                            shortestPathToFood = temp;
-                        }
+//                        else if(       ){ // her tester den kun for hvor mange nodes der er, ikke hvor mange "moves"
+//                            shortestPathToFood = temp;
+//                        }
                     }
                 }
             }   
             try{
                 targetNode = shortestPathToFood.get( shortestPathToFood.size() -1); 
             }catch(Exception nullPointer){
-//                System.out.println("exception: "+nullPointer);
             }
-            
         }
         
         if(targetNode != null){
@@ -174,14 +193,11 @@ public class CarrierLogic {
                                         !graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).isWall()                     &&
                                         !graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).isBlocked()                &&
                                         !graph.getNode( visibleLocations.get(0).getX() , visibleLocations.get(0).getY() ).isTempBlocked()        &&
-                                        
                     thisAnt.getActionPoints() < 4){
-                
                 
                 return EAction.Pass;
             }
         }
-           
         
         Node targetNode = null;
         List<Node> tempRoute =  null;
@@ -190,24 +206,11 @@ public class CarrierLogic {
         
         for( Node node : graph.getNodes() ){
             if( isInWallArea( node,  startPos,  graph )){
-                
                 if( (!node.isWall() && thisLocation.getY() != node.getYPos() && thisLocation.getX() != node.getXPos())   ||
                      (!node.isWall() && thisLocation.getX() != node.getXPos() && thisLocation.getY() != node.getYPos()) ) {
-//                    System.out.println("WALLL not build yet : "+node.getXPos()+", "+node.getYPos() +" thisLocation"+thisLocation.getX()+", "+thisLocation.getY());
-                    buildWall.add(node);
+                        buildWall.add(node);
                 }
             }
-        }
-        
-         
-          
-         
-        
-        try{
-//             System.out.println("shortestPathToWallToBuild size: "+shortestPathToWallToBuild.size());
-//            System.out.println("tempRoute size : "+tempRoute.size());
-        }catch(Exception e){
-//            System.out.println("LOOORTE "+e);
         }
        
         if( !buildWall.isEmpty() ){
@@ -223,20 +226,11 @@ public class CarrierLogic {
                   }
             } 
         }     
-     
-//        System.out.println("this ant direction: "+thisAnt.getDirection());
-//        System.out.println("this ant position: "+thisLocation.getX()+", "+thisLocation.getY());
-        
-        
         try{
             targetNode = shortestPathToWallToBuild.get(shortestPathToWallToBuild.size()-1 );
-//            System.out.println("targetNode: "+targetNode.getXPos()+", "+targetNode.getYPos());
         }catch(NullPointerException e){
-//            System.out.println("nullPointerException "+e);
         }
         if(targetNode != null ){
-          
-        
                 return NextStep(thisAnt, thisLocation, visibleLocations, graph.getNode( thisLocation.getX(), thisLocation.getY() ) , graph.getNode( (int) targetNode.getXPos() , (int) targetNode.getYPos() ) ,graph, possibleActions);
          }
        return walkAround( possibleActions, thisLocation, queen,  thisAnt );
@@ -257,6 +251,8 @@ public class CarrierLogic {
         
         return heuristicX + heuristicY;
     }
+    
+    
     
     
 }

@@ -191,8 +191,14 @@ public class AntMethods {
     
     public static boolean isInWallArea(Node node, int startPos, Graph graph){
         
+        List<Node> gate = gateOneLocation( graph, startPos);
+        for( Node n : gate ){
+            if( node.getXPos() == n.getXPos() &&  node.getYPos() == n.getYPos() )
+                return false;
+        }
+        
         if(startPos == 1){
-             if(  !isInQueenArea( node,startPos,graph ) && node.getXPos() < 4 && node.getYPos() < 4){ 
+             if(  !isInQueenArea( node,startPos,graph ) && node.getXPos() < 4 && node.getYPos() < 4  ){ 
                  return true;// South West
              }
          }
@@ -240,5 +246,159 @@ public class AntMethods {
         
     }
     
+    public static boolean isGateOneDiscovered(Graph graph,int startPos){
+    
+        Node n1 = null, n2 = null, n3 = null;
+        if( startPos == 1 ){// South West
+            n1  = graph.getNode(2, 1);
+            n2  = graph.getNode(3, 1);
+            n3  = graph.getNode(4, 1);
+        }
+        if(startPos == 2){// North West 
+            n1  = graph.getNode(1, graph.getWorldSizeY()-3);//-3 fordi worldsize ex = 20 så er node hedder 19 -> i dette tilfælde 1,17
+            n2  = graph.getNode(1, graph.getWorldSizeY()-4);
+            n3  = graph.getNode(1, graph.getWorldSizeY()-5);
+        }
+        if(startPos == 3){// South East
+            n1  = graph.getNode(graph.getWorldSizeX()-2, 2);
+            n2  = graph.getNode(graph.getWorldSizeX()-2, 3);
+            n3  = graph.getNode(graph.getWorldSizeX()-2, 4);
+        }
+         if(startPos == 4){// North east
+            n1  = graph.getNode(graph.getWorldSizeX()-3, graph.getWorldSizeY()-2);
+            n2  = graph.getNode(graph.getWorldSizeX()-4, graph.getWorldSizeY()-2);
+            n3  = graph.getNode(graph.getWorldSizeX()-5, graph.getWorldSizeY()-2);
+        }
+        if(n1.isDiscovered() && n2.isDiscovered() && n3.isDiscovered())
+            return true;
+        else return false;
+    }
+      
+    public static boolean isGateTwoDiscovered(Graph graph,int startPos){
+        
+        Node n1 = null, n2 = null, n3 = null;
+        if(startPos == 1){// South West
+            n1  = graph.getNode(1, 2);
+            n2  = graph.getNode(1, 3);
+            n3  = graph.getNode(1, 4);
+        }
+        if(startPos == 2){// North West 
+            n1  = graph.getNode(2, graph.getWorldSizeY()-2);
+            n2  = graph.getNode(3, graph.getWorldSizeY()-2);
+            n3  = graph.getNode(4, graph.getWorldSizeY()-2);
+        }
+        if(startPos == 3){// South East
+            n1  = graph.getNode(graph.getWorldSizeX()-3, 1);
+            n2  = graph.getNode(graph.getWorldSizeX()-4, 1);
+            n3  = graph.getNode(graph.getWorldSizeX()-5, 1);
+        }
+         if(startPos == 4){// North east
+            n1  = graph.getNode(graph.getWorldSizeX()-2, graph.getWorldSizeY()-3);
+            n2  = graph.getNode(graph.getWorldSizeX()-2, graph.getWorldSizeY()-4);
+            n3  = graph.getNode(graph.getWorldSizeX()-2, graph.getWorldSizeY()-5);
+        }
+        if(n1.isDiscovered() && n2.isDiscovered() && n3.isDiscovered())
+            return true;
+        else return false;
+    }
+  
+    public static List<Node> gateOneLocation(Graph graph,int startPos){
+        
+         Node n1 = null, n2 = null, n3 = null;
+        if(startPos == 1){// South West
+            n1  = graph.getNode(2, 1);
+            n2  = graph.getNode(3, 1);
+            n3  = graph.getNode(4, 1);
+        }
+        if(startPos == 2){// North West 
+            n1  = graph.getNode(1, graph.getWorldSizeY()-3);//-3 fordi worldsize ex = 20 så er node hedder 19 -> i dette tilfælde 1,17
+            n2  = graph.getNode(1, graph.getWorldSizeY()-4);
+            n3  = graph.getNode(1, graph.getWorldSizeY()-5);
+        }
+        if(startPos == 3){// South East
+            n1  = graph.getNode(graph.getWorldSizeX()-2, 2);
+            n2  = graph.getNode(graph.getWorldSizeX()-2, 3);
+            n3  = graph.getNode(graph.getWorldSizeX()-2, 4);
+        }
+         if(startPos == 4){// North east
+            n1  = graph.getNode(graph.getWorldSizeX()-3, graph.getWorldSizeY()-2);
+            n2  = graph.getNode(graph.getWorldSizeX()-4, graph.getWorldSizeY()-2);
+            n3  = graph.getNode(graph.getWorldSizeX()-5, graph.getWorldSizeY()-2);
+        }
+         
+        List res = new ArrayList();
+        res.add(n1);
+        res.add(n2);
+        res.add(n3);
+        
+        return res;
+    }
+    
+    public static List<Node> gateTwoLocation(Graph graph,int startPos){
+        
+         Node n1 = null, n2 = null, n3 = null;
+        if(startPos == 1){// South West
+            n1  = graph.getNode(1, 2);
+            n2  = graph.getNode(1, 3);
+            n3  = graph.getNode(1, 4);
+        }
+        if(startPos == 2){// North West 
+            n1  = graph.getNode(2, graph.getWorldSizeY()-2);
+            n2  = graph.getNode(3, graph.getWorldSizeY()-2);
+            n3  = graph.getNode(4, graph.getWorldSizeY()-2);
+        }
+        if(startPos == 3){// South East
+            n1  = graph.getNode(graph.getWorldSizeX()-3, 1);
+            n2  = graph.getNode(graph.getWorldSizeX()-4, 1);
+            n3  = graph.getNode(graph.getWorldSizeX()-5, 1);
+        }
+         if(startPos == 4){// North east
+            n1  = graph.getNode(graph.getWorldSizeX()-2, graph.getWorldSizeY()-3);
+            n2  = graph.getNode(graph.getWorldSizeX()-2, graph.getWorldSizeY()-4);
+            n3  = graph.getNode(graph.getWorldSizeX()-2, graph.getWorldSizeY()-5);
+        }
+         
+        List res = new ArrayList();
+        res.add(n1);
+        res.add(n2);
+        res.add(n3);
+        
+        return res;
+    }
+    
+    public static int determineGate(Graph graph,int startPos){
+        
+        boolean gate1free = true;
+        List<Node> gate1 = gateOneLocation( graph, startPos );
+        for( Node node : gate1 ){
+            if(node.isDiscovered()){
+                if( node.isRock() ){
+                    gate1free = false;
+                }
+            }else{
+                 gate1free = false;
+            }
+        }
+        
+        if(gate1free)
+            return 1;
+        
+        boolean gate2free = true;
+        List<Node> gate2 = gateOneLocation( graph, startPos );
+        for( Node node : gate2 ){
+            if(node.isDiscovered()){
+                if( node.isRock() ){
+                    gate2free = false;
+                }
+            }else{
+                 gate2free = false;
+            }
+        }
+        
+        if(gate2free)
+            return 1;
+        
+        return 0;
+    }
     
 }
