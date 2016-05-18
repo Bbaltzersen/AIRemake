@@ -13,7 +13,16 @@ public class Graph
    private final ArrayList<Node> nodes;
    private final ArrayList<Edge> edges;
    private boolean wallIsBuild;
+   private int gateNumber = -1;
 
+    public int getGateNumber() {
+        return gateNumber;
+    }
+
+    public void setGateNumber(int gateNumber) {
+        this.gateNumber = gateNumber;
+    }
+   
     public Graph(){
         this.nodes = new ArrayList<>();
         this.edges = new ArrayList<>();

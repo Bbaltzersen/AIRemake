@@ -155,7 +155,7 @@ public class AntControl implements aiantwars.IAntAI {
             return queen.generalQueenControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
         }
         if (thisAnt.getAntType().equals(EAntType.CARRIER)) {
-            return generalCarrierControl( thisAnt,  thisLocation,  visibleLocations, possibleActions,  graph, queen ,  roundNumber, startPos,);
+            return generalCarrierControl( thisAnt,  thisLocation,  visibleLocations, possibleActions,  graph, queen ,  roundNumber, startPos);
         }
         return EAction.Pass;
     }

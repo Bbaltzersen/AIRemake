@@ -27,25 +27,27 @@ public class CarrierLogic {
     
     
     public static EAction generalCarrierControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations
-            , List<EAction> possibleActions, Graph graph,Queen queen , int roundNumber, int startPos, int gateNumber) {
+            , List<EAction> possibleActions, Graph graph,Queen queen , int roundNumber, int startPos) {
   
-        if( gateNumber < 0 ){
-            if( !isGateOneDiscovered( graph, startPos )){
-                for(Node node : gateOneLocation( graph, startPos) ){
-                    if( !node.isDiscovered() )
-                        return NextStep(thisAnt,thisLocation, visibleLocations, graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  node  , graph, possibleActions);
-                }   
-            }
-            if( !isGateTwoDiscovered( graph, startPos )){
-                for(Node node : gateTwoLocation( graph, startPos) ){
-                    if( !node.isDiscovered() )
-                        return NextStep(thisAnt,thisLocation, visibleLocations, graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  node  , graph, possibleActions);
-                }   
-            }
-        }else{
-            int gateNum = determineGate( graph, startPos);
-            setGateNumber(1);
+        
+        if( graph.getGateNumber() < 0 ){
+                if( !isGateOneDiscovered( graph, startPos )){
+                    for(Node node : gateOneLocation( graph, startPos) ){
+                        if( !node.isDiscovered() )
+                            return NextStep(thisAnt,thisLocation, visibleLocations, graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  node  , graph, possibleActions);
+                    }   
+                }
+                if( !isGateTwoDiscovered( graph, startPos )){
+                    for(Node node : gateTwoLocation( graph, startPos) ){
+                        if( !node.isDiscovered() )
+                            return NextStep(thisAnt,thisLocation, visibleLocations, graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  node  , graph, possibleActions);
+                    }   
+                }
+            int gateNum = determineGate( graph, startPos );
+            graph.setGateNumber(gateNum);
         }
+            
+         
         
         if(thisAnt.getHitPoints() < 20 && possibleActions.contains(EAction.EatFood)){
                 return EAction.EatFood;
