@@ -212,7 +212,8 @@ public class AntControl implements aiantwars.IAntAI {
     public void onLayEgg(IAntInfo thisAnt, List<EAntType> types, IEgg egg) {
         if(nest.getCarriers() <= 2) {
             egg.set(EAntType.CARRIER, this);
-        } else {
+        }
+        if(nest.getWarriors() < 2) {
             egg.set(EAntType.WARRIOR, this);
         }
     }
