@@ -71,12 +71,15 @@ public class Node implements Iterable<Edge>, Comparable<Node>
     public boolean isRock(){
         return rock;
     }
+    
     public void setRock(){
         rock = true;
     }
+    
     public void setFoodCount(int foodCount){
         this.foodCount = foodCount;
     }
+    
     public int getFoodCount(){
         return foodCount;
     }
@@ -98,8 +101,6 @@ public class Node implements Iterable<Edge>, Comparable<Node>
     {
         return yPos;
     }
-    
-    
 
     public void addEdge(Edge edge)
     {

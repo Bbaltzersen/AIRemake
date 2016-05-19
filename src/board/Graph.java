@@ -12,9 +12,14 @@ public class Graph
 {
    private final ArrayList<Node> nodes;
    private final ArrayList<Edge> edges;
-   private boolean wallIsBuild;
+//   private boolean wallIsBuild;
    private int gateNumber = -1;
 
+   public Graph(){
+        this.nodes = new ArrayList<>();
+        this.edges = new ArrayList<>();
+    }
+   
     public int getGateNumber() {
         return gateNumber;
     }
@@ -23,10 +28,7 @@ public class Graph
         this.gateNumber = gateNumber;
     }
    
-    public Graph(){
-        this.nodes = new ArrayList<>();
-        this.edges = new ArrayList<>();
-    }
+    
     
     public void tempBlockedCountertick(){
         for(Node node : nodes){
@@ -36,13 +38,13 @@ public class Graph
         }
     }
     
-    public boolean wallIsBuild(){
-        return this.wallIsBuild;
-    }
-    
-    public void setWallIsBuild(boolean value){
-        this.wallIsBuild = value;
-    }
+//    public boolean wallIsBuild(){
+//        return this.wallIsBuild;
+//    }
+//    
+//    public void setWallIsBuild(boolean value){
+//        this.wallIsBuild = value;
+//    }
     
     public List<Node> getNodes(){
         return nodes;

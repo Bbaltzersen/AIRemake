@@ -143,21 +143,21 @@ public class AntControl implements aiantwars.IAntAI {
     public EAction chooseAction(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions) {
 //        System.out.println(thisAnt.antID()+", "+thisAnt.getAntType()+"----------------------------------------------------------------------------------------------------------------------------------");
 //        System.out.println("this ant healt and hitpoint: "+thisAnt.getHealth()+" : "+thisAnt.getHitPoints());
-        int tempBnodes = 0;
-        List<Node> bnodes = graph.getNodes();
-        for(Node n : bnodes){
-            if(n.isTempBlocked()) {
-                tempBnodes += 1;
-            }
-        }
-        System.out.println("Amount of tempBlocked nodes: " + tempBnodes);
-        System.out.println("GATE NUMBER PICKED: "+graph.getGateNumber());
-        for(Node node : gateOneLocation( graph, startPos)){
-            System.out.println("GATE "+node.getXPos()+", "+node.getYPos());
-        }
-        for(Node node : gateTwoLocation( graph, startPos)){
-            System.out.println("GATE "+node.getXPos()+", "+node.getYPos());
-        }
+//        int tempBnodes = 0;
+//        List<Node> bnodes = graph.getNodes();
+//        for(Node n : bnodes){
+//            if(n.isTempBlocked()) {
+//                tempBnodes += 1;
+//            }
+//        }
+//        System.out.println("Amount of tempBlocked nodes: " + tempBnodes);
+//        System.out.println("GATE NUMBER PICKED: "+graph.getGateNumber());
+//        for(Node node : gateOneLocation( graph, startPos)){
+//            System.out.println("GATE "+node.getXPos()+", "+node.getYPos());
+//        }
+//        for(Node node : gateTwoLocation( graph, startPos)){
+//            System.out.println("GATE "+node.getXPos()+", "+node.getYPos());
+//        }
         
         
         addLocationsInfoToGraph(visibleLocations,thisLocation,thisAnt);

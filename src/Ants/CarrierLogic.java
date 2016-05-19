@@ -11,6 +11,7 @@ import static Ants.AntMethods.isGateOneDiscovered;
 import static Ants.AntMethods.isGateTwoDiscovered;
 import static Ants.AntMethods.isInQueenArea;
 import static Ants.AntMethods.isInWallArea;
+import static Ants.AntMethods.isWallBuild;
 import static Ants.AntMethods.walkAround;
 import aiantwars.EAction;
 import aiantwars.IAntInfo;
@@ -26,48 +27,30 @@ import java.util.List;
 public class CarrierLogic {
     
     
+   
     public static EAction generalCarrierControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations
             , List<EAction> possibleActions, Graph graph,Queen queen , int roundNumber, int startPos) {
   
+        
+        //always reset node.prev else the heap stack gets out of memory..
         List<Node> nodes = graph.getNodes();
         for (Node n : nodes) {
             n.resetNode();
         }
-        
+        //if the gate number has not been determined, go check the gates, and determin gate number..
         if( graph.getGateNumber() < 0 ){
-                if( !isGateOneDiscovered( graph, startPos )){
-                    for(Node node : gateOneLocation( graph, startPos) ){
-                        if( !node.isDiscovered() )
-                            return NextStep(thisAnt,thisLocation, visibleLocations, graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  node  , graph, possibleActions);
-                    }   
-                }
-                if( !isGateTwoDiscovered( graph, startPos )){
-                    for(Node node : gateTwoLocation( graph, startPos) ){
-                        if( !node.isDiscovered() )
-                            return NextStep(thisAnt,thisLocation, visibleLocations, graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  node  , graph, possibleActions);
-                    }   
-                }
-            int gateNum = determineGate( graph, startPos );
-            graph.setGateNumber(gateNum);
+            EAction res =  checkGate( graph, startPos, thisAnt, thisLocation, visibleLocations, possibleActions);
+            if(res != null)
+                return res;
         }
-            
-         
-        
         if(thisAnt.getHitPoints() < 20 && possibleActions.contains(EAction.EatFood)){
                 return EAction.EatFood;
         }
-        
-        if( !visibleLocations.isEmpty() ){
-            if( !thisAnt.carriesSoil() &&possibleActions.contains(EAction.DigOut) && !isInWallArea( graph.getNode( visibleLocations.get(0).getX(), visibleLocations.get(0).getY() ) ,  startPos,  graph) ){
-                return EAction.DigOut;
-            }
-            if( visibleLocations.size() > 1 ){
-                if( !thisAnt.carriesSoil() && visibleLocations.get(1).isFilled() && possibleActions.contains(EAction.MoveForward) ){
-                    return EAction.MoveForward;
-                }
-            }
-            if(  !thisAnt.carriesSoil() && visibleLocations.get(0).isFilled() && thisAnt.getActionPoints() < 5 &&   !isInWallArea( graph.getNode( visibleLocations.get(0).getX(),visibleLocations.get(0).getY() ) , startPos,  graph ) ){
-                return EAction.Pass;
+        //if this ant doesn´t carry soil, qnd soil is ahead pick it up..
+        if( !visibleLocations.isEmpty() && !thisAnt.carriesSoil() ){
+            EAction res = isSoilAheadPickItUp( thisAnt, possibleActions, visibleLocations, startPos, graph);
+            if(res != null){
+                return res;
             }
         }    
         
@@ -90,7 +73,7 @@ public class CarrierLogic {
         }
     }
 
-      private  static EAction goToQueen(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation
+    private  static EAction goToQueen(IAntInfo thisAnt, List<ILocationInfo> visibleLocations, ILocationInfo thisLocation
             , List<EAction> possibleActions, Graph  graph, int roundNumber, Queen queen, int startPos) {
 
         if( isInQueenArea( graph.getNode( thisLocation.getX(), thisLocation.getY() ), startPos, graph ) && thisAnt.carriesSoil() ||
@@ -157,9 +140,6 @@ public class CarrierLogic {
                         if( shortestPathToFood == null || temp.size() < shortestPathToFood.size()){
                             shortestPathToFood = temp;
                         }
-//                        else if(       ){ // her tester den kun for hvor mange nodes der er, ikke hvor mange "moves"
-//                            shortestPathToFood = temp;
-//                        }
                     }
                 }
             }   
@@ -239,6 +219,39 @@ public class CarrierLogic {
        return walkAround( possibleActions, thisLocation, queen,  thisAnt );
     }
   
+     private static EAction checkGate(Graph graph, int startPos,IAntInfo thisAnt,ILocationInfo thisLocation,List<ILocationInfo> visibleLocations,List<EAction> possibleActions){
+        if( !isGateOneDiscovered( graph, startPos )){
+                    for(Node node : gateOneLocation( graph, startPos) ){
+                        if( !node.isDiscovered() )
+                            return NextStep(thisAnt,thisLocation, visibleLocations, graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  node  , graph, possibleActions);
+                    }   
+                }
+                if( !isGateTwoDiscovered( graph, startPos )){
+                    for(Node node : gateTwoLocation( graph, startPos) ){
+                        if( !node.isDiscovered() )
+                            return NextStep(thisAnt,thisLocation, visibleLocations, graph.getNode(  thisLocation.getX(), thisLocation.getY() ) ,  node  , graph, possibleActions);
+                    }   
+                }
+            int gateNum = determineGate( graph, startPos );
+            graph.setGateNumber(gateNum);
+            return null;
+    }
+    
+    private static EAction isSoilAheadPickItUp(IAntInfo thisAnt,List<EAction> possibleActions,List<ILocationInfo> visibleLocations,int startPos,Graph graph){
+        if( !thisAnt.carriesSoil() &&possibleActions.contains(EAction.DigOut) && !isInWallArea( graph.getNode( visibleLocations.get(0).getX(), visibleLocations.get(0).getY() ) ,  startPos,  graph) ){
+                return EAction.DigOut;
+            }
+            if( visibleLocations.size() > 1 ){
+                if( !thisAnt.carriesSoil() && visibleLocations.get(1).isFilled() && possibleActions.contains(EAction.MoveForward) ){
+                    return EAction.MoveForward;
+                }
+            }
+            if(  !thisAnt.carriesSoil() && visibleLocations.get(0).isFilled() && thisAnt.getActionPoints() < 5 &&   !isInWallArea( graph.getNode( visibleLocations.get(0).getX(),visibleLocations.get(0).getY() ) , startPos,  graph ) ){
+                return EAction.Pass;
+            }
+            return null;
+    }
+    
     private  static boolean indexExists(final List list, final int index) {
         return index >= 0 && index < list.size();
     }
@@ -254,7 +267,6 @@ public class CarrierLogic {
         
         return heuristicX + heuristicY;
     }
-    
     
     
     

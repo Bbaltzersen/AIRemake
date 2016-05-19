@@ -21,7 +21,7 @@ public class AntMethods {
 
     public int totalFoodInFront(List<ILocationInfo> visibleLocations) {
         int foodCount = 0;
-        foodCount = visibleLocations.stream().map((loc) -> loc.getFoodCount()).reduce(foodCount, Integer::sum); // hvad betyder dette?
+        foodCount = visibleLocations.stream().map((loc) -> loc.getFoodCount()).reduce(foodCount, Integer::sum);
         return foodCount;
     }
 
@@ -191,11 +191,20 @@ public class AntMethods {
     
     public static boolean isInWallArea(Node node, int startPos, Graph graph){
         
-        List<Node> gate = gateOneLocation( graph, startPos);
-        for( Node n : gate ){
-            if( node.getXPos() == n.getXPos() &&  node.getYPos() == n.getYPos() )
-                return false;
+        if(graph.getGateNumber() == 1){
+            for( Node gate : gateOneLocation( graph, startPos) ){
+                if( node.getXPos() == gate.getXPos() &&  node.getYPos() == gate.getYPos() )
+                    return false;
+            }
         }
+        if(graph.getGateNumber() == 2){
+            for( Node gate : gateTwoLocation( graph, startPos) ){
+                if( node.getXPos() == gate.getXPos() &&  node.getYPos() == gate.getYPos() )
+                    return false;
+            }
+        }
+        //Her mangler vi lige gate 0, som skal være in case- gate one og gate two er blocked..
+        
         
         if(startPos == 1){
              if(  !isInQueenArea( node,startPos,graph ) && node.getXPos() < 4 && node.getYPos() < 4  ){ 
@@ -384,7 +393,7 @@ public class AntMethods {
             return 1;
         
         boolean gate2free = true;
-        List<Node> gate2 = gateOneLocation( graph, startPos );
+        List<Node> gate2 = gateTwoLocation( graph, startPos );
         for( Node node : gate2 ){
             if(node.isDiscovered()){
                 if( node.isRock() ){
@@ -396,9 +405,26 @@ public class AntMethods {
         }
         
         if(gate2free)
-            return 1;
+            return 2;
         
         return 0;
     }
     
+    public static boolean isWallBuild(Graph graph,int startPos){
+        if( graph.getGateNumber() >= 0 ){
+            List<Node> wall = new ArrayList();
+            for( Node node : graph.getNodes() ){
+                if( isInWallArea( node,  startPos,  graph) )
+                    wall.add(node);
+            }
+            for(Node node : wall){
+                if( !node.isWall() ){
+                    return false;
+                }
+            }
+            return true;
+        }else{
+            return false;
+        }
+    }    
 }
