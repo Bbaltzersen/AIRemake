@@ -254,7 +254,10 @@ public class Queen {
             
             if (!n.isBlocked() && !n.isTempBlocked()) {
                 try {
-                    System.out.println("I AM HERE AND WANTS TO FIND WAY TO LAY EGG");
+                    System.out.println("This node is: " + checkNode(thisLocation.getX(), thisLocation.getY(), starX, starY, startPos));
+                    if(checkNode(thisLocation.getX(), thisLocation.getY(), starX, starY, startPos)) {
+                        return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g, possibleActions);
+                    }
                     return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), n, g, possibleActions);
                 } catch (NullPointerException e) {
                     System.out.println("Nullpoint exception caught: " + e);
@@ -308,6 +311,47 @@ public class Queen {
         return false;
     }
 
+    public boolean checkNode(int thisX, int thisY, int starX, int starY, int startPos) {
+        if (startPos == 1) {
+            for (int x = starX; x <= starX + 2; x++) {
+                for (int y = starY + 1; y <= starY + 1; y++) {
+                    if(thisX == x && thisY == y) {
+                        return true;
+                    }
+
+                }
+            }
+        }
+        if (startPos == 2) {
+            for (int x = starX; x <= starX + 2; x++) {
+                for (int y = starY - 1; y <= starY - 1; y++) {
+                    if(thisX == x && thisY == y) {
+                        return true;
+                    }
+                }
+            }
+        }
+        if (startPos == 3) {
+            for (int x = starX - 2; x <= starX; x++) {
+                for (int y = starY + 1; y <= starY + 1; y++) {
+                    if(thisX == x && thisY == y) {
+                        return true;
+                    }
+                }
+            }
+        }
+        if (startPos == 4) {
+            for (int x = starX - 2; x <= starX; x++) {
+                for (int y = starY - 1; y <= starY - 1; y++) {
+                    if(thisX == x && thisY == y) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
     public void setPosX(int x) {
         this.posX = x;
     }
@@ -323,4 +367,6 @@ public class Queen {
     public int getPosY() {
         return this.posY;
     }
+    
+    
 }
