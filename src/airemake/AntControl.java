@@ -8,6 +8,7 @@ import Ants.AntNest;
 import static Ants.CarrierLogic.generalCarrierControl;
 //import static Ants.CarrierLogic.generalCarrierControl;
 import Ants.Queen;
+import static Ants.WarriorLogic.generalWarriorControl;
 import aiantwars.EAction;
 import aiantwars.EAntType;
 import aiantwars.IAntInfo;
@@ -35,7 +36,7 @@ public class AntControl implements aiantwars.IAntAI {
     int worldSizeX;
     int worldSizeY;
     int roundNumber;
-    int gateNumber = -1;
+//    int gateNumber = -1;
     
     public int getWorldSizeX() {
         return worldSizeX;
@@ -162,6 +163,10 @@ public class AntControl implements aiantwars.IAntAI {
         
         addLocationsInfoToGraph(visibleLocations,thisLocation,thisAnt);
         
+        if (thisAnt.getAntType().equals(EAntType.WARRIOR)) {
+            return generalWarriorControl(thisAnt,  thisLocation,  visibleLocations, possibleActions,  graph, queen ,  roundNumber, startPos);
+        }                                                    
+        
         if (thisAnt.getAntType().equals(EAntType.QUEEN)) {
             return queen.generalQueenControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
         }
@@ -212,8 +217,7 @@ public class AntControl implements aiantwars.IAntAI {
     public void onLayEgg(IAntInfo thisAnt, List<EAntType> types, IEgg egg) {
         if(nest.getCarriers() <= 2) {
             egg.set(EAntType.CARRIER, this);
-        }
-        if(nest.getWarriors() < 2) {
+        }else if(nest.getWarriors() < 2) {
             egg.set(EAntType.WARRIOR, this);
         }
     }

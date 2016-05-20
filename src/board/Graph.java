@@ -12,7 +12,6 @@ public class Graph
 {
    private final ArrayList<Node> nodes;
    private final ArrayList<Edge> edges;
-//   private boolean wallIsBuild;
    private int gateNumber = -1;
 
    public Graph(){
@@ -28,8 +27,6 @@ public class Graph
         this.gateNumber = gateNumber;
     }
    
-    
-    
     public void tempBlockedCountertick(){
         for(Node node : nodes){
             if( node.isTempBlocked() ){
@@ -37,14 +34,6 @@ public class Graph
             }
         }
     }
-    
-//    public boolean wallIsBuild(){
-//        return this.wallIsBuild;
-//    }
-//    
-//    public void setWallIsBuild(boolean value){
-//        this.wallIsBuild = value;
-//    }
     
     public List<Node> getNodes(){
         return nodes;

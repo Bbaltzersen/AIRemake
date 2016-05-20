@@ -427,4 +427,20 @@ public class AntMethods {
             return false;
         }
     }    
+    
+    public static List<Node> getGuardPositions(int startPos,Graph graph){
+        
+        List<Node> guardPositions = new ArrayList();
+        if(graph.getGateNumber() < 0){
+             if( startPos == 1 && graph.getGateNumber() == 1 ){
+                 
+                if( !graph.getNode(2, 2).isRock() )
+                    guardPositions.add(graph.getNode(2,2));
+                
+                if( !graph.getNode(0, 2).isRock() )
+                    guardPositions.add(graph.getNode(0,2));
+            }
+        }
+        return guardPositions;
+    }
 }
