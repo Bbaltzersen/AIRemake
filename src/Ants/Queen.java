@@ -22,7 +22,7 @@ public class Queen {
 
     int posX, posY;
 
-    public EAction generalQueenControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph graph, int startPos, int roundNumber, int starX, int starY) {
+    public EAction generalQueenControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations, List<EAction> possibleActions, Graph graph, int startPos, int roundNumber, int starX, int starY, AntNest nest) {
         setPosX(thisLocation.getX());
         setPosY(thisLocation.getY());
 
@@ -34,7 +34,7 @@ public class Queen {
             n.resetNode();
         }
 
-        if (thisAnt.getFoodLoad() >= 6) {
+        if (thisAnt.getFoodLoad() >= 6 && nest.getCarriers() < 2 && nest.getWarriors() < 2) {
             return missionLayEggs(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
         } else if (roundNumber < 30) {
 
@@ -253,18 +253,15 @@ public class Queen {
         for (Node n : listOfBlockedNodes) {
             
             if (!n.isBlocked() && !n.isTempBlocked()) {
-                try {
-                    System.out.println("This node is: " + checkNode(thisLocation.getX(), thisLocation.getY(), starX, starY, startPos));
-                    if(checkNode(thisLocation.getX(), thisLocation.getY(), starX, starY, startPos)) {
+                try { if(checkNode(thisLocation.getX(), thisLocation.getY(), starX, starY, startPos)) {
                         return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), g.getNode(starX, starY), g, possibleActions);
                     }
                     return NextStep(thisAnt, thisLocation, visibleLocations, g.getNode(thisLocation.getX(), thisLocation.getY()), n, g, possibleActions);
                 } catch (NullPointerException e) {
-                    System.out.println("Nullpoint exception caught: " + e);
+                    System.out.println(e);
                 }
             }
         }
-        System.out.println("I AM HERE AND WANTS TO FIND WAY TO LAY EGG BUT HAVE TO");
         return EAction.Pass;
     }
 

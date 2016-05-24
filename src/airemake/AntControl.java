@@ -168,7 +168,7 @@ public class AntControl implements aiantwars.IAntAI {
         }                                                    
         
         if (thisAnt.getAntType().equals(EAntType.QUEEN)) {
-            return queen.generalQueenControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
+            return queen.generalQueenControl(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY, nest);
         }
         if (thisAnt.getAntType().equals(EAntType.CARRIER)) {
             return generalCarrierControl( thisAnt,  thisLocation,  visibleLocations, possibleActions,  graph, queen ,  roundNumber, startPos);

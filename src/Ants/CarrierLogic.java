@@ -30,29 +30,25 @@ public class CarrierLogic {
    
     public static EAction generalCarrierControl(IAntInfo thisAnt, ILocationInfo thisLocation, List<ILocationInfo> visibleLocations
             , List<EAction> possibleActions, Graph graph,Queen queen , int roundNumber, int startPos) {
-  
         
-        //always reset node.prev else the heap stack gets out of memory..
-        List<Node> nodes = graph.getNodes();
-        for (Node n : nodes) {
-            n.resetNode();
+        if(thisAnt.getHitPoints() < 20 && possibleActions.contains(EAction.EatFood)){
+                return EAction.EatFood;
         }
+        //if this ant doesn´t carry soil, qnd soil is ahead pick it up..
+        if( !visibleLocations.isEmpty() && !thisAnt.carriesSoil() && new AntFindPath().canFindPath(graph.getNode(thisLocation.getX(), thisLocation.getY()), graph.getNode(graph.getWorldSizeX()/2, graph.getWorldSizeY()/2), graph)){
+            System.out.println("SO I ATE IT ALL ANYWAY!");
+            EAction res = isSoilAheadPickItUp( thisAnt, possibleActions, visibleLocations, startPos, graph);
+            if(res != null){
+                return res;
+            }
+        }    
+        
         //if the gate number has not been determined, go check the gates, and determin gate number..
         if( graph.getGateNumber() < 0 ){
             EAction res =  checkGate( graph, startPos, thisAnt, thisLocation, visibleLocations, possibleActions);
             if(res != null)
                 return res;
         }
-        if(thisAnt.getHitPoints() < 20 && possibleActions.contains(EAction.EatFood)){
-                return EAction.EatFood;
-        }
-        //if this ant doesn´t carry soil, qnd soil is ahead pick it up..
-        if( !visibleLocations.isEmpty() && !thisAnt.carriesSoil() ){
-            EAction res = isSoilAheadPickItUp( thisAnt, possibleActions, visibleLocations, startPos, graph);
-            if(res != null){
-                return res;
-            }
-        }    
         
         List<Node> foodNodes = new ArrayList();
         for(Node node : graph.getNodes()){
@@ -251,6 +247,8 @@ public class CarrierLogic {
             }
             return null;
     }
+    
+   
     
     private  static boolean indexExists(final List list, final int index) {
         return index >= 0 && index < list.size();
