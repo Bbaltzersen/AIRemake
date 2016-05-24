@@ -34,7 +34,7 @@ public class Queen {
             n.resetNode();
         }
 
-        if (thisAnt.getFoodLoad() >= 6 && nest.getCarriers() < 2 && nest.getWarriors() < 2) {
+        if (thisAnt.getFoodLoad() >= 6 && nest.getCarriers() < 3 && nest.getWarriors() < 2) {
             return missionLayEggs(thisAnt, thisLocation, visibleLocations, possibleActions, graph, startPos, roundNumber, starX, starY);
         } else if (roundNumber < 30) {
 
